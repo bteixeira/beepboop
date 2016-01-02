@@ -2,6 +2,9 @@
 ## sudo -u postgres createdb -O brains beepboob
 ## psql -h localhost -U brains -d beepboob
 
+## split -d -a 5 -l 85 out1.txt out1_
+
+
 create table models (id serial);
 
 alter table models add column name varchar(255);
