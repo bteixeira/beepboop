@@ -63,10 +63,10 @@ pg.connect(connString, function (err, client, done) {
                     console.log(name, nationality, dob, size, enhanced);
                     // TODO trigger PG request
                     var query = 'INSERT INTO models (name, dob, nationality, cup, enhanced) VALUES (' +
-                            '\'' + name + '\', ' +
+                            '\'' + name.replace(/'/g, '\'\'') + '\', ' +
                             (dob ? ('\'' + dob + '\'') : 'null') + ', ' +
-                            (nationality ? ('\'' + nationality + '\'') : 'null') + ', ' +
-                            (size ? ('\'' + size + '\'') : 'null') + ', ' +
+                            (nationality ? ('\'' + nationality.replace(/'/g, '\'\'') + '\'') : 'null') + ', ' +
+                            (size ? ('\'' + size.replace(/'/g, '\'\'') + '\'') : 'null') + ', ' +
                             (typeof enhanced === 'boolean' ? ('\'' + enhanced + '\'') : 'null') +
                     ');';
                     console.log('QUERY:', query);
