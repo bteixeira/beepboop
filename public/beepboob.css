@@ -1,0 +1,16 @@
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 600px;
+    width: 90%;
+    margin: 5%;
+    text-align: center;
+    padding: 50px;
+    border: solid 1px gray;
+}
