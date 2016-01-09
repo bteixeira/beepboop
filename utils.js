@@ -9,7 +9,7 @@ function noop() {}
 
 module.exports = {
     readAll: function (stream, callback) {
-        if (typeof stream === 'String') {
+        if (typeof stream === 'string') {
             stream = fs.createReadStream(stream);
         }
         var chunks = [];
