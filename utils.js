@@ -20,6 +20,30 @@ module.exports = {
             callback(content);
         });
     },
+    readEachLine: function (stream, callback, verbose) {
+        if (typeof stream === 'string') {
+            stream = fs.createReadStream(stream);
+        }
+        var chunks = [];
+        stream.on('data', function (data) {
+            chunks.push(data);
+        }).on('end', function () {
+            var content = chunks.map(String).join('');
+            var lines = content.split('\n');
+            var line;
+            var i = 0;
+            function process() {
+                if (i >= lines.length) {
+                    verbose && console.log('All work done.');
+                    return;
+                }
+                line = lines[i++];
+                callback(line, process);
+            }
+            //callback(content);
+            process();
+        });
+    },
     fetchPage: function fetchPage (url, callback, verbose) {
         var log = verbose ? logger : noop;
         log('Getting "' + url + '"...');
@@ -37,6 +61,22 @@ module.exports = {
         }).on('error', function (error) {
             console.error(error);
             fetchPage(url, callback, verbose);
+        });
+    },
+    fetchAndDump: function fetchAndDump (url, filename, callback, verbose) {
+        var log = verbose ? logger : noop;
+        log('Getting "' + url + '"...');
+        request.get({uri: url, timeout: 15000}).on('response', function (res) {
+            log('Receiving, dumping to "' + filename + '"...');
+            var ws = fs.createWriteStream(filename);
+            res.pipe(ws);
+            res.on('end', function () {
+                log('Got it.');
+                callback();
+            });
+        }).on('error', function (error) {
+            console.error(error);
+            fetchAndDump(url, filename, callback, verbose);
         });
     }
 };
