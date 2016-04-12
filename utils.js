@@ -20,7 +20,7 @@ module.exports = {
             callback(content);
         });
     },
-    readEachLine: function (stream, callback, verbose) {
+    readEachLine: function (stream, callback, verbose, end) {
         if (typeof stream === 'string') {
             stream = fs.createReadStream(stream);
         }
@@ -35,7 +35,7 @@ module.exports = {
             function process() {
                 if (i >= lines.length) {
                     verbose && console.log('All work done.');
-                    return;
+                    return end && end();
                 }
                 line = lines[i++];
                 callback(line, process);
