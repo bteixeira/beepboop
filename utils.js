@@ -1,6 +1,8 @@
 var request = require('request');
 var fs = require('fs');
 
+var cheerio = require('cheerio');
+
 function logger (msg) {
     console.log(new Date(), msg);
 }
@@ -77,6 +79,16 @@ module.exports = {
         }).on('error', function (error) {
             console.error(error);
             fetchAndDump(url, filename, callback, verbose);
+        });
+    },
+    fetch: function fetch (url, callback) {
+        console.log(`fetching: "${url}"`);
+        request(url, function (err, res, body) {
+            if (err) {
+                throw err;
+            }
+            var $ = cheerio.load(body);
+            callback($);
         });
     }
 };
