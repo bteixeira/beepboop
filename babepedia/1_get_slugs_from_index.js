@@ -1,9 +1,15 @@
+var fs = require('fs');
 var stream = require('stream');
 
 var split = require('split2');
 
 var SimpleFetcher = require('./__simple_fetcher');
 var LineOutputter = require('./__line_outputter');
+
+var output = process.stdout;
+if (process.argv[2]) {
+    output = fs.createWriteStream(process.argv[2]);
+}
 
 
 function BabepediaBabeSlugParser() {
@@ -18,8 +24,7 @@ BabepediaBabeSlugParser.prototype._transform = function (doc, encoding, callback
 
     console.log(`got ${$links.length} links`);
 
-    $links.each((i, $a) => this.push($a.attr));
-    //$links.each((i, $lnk) => this.push($lnk));
+    $links.each((i, a) => this.push($(a).attr('href')));
     callback();
 };
 
@@ -29,4 +34,5 @@ process.stdin
     .pipe(new SimpleFetcher())
     .pipe(new BabepediaBabeSlugParser())
     .pipe(new LineOutputter())
+    .pipe(output)
 ;

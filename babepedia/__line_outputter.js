@@ -3,10 +3,10 @@ var stream = require('stream');
 function LineOutputter() {
 }
 
-LineOutputter.prototype = new stream.Writable({objectMode: true});
+LineOutputter.prototype = new stream.Transform({objectMode: true});
 
-LineOutputter.prototype._write = function (chunk, encoding, callback) {
-    console.log(String(chunk));
+LineOutputter.prototype._transform = function (chunk, encoding, callback) {
+    this.push(String(chunk) + '\n');
     callback();
 };
 
