@@ -82,7 +82,6 @@ module.exports = {
         });
     },
     fetch: function fetch (url, callback) {
-        console.log(`fetching: "${url}"`);
         request(url, function (err, res, body) {
             if (err) {
                 throw err;
