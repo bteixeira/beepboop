@@ -2,6 +2,8 @@ var fs = require('fs');
 var stream = require('stream');
 var util = require('util');
 
+var utils = require('../utils');
+
 function PageDump(prefix, suffix) {
     stream.Transform.call(this, {objectMode: true});
     this._prefix = prefix;
@@ -18,9 +20,9 @@ PageDump.prototype._transform = function (page, encoding, callback) {
             .replace(/\//g, '___') +
         this._suffix;
     console.log(`Writing to ${filename}...`);
-    fs.writeFile(filename, page.doc, function (err) {
-        console.log('done!');
+    utils.justWrite(filename, page.doc, function (err) {
         callback(err);
+        console.log('done!');
     });
 };
 

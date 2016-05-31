@@ -1,7 +1,9 @@
-var request = require('request');
 var fs = require('fs');
+var path = require('path');
 
 var cheerio = require('cheerio');
+var mkpath = require('mkpath');
+var request = require('request');
 
 function logger (msg) {
     console.log(new Date(), msg);
@@ -89,5 +91,16 @@ module.exports = {
             var $ = cheerio.load(body);
             callback($);
         });
+    },
+    justWrite: function (filename, data, callback) {
+        var dir = path.dirname(filename);
+        mkpath(dir, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            fs.writeFile(filename, data, callback);
+        });
+
     }
 };
