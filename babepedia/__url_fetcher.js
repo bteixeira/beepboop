@@ -1,13 +1,14 @@
 var stream = require('stream');
+var util = require('util');
 
 var request = require('request');
 
 function UrlFetcher() {
+    stream.Transform.call(this, {objectMode: true})
 }
+util.inherits(UrlFetcher, stream.Transform);
 
-UrlFetcher.prototype = new stream.Transform({objectMode: true});
-
-UrlFetcher.prototype._transform = function (url, encoding, callback) {
+UrlFetcher.prototype._transform = function UrlFetcher(url, encoding, callback) {
     console.log(`Fetching ${url}...`);
     request(url, (err, res, body) => {
         console.log('got it!');

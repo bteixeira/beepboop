@@ -56,7 +56,7 @@ var Paralelizer = function (count, Class) {
     };
 
     this.pipe = function (dest, opts) {
-        out.pipe.apply(out, arguments);
+        return out.pipe.apply(out, arguments);
     };
 
 };
