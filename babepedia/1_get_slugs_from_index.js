@@ -22,7 +22,7 @@ BabepediaBabeSlugParser.prototype._transform = function (doc, encoding, callback
 
     var $links = $('#content > ul li a');
 
-    console.log(`got ${$links.length} links`);
+    //console.log(`got ${$links.length} links`); // Create a '-v verbose' option instead in case this is needed
 
     $links.each((i, a) => this.push($(a).attr('href')));
     callback();

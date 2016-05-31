@@ -33,11 +33,11 @@ var Paralelizer = function (count, Class) {
     var me = this;
 
     this._transform = function (chunk, encoding, callback) {
-        console.log('FAN received chunk ' + chunk);
+        //console.log('FAN received chunk ' + chunk);
         if (!consumers.length) {
             this.once('ready', function () {
                 var consumer = consumers.shift();
-                console.log('FAN ATTACHED writing chunk ' + chunk);
+                //console.log('FAN ATTACHED writing chunk ' + chunk);
                 consumer.write(chunk, function (err) {
                     consumers.push(consumer);
                     me.emit('ready');
@@ -45,7 +45,7 @@ var Paralelizer = function (count, Class) {
                 callback();
             });
         } else {
-            console.log('FAN writing chunk ' + chunk);
+            //console.log('FAN writing chunk ' + chunk);
             var consumer = consumers.shift();
             consumer.write(chunk, function (err) {
                 consumers.push(consumer);

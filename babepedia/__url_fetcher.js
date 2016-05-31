@@ -11,7 +11,6 @@ util.inherits(UrlFetcher, stream.Transform);
 UrlFetcher.prototype._transform = function UrlFetcher(url, encoding, callback) {
     console.log(`Fetching ${url}...`);
     request(url, (err, res, body) => {
-        console.log('got it!');
         this.push({
             url: url,
             doc: body
