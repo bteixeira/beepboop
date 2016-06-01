@@ -11,5 +11,5 @@ process.stdin
     .pipe(new Parallelizer(
         5, UrlFetcher)
     )
-    .pipe(new PageDump('../data/babepedia/pages/', '.html'))
+    .pipe(new PageDump('../data/babepedia/pages_raw/', '.html'))
 ;
