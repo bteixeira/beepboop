@@ -8,13 +8,9 @@ var FileContentsReader = require('./__file_contents_reader');
 var Wrapper = require('./__wrapper');
 var ModelFeeder = require('./_model_feeder');
 
-
 new DirFilesIterator('../data/babepedia/pages_raw')
-
     .pipe(new FileContentsReader())
-
     .pipe(new Wrapper(JSON.parse))
-
     .pipe(new stream.Transform({
         objectMode: true,
         transform: function (page, encoding, callback) {
@@ -41,7 +37,7 @@ new DirFilesIterator('../data/babepedia/pages_raw')
                     model[label] = value;
                 }
             });
-            if (!('Bra/cup size' in model)) {
+            if (!('Boobs' in model)) {
                 callback();
                 return;
             }
