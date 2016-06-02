@@ -20,7 +20,8 @@ PageDump.prototype._transform = function (page, encoding, callback) {
             .replace(/\//g, '___') +
         this._suffix;
     console.log(`Writing to ${filename}...`);
-    utils.justWrite(filename, page.doc, function (err) {
+    var contents = JSON.stringify(page);
+    utils.justWrite(filename, contents, function (err) {
         callback(err);
         console.log('done!');
     });
