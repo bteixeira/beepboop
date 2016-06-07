@@ -5,8 +5,8 @@ Model attributes fetched from sources should be stores in a document with format
 
 {
     source: 'babepedia',
-    name: 'Model',
     slug: 'Model_model',
+    name: 'Model',
     revision: 169502349898,
     attributes: {
         name: 'Model',

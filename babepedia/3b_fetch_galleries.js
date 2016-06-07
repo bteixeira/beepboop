@@ -38,5 +38,5 @@ new DirFilesIterator('../data/babepedia/pages_raw')
         }
     }))
     .pipe(new PageFetcher())
-    .pipe(new PageDump('../data/babepedia/galleries/', '.html.json'))
+    .pipe(new PageDump('../data/babepedia/galleries_raw/', '.html.json'))
 ;

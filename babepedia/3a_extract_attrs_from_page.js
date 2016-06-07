@@ -3,7 +3,6 @@ var stream = require('stream');
 var cheerio = require('cheerio');
 
 var DirFilesIterator = require('./__dir_files_iterator');
-var LineOutputter = require('./__line_outputter');
 var FileContentsReader = require('./__file_contents_reader');
 var Wrapper = require('./__wrapper');
 var ModelFeeder = require('./_model_feeder');
@@ -25,7 +24,10 @@ new DirFilesIterator('../data/babepedia/pages_raw')
                 return;
             }
             var model = {};
-            model.name = $('#bioarea h1').text();
+            model.source = 'babepedia';
+            model.slug = page.url.slice(page.url.lastIndexOf('/') + 1).replace(/\.html$/, '');
+            model.attributes = {};
+            model.name = model.attributes.name = $('#bioarea h1').text();
             $('#bioarea ul li').each((i, li) => {
                 var $li = $(li);
                 var $label = $li.find('.label');
@@ -34,16 +36,17 @@ new DirFilesIterator('../data/babepedia/pages_raw')
                 var match = label.match(/(.+?)\:?$/);
                 if (match) {
                     label = match[1];
-                    model[label] = value;
+                    model.attributes[label] = value;
                 }
             });
-            if (!('Boobs' in model)) {
+            if (!('Boobs' in model.attributes)) {
                 callback();
                 return;
             }
+            console.log('Adding model! ' + page.url);
             this.push(model);
             callback();
         }
     }))
-    .pipe(feeder = new ModelFeeder())
+    .pipe(new ModelFeeder())
 ;
