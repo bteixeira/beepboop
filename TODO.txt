@@ -1,0 +1,163 @@
+Data Persistency
+================
+
+Model attributes fetched from sources should be stores in a document with format:
+
+{
+    source: 'babepedia',
+    name: 'Model',
+    slug: 'Model_model',
+    revision: 169502349898,
+    attributes: {
+        name: 'Model',
+        size: '38B',
+        dob: '1986-14-03',
+        others: '...'
+    }
+}
+
+revision is a timestamp which is obtained at the beginning of the pass.
+If the same combination of (source, slug) already exists, update its revision, name, and all attributes.
+LOG ANY CHANGED ATTRIBUTES.
+
+If the (source, slug) combination does not exist yet, add it.
+LOG ANY NEW MODELS.
+
+At the end of the pass, all models with revision older than current can be deleted.
+This way the pass is crash resistant.
+LOG ANY DELETED MODELS.
+
+LOGGING IS SUPER IMPORTANT BECAUSE IT WILL ALLOW US TO GET A FEELING OF HOW OFTEN AND HOW MUCH THE DATA CHANGES.
+
+In the future, there will be a process that takes this raw data from each source and processes it and stores it in a centralized collection.
+For now, we will use a single source (babepedia) and work directly from there.
+
+
+
+Image Files
+===========
+
+Once again, we're only focusing ona a single source which contains both data and files, so it's a little simpler.
+
+There will be a collection with file information:
+
+{
+    source: "babepedia",
+    slug: "Model_model",
+    hash: "e652ba523bef87f8",
+    filename: "model_model_33.jpg",
+    url: "www.source.com/path/model_model_33.jpg",
+    deleted: false,
+    revision: 7865421361234834,
+    crop: {
+        x: 30,
+        y: 50,
+        w: 120,
+        h: 120
+    },
+    metadata: {
+        use: (true | false),
+        quality: (blurry,pixelated,noisy,contrast or brightness too high or low, resolution too low | acceptable, good enough | very good),
+        visibility: (too small,hidden,not frontal enough,weird angle | visible),
+        exposure: (completely covered,curve barely visible | covered but prominent curve | bra,bikini | hand-bra,very covered and/or pushed up | hand-bra or other minor concealment, little or no support | minor concealment, only nipples | nipples visible, partial coverage | fully disclosed )
+    }
+}
+
+hash is the hash of the file contents (pick your favorite hashing algorithm)
+filename is as provided from the source, on a directory "source/slug"
+url is the original url from which it was obtained (and can be obtained again)
+deleted says whether this file has been deleted from the file system. this lets us remove from the filesystem files which are marked use:false without losing their information and therefore without them creeping into the system again on the next pass. the url allows us to immediately re-download a deleted file on demand at any time
+revision works the same way as for model data
+crop describes a rectangle which is the part of the image that will be used during guessing. this could allow not only limiting the selection to the breasts, but also making sure that all displayed images have a specific aspect ratio
+metada starts out empty and will be filled in by curating. most fields are subjective. the fields and their possible values might change often, but for now they are:
+    use tells wether this file should be visible on the application or not (some files mught just not look good, or might be too similar to others)
+    quality describes the overall quality of this image
+    visibility describes how well suited an image is for guesswork, according to the angle and other attributes of the photo
+    exposure describes how much nudity there is
+
+THE HASH SHOULD BE UNIQUE IN THE WHOLE COLLECTION, AND UNIQUELY IDENTIFIES A FILE (look up probability of hash collisions for used algorithm)
+
+At a pass, when a file comes in:
+    1) hash the file
+    2) if there is no entry with this hash:
+        2a) create new entry with empty metadata, current revision, calculated hash, current filename, source and slug
+        2b) drop file in place with current filename
+    3) if there is already entry for this hash:
+        3a) if filename is different, update it on both document and file system
+        3b) update revision
+At the end of a pass, files of older revisions can be eliminated in the same way as models. When a document is eliminated, the file should be deleted.
+
+At this point we can:
+    1) for any model, get a list of all file documents, containing all meta-data and filename, without using the file system;
+    2) for any model, get all image files from the file system, without querying the database, even if we don't get any metadata (but we know the filename and can calculate the hash
+
+    3) for a given file document, get the associated image file directly by filename, without fetching model information
+    4) for a given file document, get the associated model without using the file system
+
+    5) for a given file in the file system, get the associated model directly without querying its file document (file path maps to source+model_slug)
+    6) for a given file in the file system, get the associated file document via (suorce, slug, filename) or (source, slug, hash) without getting the model information
+
+
+
+Any new data or files obtained from the source can be added or updated incrementally, without loss in the event of a crash. The pass is pausable and resumable as long as we don't lose the current revision number.
+
+
+
+
+Curating
+========
+It should be possible to get an overview of all the images for a model, in order to quickly detect duplicates and wrong images. However this complicates the frontend a lot.
+
+If we ignore that, the frontend simply queries the server for a random image.
+The server returns an image for which there is no metadata yet. It returns:
+    the filename
+    source+slug
+    file contents
+    all available model info
+
+After this the user, via the frontend, returns either "skip", to ignore this file and return a new random one, or it returns metadata and cropping information, and is fed a new random non-curated image.
+
+
+
+Playing
+=======
+The frontend is supplied a set of images of a predetermined size (probably 20).
+for each image:
+    hash
+    cropped image contents according to "cropping" property
+
+that's it. do not send more information than the user should be allowed to see.
+
+the user then assigns a value "real"/"fake" to each image.
+
+Either one-by-one or in bulk at the end of the game, the frontend sends the user's guess of real/fake to the server. The server returns the correct answer for each of the supplied file hashes.
+
+It might seem simpler to simply query the server for the correct answers without sending the user's guess. That works for now, but keep in mind that in the future, if we want to make sure the user doesn't cheat (say, if we're keeping a global score) then the server should never supply the correct answers until the user provides their guess.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
