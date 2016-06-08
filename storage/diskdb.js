@@ -13,7 +13,14 @@ DiskdbConnection.prototype.addOrUpdateModel = function (model, callback) {
     //this._connection.models.save(model);
 
     // TODO ASSERT THAT DATA IS IN CORRECT FORMAT
-    var stats = this._connection.models.update(
+
+    var old = this._connection.models.find(m =>
+        m.source === model.source && m.slug === model.slug
+    );
+
+    old = old[0];
+
+    this._connection.models.update(
         (m) => {
             return m.source === model.source && m.slug === model.slug;
         },
@@ -22,8 +29,16 @@ DiskdbConnection.prototype.addOrUpdateModel = function (model, callback) {
             upsert: true
         }
     );
-    console.log('Model upserted, issuing callback');
-    callback(null, stats);
+    callback(null, old);
+};
+
+DiskdbConnection.prototype.expireModels = function (timestamp, callback) {
+    if (typeof timestamp !== 'number') {
+        timestamp = timestamp.getTime();
+    }
+    var models = this._connection.models.find(entry => entry.revision < timestamp);
+    this._connection.models.remove(entry => entry.revision < timestamp);
+    callback(models);
 };
 
 DiskdbConnection.prototype.close = function () {

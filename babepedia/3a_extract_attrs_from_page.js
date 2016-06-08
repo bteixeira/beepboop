@@ -20,6 +20,7 @@ new DirFilesIterator('../data/babepedia/pages_raw')
             var $thumbshots = $('#content .separate .thumbshot');
             var $thumbnails = $('#content .separate .thumbnail');
             if (!$thumbshots.length && !$thumbnails.length) {
+                console.log(`Page ${page.url} discarded, no photos`);
                 callback();
                 return;
             }
@@ -40,6 +41,7 @@ new DirFilesIterator('../data/babepedia/pages_raw')
                 }
             });
             if (!('Boobs' in model.attributes)) {
+                console.log(`Page ${page.url} discarded, no size information`);
                 callback();
                 return;
             }
