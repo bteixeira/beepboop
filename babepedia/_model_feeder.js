@@ -20,7 +20,10 @@ function ModelFeeder(timestamp) {
             db.addOrUpdateModel(this._waiting, this._waitingCB);
             this._waiting = null;
         }
-        this.on('finish', () => db.close());
+        this.on('finish', () => {
+            // TODO EXPIRE MODELS
+            db.close()
+        });
 
     });
 }

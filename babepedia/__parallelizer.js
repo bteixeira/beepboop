@@ -1,9 +1,10 @@
 var stream = require('stream');
 var util = require('util');
 
-var Paralelizer = function (count, Class) {
+var Parallelizer = function (count, Class) {
     stream.Transform.call(this, {objectMode: true});
     var consumers = [];
+    var available = [];
 
     if (typeof count === 'number') {
         for (var i = 0 ; i < count ; i++) {
@@ -26,6 +27,7 @@ var Paralelizer = function (count, Class) {
     }
 
     consumers.forEach(consumer => {
+        available.push(consumer);
         consumer.pipe(out, {end: false});
         consumer.on('end', closeConsumer);
     });
@@ -34,21 +36,21 @@ var Paralelizer = function (count, Class) {
 
     this._transform = function (chunk, encoding, callback) {
         //console.log('FAN received chunk ' + chunk);
-        if (!consumers.length) {
+        if (!available.length) {
             this.once('ready', function () {
-                var consumer = consumers.shift();
+                var consumer = available.shift();
                 //console.log('FAN ATTACHED writing chunk ' + chunk);
                 consumer.write(chunk, function (err) {
-                    consumers.push(consumer);
+                    available.push(consumer);
                     me.emit('ready');
                 });
                 callback();
             });
         } else {
             //console.log('FAN writing chunk ' + chunk);
-            var consumer = consumers.shift();
+            var consumer = available.shift();
             consumer.write(chunk, function (err) {
-                consumers.push(consumer);
+                available.push(consumer);
                 me.emit('ready');
             });
             callback();
@@ -59,7 +61,17 @@ var Paralelizer = function (count, Class) {
         return out.pipe.apply(out, arguments);
     };
 
-};
-util.inherits(Paralelizer, stream.Transform);
+    this.on('finish', function () {
+        for (var consumer of consumers) {
+            consumer.end();
+        }
+    });
 
-module.exports = Paralelizer;
+    out.on('end', () => {
+        this.emit('end');
+    });
+
+};
+util.inherits(Parallelizer, stream.Transform);
+
+module.exports = Parallelizer;

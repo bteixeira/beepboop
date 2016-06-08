@@ -102,5 +102,20 @@ module.exports = {
             fs.writeFile(filename, data, callback);
         });
 
+    },
+    expireFiles: function (options) {
+        mkpath.sync(options.target);
+        fs.readdir(options.origin, (err, files) => {
+            console.log('files read');
+            for (var file of files.map(f => path.resolve(options.origin, f))) {
+                var stats = fs.statSync(file);
+                if (stats.mtime < options.timestamp) {
+                    console.log('moving file ' + file);
+                    fs.rename(file, path.resolve(options.target, path.basename(file)));
+                } else {
+                    console.log('file not old ' + file);
+                }
+            }
+        });
     }
 };
