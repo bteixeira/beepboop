@@ -1,5 +1,17 @@
 var diskdb = require('./diskdb-custom');
 
-var conn = diskdb.connect('./data/storage/diskdb', ['models']);
+conn = diskdb.connect('./data/storage/diskdb', ['models', 'images']);
 
-console.log(conn.models.find());
+examples = function () {
+    console.log(`
+Access Data
+Examples:
+
+    conn.models.find()
+    conn.images.find({source: 'babepedia'})
+
+`);
+};
+examples();
+
+require('repl').start({useGlobal: true});
