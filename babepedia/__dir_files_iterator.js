@@ -25,6 +25,9 @@ DirFilesIterator.prototype._read = function (size) {
         });
     } else {
         var file = this._files[this._i++];
+        if (!file) {
+            return this.push(null);
+        }
         if (this._prependDir) {
             file = path.resolve(this._dir, file);
         }

@@ -11,6 +11,8 @@ function logger (msg) {
 
 function noop() {}
 
+const DATA_PATH = path.resolve(__dirname, 'data');
+
 module.exports = {
     readAll: function (stream, callback) {
         if (typeof stream === 'string') {
@@ -96,8 +98,11 @@ module.exports = {
         var dir = path.dirname(filename);
         mkpath(dir, function(err) {
             if (err) {
-                callback(err);
-                return;
+                if (callback) {
+                    return callback(err);
+                } else {
+                    throw err;
+                }
             }
             fs.writeFile(filename, data, callback);
         });
@@ -117,5 +122,9 @@ module.exports = {
                 }
             }
         });
+    },
+    getDataPath: function (...components) {
+        components.unshift(DATA_PATH);
+        return path.resolve.apply(null, components);
     }
 };

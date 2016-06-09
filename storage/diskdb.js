@@ -6,11 +6,10 @@ const DATA_DIR = '../data/storage/diskdb';
 
 function DiskdbConnection () {
     mkpath.sync(DATA_DIR);
-    this._connection = diskdb.connect(DATA_DIR, ['models']);
+    this._connection = diskdb.connect(DATA_DIR, ['models', 'images']);
 }
 
 DiskdbConnection.prototype.addOrUpdateModel = function (model, callback) {
-    //this._connection.models.save(model);
 
     // TODO ASSERT THAT DATA IS IN CORRECT FORMAT
 
@@ -39,6 +38,35 @@ DiskdbConnection.prototype.expireModels = function (timestamp, callback) {
     var models = this._connection.models.find(entry => entry.revision < timestamp);
     this._connection.models.remove(entry => entry.revision < timestamp);
     callback(models);
+};
+
+DiskdbConnection.prototype.addOrUpdateImage = function (image, callback) {
+
+    // TODO ASSERT THAT DATA IS IN CORRECT FORMAT
+
+    var old = this._connection.images.find({hash: image.hash});
+
+    old = old[0];
+
+    // TODO MAKE SURE SLUG AND SOURCE ARE STILL THE SAME
+
+    if (old) {
+        old.revision = image.revision;
+        this._connection.images.update({hash: old.hash}, old);
+    } else {
+        this._connection.images.save(image);
+    }
+
+    callback(null, old);
+};
+
+DiskdbConnection.prototype.expireImages = function (timestamp, callback) {
+    if (typeof timestamp !== 'number') {
+        timestamp = timestamp.getTime();
+    }
+    var images = this._connection.images.find(entry => entry.revision < timestamp);
+    this._connection.images.remove(entry => entry.revision < timestamp);
+    callback(images);
 };
 
 DiskdbConnection.prototype.close = function () {

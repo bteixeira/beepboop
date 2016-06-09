@@ -37,7 +37,7 @@ For now, we will use a single source (babepedia) and work directly from there.
 Image Files
 ===========
 
-Once again, we're only focusing ona a single source which contains both data and files, so it's a little simpler.
+Once again, we're only focusing on a single source which contains both data and files, so it's a little simpler.
 
 There will be a collection with file information:
 
@@ -69,7 +69,7 @@ url is the original url from which it was obtained (and can be obtained again)
 deleted says whether this file has been deleted from the file system. this lets us remove from the filesystem files which are marked use:false without losing their information and therefore without them creeping into the system again on the next pass. the url allows us to immediately re-download a deleted file on demand at any time
 revision works the same way as for model data
 crop describes a rectangle which is the part of the image that will be used during guessing. this could allow not only limiting the selection to the breasts, but also making sure that all displayed images have a specific aspect ratio
-metada starts out empty and will be filled in by curating. most fields are subjective. the fields and their possible values might change often, but for now they are:
+metadata starts out empty and will be filled in by curating. most fields are subjective. the fields and their possible values might change often, but for now they are:
     use tells wether this file should be visible on the application or not (some files mught just not look good, or might be too similar to others)
     quality describes the overall quality of this image
     visibility describes how well suited an image is for guesswork, according to the angle and other attributes of the photo
