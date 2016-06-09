@@ -49,17 +49,17 @@ There will be a collection with file information:
     url: "www.source.com/path/model_model_33.jpg",
     deleted: false,
     revision: 7865421361234834,
-    crop: {
-        x: 30,
-        y: 50,
-        w: 120,
-        h: 120
-    },
     metadata: {
         use: (true | false),
         quality: (blurry,pixelated,noisy,contrast or brightness too high or low, resolution too low | acceptable, good enough | very good),
         visibility: (too small,hidden,not frontal enough,weird angle | visible),
-        exposure: (completely covered,curve barely visible | covered but prominent curve | bra,bikini | hand-bra,very covered and/or pushed up | hand-bra or other minor concealment, little or no support | minor concealment, only nipples | nipples visible, partial coverage | fully disclosed )
+        exposure: (completely covered,curve barely visible | covered but prominent curve | bra,bikini | hand-bra,very covered and/or pushed up | hand-bra or other minor concealment, little or no support | minor concealment, only nipples | nipples visible, partial coverage | fully disclosed ),
+        crop: {
+            x: 30,
+            y: 50,
+            w: 120,
+            h: 120
+        }
     }
 }
 
@@ -68,12 +68,12 @@ filename is as provided from the source, on a directory "source/slug"
 url is the original url from which it was obtained (and can be obtained again)
 deleted says whether this file has been deleted from the file system. this lets us remove from the filesystem files which are marked use:false without losing their information and therefore without them creeping into the system again on the next pass. the url allows us to immediately re-download a deleted file on demand at any time
 revision works the same way as for model data
-crop describes a rectangle which is the part of the image that will be used during guessing. this could allow not only limiting the selection to the breasts, but also making sure that all displayed images have a specific aspect ratio
 metadata starts out empty and will be filled in by curating. most fields are subjective. the fields and their possible values might change often, but for now they are:
     use tells wether this file should be visible on the application or not (some files mught just not look good, or might be too similar to others)
     quality describes the overall quality of this image
     visibility describes how well suited an image is for guesswork, according to the angle and other attributes of the photo
     exposure describes how much nudity there is
+    crop describes a rectangle which is the part of the image that will be used during guessing. this could allow not only limiting the selection to the breasts, but also making sure that all displayed images have a specific aspect ratio
 
 THE HASH SHOULD BE UNIQUE IN THE WHOLE COLLECTION, AND UNIQUELY IDENTIFIES A FILE (look up probability of hash collisions for used algorithm)
 

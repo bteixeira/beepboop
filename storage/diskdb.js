@@ -1,8 +1,9 @@
-var diskdb = require('../diskdb-custom');
 var mkpath = require('mkpath');
 
+var diskdb = require('../diskdb-custom');
+var utils = require('../utils');
 
-const DATA_DIR = '../data/storage/diskdb';
+const DATA_DIR = utils.getDataPath('storage/diskdb');
 
 function DiskdbConnection () {
     mkpath.sync(DATA_DIR);
@@ -67,6 +68,11 @@ DiskdbConnection.prototype.expireImages = function (timestamp, callback) {
     var images = this._connection.images.find(entry => entry.revision < timestamp);
     this._connection.images.remove(entry => entry.revision < timestamp);
     callback(images);
+};
+
+DiskdbConnection.prototype.findUncuratedImage = function (callback) {
+    var image = this._connection.images.findOne(img => !('metadata' in img) || !Object.keys(img.metadata).length);
+    callback(null, image);
 };
 
 DiskdbConnection.prototype.close = function () {
