@@ -126,5 +126,8 @@ module.exports = {
     getDataPath: function (...components) {
         components.unshift(DATA_PATH);
         return path.resolve.apply(null, components);
+    },
+    getFullSinglePath: function (image) {
+        return this.getDataPath(image.source, 'singles_raw', image.slug[0].toUpperCase(), image.slug, image.hash + '_' + image.filename)
     }
 };

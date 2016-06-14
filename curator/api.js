@@ -1,5 +1,12 @@
+var fs = require('fs');
+
 var express = require('express');
 var bodyParser = require('body-parser');
+
+var mmm = require('mmmagic');
+var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
+
+var utils = require('../utils');
 
 var storage = require('../storage/diskdb');
 var connection;
@@ -24,8 +31,22 @@ router.get('/getImage', function (req, res) {
         if (err) {
             throw err;
         }
-        console.log(image);
-        res.json(image);
+        var filepath = utils.getFullSinglePath(image);
+        fs.readFile(filepath, (err, data) => {
+            if (err) {
+                throw err;
+            }
+            image.contents = data.toString('base64');
+            magic.detect(data, function(err, result) {
+                if (err) {
+                    throw err;
+                }
+                image.mimeType = result;
+                console.log(image);
+                res.json(image);
+            });
+
+        });
     });
 });
 

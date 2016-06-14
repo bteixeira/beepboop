@@ -63,7 +63,7 @@ ImageFeed.prototype._transform = function (image, encoding, callback) {
             } else {
                 if (!old) {
                     console.log('[EVENT LOG] [IMAGE INSERTED] ' + image.filename);
-                    var filepath = utils.getDataPath(image.source, 'singles_raw', image.slug[0].toUpperCase(), image.slug, image.hash + '_' + image.filename);
+                    var filepath = utils.getFullSinglePath(image);
                     console.log(`Trying to write to ${filepath}`);
                     utils.justWrite(filepath, content);
                 } else {
