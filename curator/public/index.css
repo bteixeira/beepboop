@@ -1,0 +1,23 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    padding: 15px;
+}
+
+#image-container {
+}
+
+#image-area {
+    border: solid 15px magenta;
+}
+
+#controls-container {
+}
+
+#image {
+    display: block;
+    max-width: 100%;
+}

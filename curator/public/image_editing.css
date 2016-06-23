@@ -1,0 +1,17 @@
+#image {
+    cursor: crosshair;
+}
+
+#image:active, #image:focus {
+    cursor: crosshair;
+}
+
+.image-blur-overlay {
+    background: black;
+    opacity: 0.8;
+    position: absolute;
+}
+
+#image-area {
+    position: relative;
+}
