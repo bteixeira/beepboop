@@ -11,7 +11,7 @@ var ImageFeed = require('./__image_feed');
 
 var timestamp = Date.now();
 
-new DirFilesIterator('../data/babepedia/pages_raw_test')
+new DirFilesIterator('../data/babepedia/pages_raw')
     .pipe(new FileContentsReader())
     .pipe(new Wrapper(JSON.parse))
     .pipe(new stream.Transform({
