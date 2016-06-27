@@ -80,12 +80,24 @@ $(function () {
                 parseInt($imageArea.css('border-top-width'), 10) -
                 parseInt($imageArea.css('padding-top'), 10)
             );
+            if (y > $imageArea.height()) {
+                y = $imageArea.height();
+            }
+            if (y < 0) {
+                y = 0;
+            }
             var x = (
                 ev.pageX -
                 $imageArea.offset().left -
                 parseInt($imageArea.css('border-left-width'), 10) -
                 parseInt($imageArea.css('padding-left'), 10)
             );
+            if (x > $imageArea.width()) {
+                x = $imageArea.width();
+            }
+            if (x < 0) {
+                x = 0;
+            }
 
             return {
                 y: y,
@@ -150,7 +162,7 @@ $(function () {
             refreshSize();
             ev.preventDefault(); // Don't let browser drag the image around
 
-            $imageArea.on('mousemove.resize', function (ev) {
+            $('body').on('mousemove.resize', function (ev) {
                 var c = getImageCoords(ev);
 
                 if (c.x >= clickStart.x) {
@@ -174,15 +186,15 @@ $(function () {
             });
 
 
-        });
+             $('body').one('mouseup', function () {
+                 // $imageArea.off('mousemove.resize');
+                 $('body').off('mousemove.resize');
+                 console.log('done!');
+                 console.log(crop);
+                 // TODO ADD CENTER OVERLAY TO ALLOW DRAGGING SELECTION
+             });
 
-        $imageArea.on('mouseup mouseleave', function () {
-            $imageArea.off('mousemove.resize');
-            console.log('done!');
-            console.log(crop);
-            // TODO ADD CENTER OVERLAY TO ALLOW DRAGGING SELECTION
         });
-
 
     });
 });
