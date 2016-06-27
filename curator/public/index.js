@@ -42,6 +42,77 @@ $(function () {
     var clickStart = {};
     var crop = {};
 
+    var $oTop;
+    var $oBottom;
+    var $oLeft;
+    var $oRight;
+
+    function getImageCoords(ev) {
+        var y = (
+            ev.pageY -
+            $imageArea.offset().top -
+            parseInt($imageArea.css('border-top-width'), 10) -
+            parseInt($imageArea.css('padding-top'), 10)
+        );
+        if (y > $imageArea.height()) {
+            y = $imageArea.height();
+        }
+        if (y < 0) {
+            y = 0;
+        }
+        var x = (
+            ev.pageX -
+            $imageArea.offset().left -
+            parseInt($imageArea.css('border-left-width'), 10) -
+            parseInt($imageArea.css('padding-left'), 10)
+        );
+        if (x > $imageArea.width()) {
+            x = $imageArea.width();
+        }
+        if (x < 0) {
+            x = 0;
+        }
+
+        return {
+            y: y,
+            x: x
+        }
+    }
+
+    function initSize(ev) {
+        var c = getImageCoords(ev);
+
+        crop.x = c.x;
+        crop.y = c.y;
+        crop.w = 1;
+        crop.h = 1;
+
+        clickStart.x = c.x;
+        clickStart.y = c.y;
+    }
+
+    function refreshSize() {
+        $oTop.css('top', 0);
+        $oTop.css('left', 0);
+        $oTop.css('width', '100%');
+        $oTop.css('height', crop.y);
+
+        $oBottom.css('top', crop.y + crop.h);
+        $oBottom.css('left', 0);
+        $oBottom.css('width', '100%');
+        $oBottom.css('bottom', 0);
+
+        $oLeft.css('top', crop.y);
+        $oLeft.css('left', 0);
+        $oLeft.css('width', crop.x);
+        $oLeft.css('height', crop.h);
+
+        $oRight.css('top', crop.y);
+        $oRight.css('right', 0);
+        $oRight.css('left', crop.x + crop.w);
+        $oRight.css('height', crop.h);
+    }
+
     function setModel(model) {
         $('.model-name').text(model.name);
         $('.model-link').text(model.source + ' / ' + model.slug);
@@ -68,78 +139,9 @@ $(function () {
         setModel(data.model);
         setImage(data.image);
 
-        var $oTop;
-        var $oBottom;
-        var $oLeft;
-        var $oRight;
-
-        function getImageCoords(ev) {
-            var y = (
-                ev.pageY -
-                $imageArea.offset().top -
-                parseInt($imageArea.css('border-top-width'), 10) -
-                parseInt($imageArea.css('padding-top'), 10)
-            );
-            if (y > $imageArea.height()) {
-                y = $imageArea.height();
-            }
-            if (y < 0) {
-                y = 0;
-            }
-            var x = (
-                ev.pageX -
-                $imageArea.offset().left -
-                parseInt($imageArea.css('border-left-width'), 10) -
-                parseInt($imageArea.css('padding-left'), 10)
-            );
-            if (x > $imageArea.width()) {
-                x = $imageArea.width();
-            }
-            if (x < 0) {
-                x = 0;
-            }
-
-            return {
-                y: y,
-                x: x
-            }
-        }
-
-        function initSize(ev) {
-            var c = getImageCoords(ev);
-
-            crop.x = c.x;
-            crop.y = c.y;
-            crop.w = 1;
-            crop.h = 1;
-
-            clickStart.x = c.x;
-            clickStart.y = c.y;
-        }
-
-        function refreshSize() {
-            $oTop.css('top', 0);
-            $oTop.css('left', 0);
-            $oTop.css('width', '100%');
-            $oTop.css('height', crop.y);
-
-            $oBottom.css('top', crop.y + crop.h);
-            $oBottom.css('left', 0);
-            $oBottom.css('width', '100%');
-            $oBottom.css('bottom', 0);
-
-            $oLeft.css('top', crop.y);
-            $oLeft.css('left', 0);
-            $oLeft.css('width', crop.x);
-            $oLeft.css('height', crop.h);
-
-            $oRight.css('top', crop.y);
-            $oRight.css('right', 0);
-            $oRight.css('left', crop.x + crop.w);
-            $oRight.css('height', crop.h);
-        }
-
         $imageArea.on('mousedown', function (ev) {
+
+            $('.image-selection-overlay').toggleClass('hidden', true);
 
             if (!$oTop) {
                 $oTop = $('<div class="image-blur-overlay"/>');
@@ -186,16 +188,78 @@ $(function () {
             });
 
 
-             $('body').one('mouseup', function () {
-                 // $imageArea.off('mousemove.resize');
-                 $('body').off('mousemove.resize');
-                 console.log('done!');
-                 console.log(crop);
-                 // TODO ADD CENTER OVERLAY TO ALLOW DRAGGING SELECTION
-             });
+            $('body').one('mouseup', function () {
+                $('body').off('mousemove.resize');
+                console.log('done!');
+                console.log(crop);
+                remakeSelectionOVerlay();
+
+            });
 
         });
 
+    });
+
+    function remakeSelectionOVerlay () {
+        $('.image-selection-overlay').removeClass('hidden');
+        $('.image-selection-overlay').css('top', crop.y - 2);
+        $('.image-selection-overlay').css('left', crop.x - 2);
+        $('.image-selection-overlay').css('width', crop.w);
+        $('.image-selection-overlay').css('height', crop.h);
+    }
+
+    $('.image-selection-overlay').on('mousedown', function (ev) {
+        console.log('dragging');
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        $('.image-selection-overlay').toggleClass('hidden', true);
+        $imageArea.toggleClass('dragging', true);
+
+        var c = getImageCoords(ev);
+        clickStart.x = c.x;
+        clickStart.y = c.y;
+        console.log(c);
+
+        $('body').on('mousemove.drag', function (ev) {
+            var c = getImageCoords(ev);
+
+            // 1 check diff from clickStart
+            var diff = {
+                x: c.x - clickStart.x,
+                y: c.y - clickStart.y
+            };
+
+            // 2 add that vector to crop.xy
+            crop.x += diff.x;
+            crop.y += diff.y;
+
+            // 3 assign c to clickStart
+            clickStart = c;
+
+            if (crop.y + crop.h > $imageArea.height()) {
+                crop.y = $imageArea.height() - crop.h;
+            }
+            if (crop.y < 0) {
+                crop.y = 0;
+            }
+            if (crop.x + crop.w > $imageArea.width()) {
+                crop.x = $imageArea.width() - crop.w;
+            }
+            if (crop.x < 0) {
+                crop.x = 0;
+            }
+
+            refreshSize();
+        });
+
+        $(this).toggleClass('dragging', true);
+        $('body').one('mouseup', function () {
+            console.log('end');
+            $('body').off('mousemove.drag');
+            $imageArea.removeClass('dragging');
+            remakeSelectionOVerlay();
+        });
     });
 });
 

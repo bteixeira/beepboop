@@ -13,6 +13,25 @@
     position: absolute;
 }
 
+.image-selection-overlay {
+    border: dashed 1px white;
+    cursor: grab;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    padding: 1px;
+    position: absolute;
+    z-index: 9;
+}
+
+.image-selection-overlay.hidden {
+    display: none;
+}
+
 #image-area {
     position: relative;
+}
+#image-area.dragging, #image-area.dragging .image-blur-overlay, #image-area.dragging #image {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
 }
