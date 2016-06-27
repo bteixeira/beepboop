@@ -69,7 +69,7 @@ url is the original url from which it was obtained (and can be obtained again)
 deleted says whether this file has been deleted from the file system. this lets us remove from the filesystem files which are marked use:false without losing their information and therefore without them creeping into the system again on the next pass. the url allows us to immediately re-download a deleted file on demand at any time
 revision works the same way as for model data
 metadata starts out empty and will be filled in by curating. most fields are subjective. the fields and their possible values might change often, but for now they are:
-    use tells wether this file should be visible on the application or not (some files mught just not look good, or might be too similar to others)
+    use tells whether this file should be visible on the application or not (some files might just not look good, or might be too similar to others)
     quality describes the overall quality of this image
     visibility describes how well suited an image is for guesswork, according to the angle and other attributes of the photo
     exposure describes how much nudity there is

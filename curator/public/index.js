@@ -1,5 +1,41 @@
 $(function () {
 
+    var META = {
+        use: [true, false],
+        quality: ['low', 'acceptable', 'good'],
+        imageIssues: ['blurry', 'pixelated', 'noisy', 'contrast/brightness too low/high', 'resolution too low', 'other issues', 'OK'],
+        horizontalAngle: ['full-frontal', 'three-quarters', 'side', 'reverse-three-quarters', 'back'],
+        verticalAngle: ['straight', 'below', 'above'],
+        exposure: [
+            'completely covered, curve barely visible',
+            'completely covered but prominent curve',
+            'bra or bikini',
+            'hand-bra or other cover, very covered and/or pushed up',
+            'hand-bra or other cover, little or no support',
+            'only nipples covered',
+            'nipples visible but breast partially covered',
+            'full disclosure'
+        ],
+        generalVisibility: [0, 1, 2]
+    };
+
+    var META_DEFAULTS = {
+        use: true,
+        quality: 'good',
+        imageIssues: 'OK',
+        verticalAngle: 'straight'
+    };
+
+    for (var m in META) {
+        $('#controls').append('<div><label for="control-' + m + '">' + m + '</label><select name="' + m + '">' +
+            '<option value=""' + (m in META_DEFAULTS ? '' : ' selected') + '></option>' +
+            META[m].map(function (value) {
+                return '<option value="' + value + '"' + (m in META_DEFAULTS && value === META_DEFAULTS[m] ? ' selected' : '') + '>' + value + '</option>'
+            }).join('') +
+
+            '</select>');
+    }
+
     var $img = $('#image');
     var $imageArea = $('#image-area');
 
