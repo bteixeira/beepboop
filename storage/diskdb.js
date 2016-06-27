@@ -32,6 +32,13 @@ DiskdbConnection.prototype.addOrUpdateModel = function (model, callback) {
     callback(null, old);
 };
 
+DiskdbConnection.prototype.getModel = function (source, slug, callback) {
+    var model = this._connection.models.findOne(m => {
+        return m.source === source && m.slug === slug;
+    });
+    callback(null, model);
+};
+
 DiskdbConnection.prototype.expireModels = function (timestamp, callback) {
     if (typeof timestamp !== 'number') {
         timestamp = timestamp.getTime();

@@ -19,7 +19,7 @@ storage.getConnection(null, (err, db) => {
 
 var router = express.Router();
 
-router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
 router.get('/', function (req, res) {
@@ -27,25 +27,34 @@ router.get('/', function (req, res) {
 });
 
 router.get('/getImage', function (req, res) {
+    console.log('ping');
     connection.findUncuratedImage((err, image) => {
+        console.log('found image');
         if (err) {
             throw err;
         }
-        var filepath = utils.getFullSinglePath(image);
-        fs.readFile(filepath, (err, data) => {
+        connection.getModel(image.source, image.slug, (err, model) => {
+            console.log('found model');
             if (err) {
                 throw err;
             }
-            image.contents = data.toString('base64');
-            magic.detect(data, function(err, result) {
+            var filepath = utils.getFullSinglePath(image);
+            fs.readFile(filepath, (err, data) => {
                 if (err) {
                     throw err;
                 }
-                image.mimeType = result;
-                console.log(image);
-                res.json(image);
-            });
+                image.contents = data.toString('base64');
+                magic.detect(data, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                    image.mimeType = result;
+                    console.log(model);
+                    console.log(image);
+                    res.json({model: model, image: image});
+                });
 
+            });
         });
     });
 });

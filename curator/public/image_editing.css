@@ -9,7 +9,7 @@
 .image-blur-overlay {
     background: black;
     cursor: crosshair;
-    opacity: 0.8;
+    opacity: 0.9;
     position: absolute;
 }
 

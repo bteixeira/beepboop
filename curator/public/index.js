@@ -8,7 +8,7 @@ $(function () {
 
 
     $.get('http://localhost:9000/api/getImage', function (data) {
-        $img.attr('src', 'data:' + data.mimeType + ';base64,' + data.contents);
+        $img.attr('src', 'data:' + data.image.mimeType + ';base64,' + data.image.contents);
 
         var $oTop;
         var $oBottom;
