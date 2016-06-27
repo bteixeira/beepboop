@@ -21,3 +21,13 @@ body, html {
     display: block;
     max-width: 100%;
 }
+
+dt {
+    float: left;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+dd {
+    margin-left: 100px;
+}

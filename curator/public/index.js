@@ -6,9 +6,31 @@ $(function () {
     var clickStart = {};
     var crop = {};
 
+    function setModel(model) {
+        $('.model-name').text(model.name);
+        $('.model-link').text(model.source + ' / ' + model.slug);
+        $('.model-link').attr('href', 'http://www.' + model.source + '.com/babe/' + model.slug);
+        $('.model-attrs').empty();
+        for (var p in model.attributes) {
+            $('.model-attrs').append('<dt>' + p + '</dt><dd>' + model.attributes[p] + '</dd>');
+        }
+    }
+
+    function setImage(image) {
+        $img.attr('src', 'data:' + image.mimeType + ';base64,' + image.contents);
+        $('.image-link').text(image.filename);
+        $('.image-link').attr('href', image.url);
+        $('.image-hash').text(image.hash);
+        $('.image-mime').text(image.mimeType);
+
+        $('.image-size').text(atob(image.contents).length + ' bytes');
+        $('.image-res').text($img[0].naturalWidth + '\u00d7' + $img[0].naturalHeight);
+    }
 
     $.get('http://localhost:9000/api/getImage', function (data) {
-        $img.attr('src', 'data:' + data.image.mimeType + ';base64,' + data.image.contents);
+
+        setModel(data.model);
+        setImage(data.image);
 
         var $oTop;
         var $oBottom;
