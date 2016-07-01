@@ -8,6 +8,7 @@ var FileContentsReader = require('./__file_contents_reader');
 var Wrapper = require('./__wrapper');
 var ImageFetcher = require('./__image_fetcher');
 var ImageFeed = require('./__image_feed');
+var FilterForModel = require('./__filter_for_model');
 
 var timestamp = Date.now();
 
@@ -42,6 +43,7 @@ new DirFilesIterator('../data/babepedia/pages_raw')
             callback();
         }
     }))
+    .pipe(new FilterForModel())
     .pipe(new ImageFetcher('babepedia'))
     .pipe(new ImageFeed())
 ;

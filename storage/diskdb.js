@@ -36,7 +36,7 @@ DiskdbConnection.prototype.getModel = function (source, slug, callback) {
     var model = this._connection.models.findOne(m => {
         return m.source === source && m.slug === slug;
     });
-    console.log('looking for', source, slug, 'found:', model);
+    // console.log('looking for', source, slug, 'found:', model);
     callback(null, model);
 };
 
@@ -79,12 +79,19 @@ DiskdbConnection.prototype.expireImages = function (timestamp, callback) {
 };
 
 DiskdbConnection.prototype.findUncuratedImage = function (callback) {
-    var image = this._connection.images.findOne(img => !('metadata' in img) || !Object.keys(img.metadata).length);
+    var image = this._connection.images.findOne(img =>
+        (
+            !('metadata' in img) || !Object.keys(img.metadata).length
+        ) && (
+            this._connection.models.findOne(m => m.source === img.source && m.slug === img.slug)
+        )
+    );
     callback(null, image);
 };
 
 DiskdbConnection.prototype.addImageMetadata = function (hash, metadata, callback) {
     console.log('Changing image ' + hash + ':', metadata);
+    this._connection.images.update({hash: hash}, {metadata: metadata}, {multi: false});
     callback();
 };
 
