@@ -128,6 +128,9 @@ module.exports = {
         return path.resolve.apply(null, components);
     },
     getFullSinglePath: function (image) {
-        return this.getDataPath(image.source, 'singles_raw', image.slug[0].toUpperCase(), image.slug, image.hash + '_' + image.filename)
+        return this.getDataPath(image.source, 'singles_raw', image.slug[0].toUpperCase(), image.slug, image.hash + '_' + image.filename);
+    },
+    getFullCroppedPath: function (image) {
+        return this.getDataPath(image.source, 'singles_crop', image.hash + path.extname(image.filename));
     }
 };

@@ -1,3 +1,6 @@
+var fs = require('fs');
+
+var gm = require('gm');
 var mkpath = require('mkpath');
 
 var diskdb = require('../diskdb-custom');
@@ -5,7 +8,7 @@ var utils = require('../utils');
 
 const DATA_DIR = utils.getDataPath('storage/diskdb');
 
-function DiskdbConnection () {
+function DiskdbConnection() {
     mkpath.sync(DATA_DIR);
     this._connection = diskdb.connect(DATA_DIR, ['models', 'images']);
 }
@@ -93,6 +96,42 @@ DiskdbConnection.prototype.addImageMetadata = function (hash, metadata, callback
     console.log('Changing image ' + hash + ':', metadata);
     this._connection.images.update({hash: hash}, {metadata: metadata}, {multi: false});
     callback();
+};
+
+DiskdbConnection.prototype.getRandomCroppedImage = function (callback) {
+    var images = this._connection.images.find(img => 'metadata' in img && 'crop' in img.metadata);
+    var i = Math.floor(Math.random() * images.length);
+    var image = images[i];
+
+    console.log('this is the image', image);
+
+    var filename = utils.getFullCroppedPath(image);
+    console.log('reading file:', filename);
+    fs.readFile(filename, (err, contents) => {
+        if (err) {
+            // file does not exist, create
+            console.log('file does not exist, cropping');
+            gm(utils.getFullSinglePath(image))
+                .crop(image.metadata.crop.w, image.metadata.crop.h, image.metadata.crop.x, image.metadata.crop.y)
+                .toBuffer((err, buffer) => {
+                    if (err) {
+                        throw err;
+                    }
+                    utils.justWrite(filename, buffer);
+                    console.log('the buffer has', buffer.length, 'bytes');
+                    callback({
+                        image: image,
+                        cropped: buffer
+                    });
+                });
+        } else {
+            console.log('file found, streaming');
+            callback({
+                image: image,
+                cropped: contents
+            });
+        }
+    });
 };
 
 DiskdbConnection.prototype.close = function () {

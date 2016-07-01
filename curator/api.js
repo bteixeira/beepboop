@@ -68,5 +68,13 @@ router.post('/saveImage', function (req, res) {
     });
 });
 
+router.get('/getCroppedImage', function (req, res) {
+    console.log('pang');
+    connection.getRandomCroppedImage(img => {
+        console.log('got bytes', img.cropped.length);
+        res.end(img.cropped);
+    });
+});
+
 
 module.exports = router;
