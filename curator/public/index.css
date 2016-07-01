@@ -1,4 +1,5 @@
 body, html {
+    font-size: 12px;
     margin: 0;
     padding: 0;
 }
@@ -22,12 +23,18 @@ body, html {
     max-width: 100%;
 }
 
+dl {
+    font-size: 11px;
+}
+
 dt {
-    float: left;
+    /*float: left;*/
     font-weight: bold;
-    margin-right: 15px;
+    /*margin-right: 15px;*/
 }
 
 dd {
-    margin-left: 100px;
+    /*margin-left: 100px;*/
+    margin-left: 0;
+    margin-bottom: 5px;
 }

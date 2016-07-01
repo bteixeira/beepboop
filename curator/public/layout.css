@@ -1,0 +1,29 @@
+#info-container {
+    box-sizing: border-box;
+    float: left;
+    padding-right: 15px;
+    width: 20%;
+}
+
+#image-container {
+    box-sizing: border-box;
+    float: left;
+    width: 60%;
+}
+
+#controls-container {
+    box-sizing: border-box;
+    float: left;
+    padding-left: 15px;
+    width: 20%;
+}
+
+#controls {
+    padding: 0;
+}
+
+#controls select {
+    display: block;
+    margin-bottom: 5px;
+    width: 100%;
+}

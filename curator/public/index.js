@@ -1,31 +1,5 @@
 $(function () {
 
-    var META = {
-        use: [true, false],
-        quality: ['low', 'acceptable', 'good'],
-        imageIssues: ['blurry', 'pixelated', 'noisy', 'contrast/brightness too low/high', 'resolution too low', 'other issues', 'OK'],
-        horizontalAngle: ['full-frontal', 'three-quarters', 'side', 'reverse-three-quarters', 'back'],
-        verticalAngle: ['straight', 'below', 'above'],
-        exposure: [
-            'completely covered, curve barely visible',
-            'completely covered but prominent curve',
-            'bra or bikini',
-            'hand-bra or other cover, very covered and/or pushed up',
-            'hand-bra or other cover, little or no support',
-            'only nipples covered',
-            'nipples visible but breast partially covered',
-            'full disclosure'
-        ],
-        generalVisibility: [0, 1, 2]
-    };
-
-    var META_DEFAULTS = {
-        use: true,
-        quality: 'good',
-        imageIssues: 'OK',
-        verticalAngle: 'straight'
-    };
-
     for (var m in META) {
         $('#controls').append('<div><label for="control-' + m + '">' + m + '</label><select name="' + m + '">' +
             '<option value=""' + (m in META_DEFAULTS ? '' : ' selected') + '></option>' +
@@ -134,71 +108,75 @@ $(function () {
         $('.image-res').text($img[0].naturalWidth + '\u00d7' + $img[0].naturalHeight);
     }
 
-    $.get('http://localhost:9000/api/getImage', function (data) {
+    window.requestImage = function () {
+        $.get('http://localhost:9000/api/getImage', function (data) {
 
-        setModel(data.model);
-        setImage(data.image);
+            setModel(data.model);
+            setImage(data.image);
 
-        $imageArea.on('mousedown', function (ev) {
+            $imageArea.on('mousedown', function (ev) {
 
-            $('.image-selection-overlay').toggleClass('hidden', true);
+                $('.image-selection-overlay').toggleClass('hidden', true);
 
-            if (!$oTop) {
-                $oTop = $('<div class="image-blur-overlay"/>');
-                $imageArea.append($oTop);
-            }
-            if (!$oBottom) {
-                $oBottom = $('<div class="image-blur-overlay"/>');
-                $imageArea.append($oBottom);
-            }
-            if (!$oLeft) {
-                $oLeft = $('<div class="image-blur-overlay"/>');
-                $imageArea.append($oLeft);
-            }
-            if (!$oRight) {
-                $oRight = $('<div class="image-blur-overlay"/>');
-                $imageArea.append($oRight);
-            }
-
-            initSize(ev);
-            refreshSize();
-            ev.preventDefault(); // Don't let browser drag the image around
-
-            $('body').on('mousemove.resize', function (ev) {
-                var c = getImageCoords(ev);
-
-                if (c.x >= clickStart.x) {
-                    crop.x = clickStart.x;
-                    crop.w = c.x - clickStart.x + 1;
-                } else {
-                    crop.x = c.x;
-                    crop.w = clickStart.x - c.x + 1;
+                if (!$oTop) {
+                    $oTop = $('<div class="image-blur-overlay"/>');
+                    $imageArea.append($oTop);
+                }
+                if (!$oBottom) {
+                    $oBottom = $('<div class="image-blur-overlay"/>');
+                    $imageArea.append($oBottom);
+                }
+                if (!$oLeft) {
+                    $oLeft = $('<div class="image-blur-overlay"/>');
+                    $imageArea.append($oLeft);
+                }
+                if (!$oRight) {
+                    $oRight = $('<div class="image-blur-overlay"/>');
+                    $imageArea.append($oRight);
                 }
 
-                if (c.y >= clickStart.y) {
-                    crop.y = clickStart.y;
-                    crop.h = c.y - clickStart.y + 1;
-                } else {
-                    crop.y = c.y;
-                    crop.h = clickStart.y - c.y + 1;
-                }
-
-
+                initSize(ev);
                 refreshSize();
-            });
+                ev.preventDefault(); // Don't let browser drag the image around
+
+                $('body').on('mousemove.resize', function (ev) {
+                    var c = getImageCoords(ev);
+
+                    if (c.x >= clickStart.x) {
+                        crop.x = clickStart.x;
+                        crop.w = c.x - clickStart.x + 1;
+                    } else {
+                        crop.x = c.x;
+                        crop.w = clickStart.x - c.x + 1;
+                    }
+
+                    if (c.y >= clickStart.y) {
+                        crop.y = clickStart.y;
+                        crop.h = c.y - clickStart.y + 1;
+                    } else {
+                        crop.y = c.y;
+                        crop.h = clickStart.y - c.y + 1;
+                    }
 
 
-            $('body').one('mouseup', function () {
-                $('body').off('mousemove.resize');
-                console.log('done!');
-                console.log(crop);
-                remakeSelectionOVerlay();
+                    refreshSize();
+                });
+
+
+                $('body').one('mouseup', function () {
+                    $('body').off('mousemove.resize');
+                    console.log('done!');
+                    console.log(crop);
+                    remakeSelectionOVerlay();
+
+                });
 
             });
 
         });
+    };
 
-    });
+    window.requestImage();
 
     function remakeSelectionOVerlay () {
         $('.image-selection-overlay').removeClass('hidden');

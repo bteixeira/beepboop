@@ -50,7 +50,7 @@ router.get('/getImage', function (req, res) {
                     }
                     image.mimeType = result;
                     console.log(model);
-                    console.log(image);
+                    // console.log(image);
                     res.json({model: model, image: image});
                 });
 
@@ -60,10 +60,7 @@ router.get('/getImage', function (req, res) {
 });
 
 router.post('/saveImage', function (req, res) {
-    connection.addImageMetadata({
-        hash: req.body.hash,
-        metadata: req.body.metadata
-    }, (err) => {
+    connection.addImageMetadata(req.body.hash, req.body.metadata, (err) => {
         if (err) {
             throw err;
         }
