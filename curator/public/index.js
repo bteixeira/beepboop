@@ -21,6 +21,11 @@ $(function () {
     var $oLeft;
     var $oRight;
 
+    /**
+     * Converts absolute page click coordinates into percentual coordinates relative to the image
+     * @param ev
+     * @returns {{y: number, x: number}}
+     */
     function getImageCoords(ev) {
         var y = (
             ev.pageY -
@@ -34,7 +39,7 @@ $(function () {
         if (y < 0) {
             y = 0;
         }
-        var x = (
+        var x = Math.round(
             ev.pageX -
             $imageArea.offset().left -
             parseInt($imageArea.css('border-left-width'), 10) -
@@ -48,43 +53,39 @@ $(function () {
         }
 
         return {
-            y: y,
-            x: x
+            y: y / $imageArea.height(),
+            x: x / $imageArea.width()
         }
     }
 
-    function initSize(ev) {
-        var c = getImageCoords(ev);
-
-        crop.x = c.x;
-        crop.y = c.y;
-        crop.w = 1;
-        crop.h = 1;
-
-        clickStart.x = c.x;
-        clickStart.y = c.y;
-    }
-
+    /**
+     * Makes sure the blur overlay is according to crop
+     */
     function refreshSize() {
         $oTop.css('top', 0);
         $oTop.css('left', 0);
         $oTop.css('width', '100%');
-        $oTop.css('height', crop.y);
+        $oTop.css('height', (crop.y * 100) + '%');
 
-        $oBottom.css('top', crop.y + crop.h);
+        $oBottom.css('top', (crop.y + crop.h) * 100 + '%');
         $oBottom.css('left', 0);
         $oBottom.css('width', '100%');
         $oBottom.css('bottom', 0);
 
-        $oLeft.css('top', crop.y);
+        $oLeft.css('top', (crop.y * 100) + '%');
         $oLeft.css('left', 0);
-        $oLeft.css('width', crop.x);
-        $oLeft.css('height', crop.h);
+        $oLeft.css('width', (crop.x * 100) + '%');
+        $oLeft.css('height', (crop.h * 100) + '%');
 
-        $oRight.css('top', crop.y);
+        $oRight.css('top', (crop.y * 100) + '%');
         $oRight.css('right', 0);
-        $oRight.css('left', crop.x + crop.w);
-        $oRight.css('height', crop.h);
+        $oRight.css('left', (crop.x + crop.w) * 100 + '%');
+        $oRight.css('height', (crop.h * 100) + '%');
+
+        $('#input-crop-x').val(Math.round(crop.x * $img[0].naturalWidth));
+        $('#input-crop-y').val(Math.round(crop.y * $img[0].naturalHeight));
+        $('#input-crop-w').val(Math.round(crop.w * $img[0].naturalWidth));
+        $('#input-crop-h').val(Math.round(crop.h * $img[0].naturalHeight));
     }
 
     function setModel(model) {
@@ -109,6 +110,9 @@ $(function () {
     }
 
     window.requestImage = function () {
+
+        $oTop = $oBottom = $oLeft = $oRight = null;
+
         $.get('http://localhost:9000/api/getImage', function (data) {
 
             setModel(data.model);
@@ -116,26 +120,34 @@ $(function () {
 
             $imageArea.on('mousedown', function (ev) {
 
+                if (ev.buttons !== 1) {
+                    return;
+                }
+
                 $('.image-selection-overlay').toggleClass('hidden', true);
 
                 if (!$oTop) {
-                    $oTop = $('<div class="image-blur-overlay"/>');
+                    $oTop = $('<div class="image-blur-overlay top"/>');
                     $imageArea.append($oTop);
                 }
                 if (!$oBottom) {
-                    $oBottom = $('<div class="image-blur-overlay"/>');
+                    $oBottom = $('<div class="image-blur-overlay bottom"/>');
                     $imageArea.append($oBottom);
                 }
                 if (!$oLeft) {
-                    $oLeft = $('<div class="image-blur-overlay"/>');
+                    $oLeft = $('<div class="image-blur-overlay left"/>');
                     $imageArea.append($oLeft);
                 }
                 if (!$oRight) {
-                    $oRight = $('<div class="image-blur-overlay"/>');
+                    $oRight = $('<div class="image-blur-overlay right"/>');
                     $imageArea.append($oRight);
                 }
 
-                initSize(ev);
+                clickStart = getImageCoords(ev);
+                crop.x = clickStart.x;
+                crop.y = clickStart.y;
+                crop.w = 0;
+                crop.h = 0;
                 refreshSize();
                 ev.preventDefault(); // Don't let browser drag the image around
 
@@ -144,18 +156,18 @@ $(function () {
 
                     if (c.x >= clickStart.x) {
                         crop.x = clickStart.x;
-                        crop.w = c.x - clickStart.x + 1;
+                        crop.w = c.x - clickStart.x;
                     } else {
                         crop.x = c.x;
-                        crop.w = clickStart.x - c.x + 1;
+                        crop.w = clickStart.x - c.x;
                     }
 
                     if (c.y >= clickStart.y) {
                         crop.y = clickStart.y;
-                        crop.h = c.y - clickStart.y + 1;
+                        crop.h = c.y - clickStart.y;
                     } else {
                         crop.y = c.y;
-                        crop.h = clickStart.y - c.y + 1;
+                        crop.h = clickStart.y - c.y;
                     }
 
 
@@ -167,8 +179,22 @@ $(function () {
                     $('body').off('mousemove.resize');
                     console.log('done!');
                     console.log(crop);
-                    remakeSelectionOVerlay();
 
+                    if (crop.h === 0 || crop.w === 0) {
+                        crop = {};
+                        $oTop.remove();
+                        $oTop = null;
+                        $oBottom.remove();
+                        $oBottom = null;
+                        $oLeft.remove();
+                        $oLeft = null;
+                        $oRight.remove();
+                        $oRight = null;
+                        $('.image-selection-overlay').toggleClass('hidden', true);
+                        $('#form-crop input').val('');
+                    } else {
+                        remakeSelectionOVerlay();
+                    }
                 });
 
             });
@@ -180,10 +206,10 @@ $(function () {
 
     function remakeSelectionOVerlay () {
         $('.image-selection-overlay').removeClass('hidden');
-        $('.image-selection-overlay').css('top', crop.y - 2);
-        $('.image-selection-overlay').css('left', crop.x - 2);
-        $('.image-selection-overlay').css('width', crop.w);
-        $('.image-selection-overlay').css('height', crop.h);
+        $('.image-selection-overlay').css('top', 'calc(' + (crop.y * 100) + '% - 2px)');
+        $('.image-selection-overlay').css('left', 'calc(' + (crop.x * 100) + '% - 2px)');
+        $('.image-selection-overlay').css('width', (crop.w * 100) + '%');
+        $('.image-selection-overlay').css('height', (crop.h * 100) + '%');
     }
 
     $('.image-selection-overlay').on('mousedown', function (ev) {
@@ -215,14 +241,14 @@ $(function () {
             // 3 assign c to clickStart
             clickStart = c;
 
-            if (crop.y + crop.h > $imageArea.height()) {
-                crop.y = $imageArea.height() - crop.h;
+            if (crop.y + crop.h > 1) {
+                crop.y = 1 - crop.h;
             }
             if (crop.y < 0) {
                 crop.y = 0;
             }
-            if (crop.x + crop.w > $imageArea.width()) {
-                crop.x = $imageArea.width() - crop.w;
+            if (crop.x + crop.w > 1) {
+                crop.x = 1 - crop.w;
             }
             if (crop.x < 0) {
                 crop.x = 0;

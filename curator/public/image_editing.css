@@ -9,7 +9,7 @@
 .image-blur-overlay {
     background: black;
     cursor: crosshair;
-    opacity: 0.9;
+    opacity: 0.95;
     position: absolute;
 }
 
@@ -27,11 +27,27 @@
     display: none;
 }
 
+#image {
+    display: block;
+    max-width: 100%;
+}
+
 #image-area {
+    display: inline-block;
     position: relative;
 }
 #image-area.dragging, #image-area.dragging .image-blur-overlay, #image-area.dragging #image {
     cursor: grabbing;
     cursor: -webkit-grabbing;
     cursor: -moz-grabbing;
+}
+
+
+#image-container {
+}
+
+#image-area-container {
+    background: magenta;
+    border: solid 15px magenta;
+    text-align: center;
 }

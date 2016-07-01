@@ -22,7 +22,7 @@
     padding: 0;
 }
 
-#controls select {
+#controls-container select, #controls-container input {
     display: block;
     margin-bottom: 5px;
     width: 100%;

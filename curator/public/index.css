@@ -8,19 +8,7 @@ body, html {
     padding: 15px;
 }
 
-#image-container {
-}
-
-#image-area-container {
-    border: solid 15px magenta;
-}
-
 #controls-container {
-}
-
-#image {
-    display: block;
-    max-width: 100%;
 }
 
 dl {
