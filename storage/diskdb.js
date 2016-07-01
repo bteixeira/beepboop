@@ -98,15 +98,35 @@ DiskdbConnection.prototype.addImageMetadata = function (hash, metadata, callback
     callback();
 };
 
-DiskdbConnection.prototype.getRandomCroppedImage = function (callback) {
-    var images = this._connection.images.find(img => 'metadata' in img && 'crop' in img.metadata);
+DiskdbConnection.prototype.getRandomCroppedImage = function (query, callback) {
+    var images = this._connection.images.find(img => {
+        if (!('metadata' in img) || !('crop' in img.metadata)) {
+            return false;
+        }
+
+        if (!query) {
+            return true;
+        }
+
+        for (var p in query) {
+            if (img.metadata[p] !== query[p]) {
+                return false;
+            }
+        }
+        return true;
+    });
+
+    if (!images.length) {
+        throw 'No images found for query';
+    }
+
     var i = Math.floor(Math.random() * images.length);
     var image = images[i];
 
-    console.log('this is the image', image);
+    // console.log('this is the image', image);
 
     var filename = utils.getFullCroppedPath(image);
-    console.log('reading file:', filename);
+    // console.log('reading file:', filename);
     fs.readFile(filename, (err, contents) => {
         if (err) {
             // file does not exist, create
@@ -118,7 +138,7 @@ DiskdbConnection.prototype.getRandomCroppedImage = function (callback) {
                         throw err;
                     }
                     utils.justWrite(filename, buffer);
-                    console.log('the buffer has', buffer.length, 'bytes');
+                    // console.log('the buffer has', buffer.length, 'bytes');
                     callback({
                         image: image,
                         cropped: buffer

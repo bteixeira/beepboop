@@ -70,7 +70,39 @@ router.post('/saveImage', function (req, res) {
 
 router.get('/getCroppedImage', function (req, res) {
     console.log('pang');
-    connection.getRandomCroppedImage(img => {
+
+    var query = {};
+    const CONVERSION = {
+        horizontalAngle: {
+            '1': 'full-frontal',
+            '2': 'three-quarters',
+            '3': 'side',
+            '4': 'reverse-three-quarters',
+            '5': 'back'
+        },
+        exposure: {
+            '0': 'not in the picture (body not shown)',
+            '1': 'completely covered, curve barely visible',
+            '2': 'completely covered but prominent curve',
+            '3': 'bra or bikini',
+            '4': 'hand-bra or other minor cover', // the model is not dressed anymore
+            '5': 'full disclosure'
+        }
+    };
+    for (var p in req.query) {
+        console.log('checking', p);
+        console.log('checking', req.query[p]);
+        if (p in CONVERSION && req.query[p] in CONVERSION[p]) {
+            query[p] = CONVERSION[p][req.query[p]];
+        } else {
+            console.log('nope');
+        }
+    }
+
+    console.log('processed parameters', query);
+
+
+    connection.getRandomCroppedImage(query, img => {
         console.log('got bytes', img.cropped.length);
         res.end(img.cropped);
     });
