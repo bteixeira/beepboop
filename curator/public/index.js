@@ -25,7 +25,7 @@ $(function () {
             $img.css('max-height', maxHeight);
         }
     });
-    
+
 
     var clickStart = {};
     var crop = {};
@@ -218,7 +218,7 @@ $(function () {
 
     Controller.requestImage();
 
-    function remakeSelectionOVerlay () {
+    function remakeSelectionOVerlay() {
         $('.image-selection-overlay').removeClass('hidden');
         $('.image-selection-overlay').css('top', 'calc(' + (crop.y * 100) + '% - 2px)');
         $('.image-selection-overlay').css('left', 'calc(' + (crop.x * 100) + '% - 2px)');
@@ -226,10 +226,21 @@ $(function () {
         $('.image-selection-overlay').css('height', (crop.h * 100) + '%');
     }
 
+
     $('.image-selection-overlay').on('mousedown', function (ev) {
         console.log('dragging');
         ev.stopPropagation();
         ev.preventDefault();
+
+        var $handle = $(ev.target);
+        var mode;
+        console.log(ev.target);
+        if ($handle.is('.resize-handle')) {
+            mode = 'resize';
+        } else {
+            mode = 'drag';
+        }
+        console.log('mode', mode);
 
         $('.image-selection-overlay').toggleClass('hidden', true);
         $imageArea.toggleClass('dragging', true);
@@ -241,30 +252,63 @@ $(function () {
         $('body').on('mousemove.drag', function (ev) {
             var c = getImageCoords(ev);
 
-            // 1 check diff from clickStart
-            var diff = {
-                x: c.x - clickStart.x,
-                y: c.y - clickStart.y
-            };
 
-            // 2 add that vector to crop.xy
-            crop.x += diff.x;
-            crop.y += diff.y;
+            if (mode === 'resize') {
+                if ($handle.is('.top-left')) {
+                    crop.w += crop.x - c.x;
+                    crop.x = c.x;
+                    crop.h += crop.y - c.y;
+                    crop.y = c.y;
+                } else if ($handle.is('.top')) {
+                    crop.h += crop.y - c.y;
+                    crop.y = c.y;
+                } else if ($handle.is('.top-right')) {
+                    crop.w = c.x - crop.x;
+                    crop.h += crop.y - c.y;
+                    crop.y = c.y;
+                } else if ($handle.is('.left')) {
+                    crop.w += crop.x - c.x;
+                    crop.x = c.x;
+                } else if ($handle.is('.right')) {
+                    crop.w = c.x - crop.x;
+                } else if ($handle.is('.bottom-left')) {
+                    crop.w += crop.x - c.x;
+                    crop.x = c.x;
+                    crop.h = c.y - crop.y;
+                } else if ($handle.is('.bottom')) {
+                    crop.h = c.y - crop.y;
+                } else if ($handle.is('.bottom-right')) {
+                    crop.w = c.x - crop.x;
+                    crop.h = c.y - crop.y;
+                }
 
-            // 3 assign c to clickStart
-            clickStart = c;
+            } else {// dragging
 
-            if (crop.y + crop.h > 1) {
-                crop.y = 1 - crop.h;
-            }
-            if (crop.y < 0) {
-                crop.y = 0;
-            }
-            if (crop.x + crop.w > 1) {
-                crop.x = 1 - crop.w;
-            }
-            if (crop.x < 0) {
-                crop.x = 0;
+                // 1 check diff from clickStart
+                var diff = {
+                    x: c.x - clickStart.x,
+                    y: c.y - clickStart.y
+                };
+
+                // 2 add that vector to crop.xy
+                crop.x += diff.x;
+                crop.y += diff.y;
+
+                // 3 assign c to clickStart
+                clickStart = c;
+
+                if (crop.y + crop.h > 1) {
+                    crop.y = 1 - crop.h;
+                }
+                if (crop.y < 0) {
+                    crop.y = 0;
+                }
+                if (crop.x + crop.w > 1) {
+                    crop.x = 1 - crop.w;
+                }
+                if (crop.x < 0) {
+                    crop.x = 0;
+                }
             }
 
             refreshSize();
