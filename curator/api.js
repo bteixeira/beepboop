@@ -28,7 +28,9 @@ router.get('/', function (req, res) {
 
 router.get('/getImage', function (req, res) {
     console.log('ping');
-    connection.findUncuratedImage((err, image) => {
+    var skip = parseInt(req.query.skip, 10) || 0;
+    console.log('skipping?', skip);
+    connection.findUncuratedImage({}, skip, (err, image) => {
         console.log('found image');
         if (err) {
             throw err;

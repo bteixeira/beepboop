@@ -1,5 +1,7 @@
 $(function () {
 
+    var Controller = window.Controller = {};
+
     for (var m in META) {
         $('#controls').append('<div><label for="control-' + m + '">' + m + '</label><select name="' + m + '">' +
             '<option value=""' + (m in META_DEFAULTS ? '' : ' selected') + '></option>' +
@@ -121,11 +123,11 @@ $(function () {
         $('.image-res').text($img[0].naturalWidth + '\u00d7' + $img[0].naturalHeight);
     }
 
-    window.requestImage = function () {
+    Controller.requestImage = function () {
 
         $oTop = $oBottom = $oLeft = $oRight = null;
 
-        $.get('http://localhost:9000/api/getImage', function (data) {
+        $.get('http://localhost:9000/api/getImage' + (skip ? '?skip=' + skip : ''), function (data) {
 
             setModel(data.model);
             setImage(data.image);
@@ -134,8 +136,6 @@ $(function () {
     };
 
     $imageArea.on('mousedown', function (ev) {
-
-
 
         if (ev.buttons !== 1) {
             return;
@@ -216,7 +216,7 @@ $(function () {
 
     });
 
-    window.requestImage();
+    Controller.requestImage();
 
     function remakeSelectionOVerlay () {
         $('.image-selection-overlay').removeClass('hidden');
@@ -278,6 +278,16 @@ $(function () {
             remakeSelectionOVerlay();
         });
     });
+
+    var skip = 0;
+    Controller.skipImage = function () {
+        skip += 1;
+        this.requestImage();
+    };
+    Controller.resetSkip = function () {
+        skip = 0;
+        this.requestImage();
+    };
 });
 
 

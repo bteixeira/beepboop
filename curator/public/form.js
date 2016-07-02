@@ -27,17 +27,20 @@ $(function () {
             hash: getHash(),
             metadata: metadata
         }, function (data) {
-            // TODO INVOKE getImage AGAIN AND RESTART THE PROCESS
             $('#controls select').each(function (i, el) {
                 $(this).val(String(META_DEFAULTS[this.name]));
             });
-            window.requestImage();
+            Controller.requestImage();
             $('#form-crop input').val('');
             $('.image-blur-overlay').remove();
             $('.image-selection-overlay').toggleClass('hidden', true);
         });
+    });
 
-
-
+    $('#button-skip').on('click', function () {
+        Controller.skipImage();
+    });
+    $('#button-reset-skip').on('click', function () {
+        Controller.resetSkip();
     });
 });

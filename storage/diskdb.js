@@ -81,12 +81,17 @@ DiskdbConnection.prototype.expireImages = function (timestamp, callback) {
     callback(images);
 };
 
-DiskdbConnection.prototype.findUncuratedImage = function (callback) {
+DiskdbConnection.prototype.findUncuratedImage = function (query, skip, callback) {
+    if (typeof skip !== 'number' || skip < 0) {
+        skip = 0;
+    }
     var image = this._connection.images.findOne(img =>
         (
             !('metadata' in img) || !Object.keys(img.metadata).length
         ) && (
             this._connection.models.findOne(m => m.source === img.source && m.slug === img.slug)
+        ) && (
+            skip-- <= 0
         )
     );
     callback(null, image);
