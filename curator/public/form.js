@@ -1,7 +1,6 @@
 $(function () {
 
     function getHash() {
-        console.log($('.image-hash').text());
         return $('.image-hash').text();
     }
 
@@ -10,7 +9,6 @@ $(function () {
         $('#form-crop').serializeArray().forEach(function (el) {
             metadata[el.name] = el.value;
         });
-        console.log(metadata);
         return metadata;
     }
     
@@ -19,7 +17,6 @@ $(function () {
         $('#form-meta').serializeArray().forEach(function (el) {
             metadata[el.name] = el.value;
         });
-        console.log(metadata);
         return metadata;
     }
 
@@ -30,7 +27,6 @@ $(function () {
             hash: getHash(),
             metadata: metadata
         }, function (data) {
-            console.log(data);
             // TODO INVOKE getImage AGAIN AND RESTART THE PROCESS
             $('#controls select').each(function (i, el) {
                 $(this).val(String(META_DEFAULTS[this.name]));

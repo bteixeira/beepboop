@@ -12,6 +12,18 @@ $(function () {
 
     var $img = $('#image');
     var $imageArea = $('#image-area');
+    var $imageAreaContainer = $('#image-area-container');
+
+    var maxHeight = $imageAreaContainer.innerHeight();
+    $img.css('max-height', maxHeight);
+    $(window).on('resize', function () {
+        var maxHeight_ = $imageAreaContainer.innerHeight();
+        if (maxHeight_ !== maxHeight) {
+            maxHeight = maxHeight_;
+            $img.css('max-height', maxHeight);
+        }
+    });
+    
 
     var clickStart = {};
     var crop = {};
@@ -118,89 +130,91 @@ $(function () {
             setModel(data.model);
             setImage(data.image);
 
-            $imageArea.on('mousedown', function (ev) {
-
-                if (ev.buttons !== 1) {
-                    return;
-                }
-
-                $('.image-selection-overlay').toggleClass('hidden', true);
-
-                if (!$oTop) {
-                    $oTop = $('<div class="image-blur-overlay top"/>');
-                    $imageArea.append($oTop);
-                }
-                if (!$oBottom) {
-                    $oBottom = $('<div class="image-blur-overlay bottom"/>');
-                    $imageArea.append($oBottom);
-                }
-                if (!$oLeft) {
-                    $oLeft = $('<div class="image-blur-overlay left"/>');
-                    $imageArea.append($oLeft);
-                }
-                if (!$oRight) {
-                    $oRight = $('<div class="image-blur-overlay right"/>');
-                    $imageArea.append($oRight);
-                }
-
-                clickStart = getImageCoords(ev);
-                crop.x = clickStart.x;
-                crop.y = clickStart.y;
-                crop.w = 0;
-                crop.h = 0;
-                refreshSize();
-                ev.preventDefault(); // Don't let browser drag the image around
-
-                $('body').on('mousemove.resize', function (ev) {
-                    var c = getImageCoords(ev);
-
-                    if (c.x >= clickStart.x) {
-                        crop.x = clickStart.x;
-                        crop.w = c.x - clickStart.x;
-                    } else {
-                        crop.x = c.x;
-                        crop.w = clickStart.x - c.x;
-                    }
-
-                    if (c.y >= clickStart.y) {
-                        crop.y = clickStart.y;
-                        crop.h = c.y - clickStart.y;
-                    } else {
-                        crop.y = c.y;
-                        crop.h = clickStart.y - c.y;
-                    }
-
-
-                    refreshSize();
-                });
-
-
-                $('body').one('mouseup', function () {
-                    $('body').off('mousemove.resize');
-                    console.log('done!');
-                    console.log(crop);
-
-                    if (crop.h === 0 || crop.w === 0) {
-                        crop = {};
-                        $oTop.remove();
-                        $oTop = null;
-                        $oBottom.remove();
-                        $oBottom = null;
-                        $oLeft.remove();
-                        $oLeft = null;
-                        $oRight.remove();
-                        $oRight = null;
-                        $('.image-selection-overlay').toggleClass('hidden', true);
-                        $('#form-crop input').val('');
-                    } else {
-                        remakeSelectionOVerlay();
-                    }
-                });
-
-            });
-
         });
     };
+
+    $imageArea.on('mousedown', function (ev) {
+
+
+
+        if (ev.buttons !== 1) {
+            return;
+        }
+
+        $('.image-selection-overlay').toggleClass('hidden', true);
+
+        if (!$oTop) {
+            $oTop = $('<div class="image-blur-overlay top"/>');
+            $imageArea.append($oTop);
+        }
+        if (!$oBottom) {
+            $oBottom = $('<div class="image-blur-overlay bottom"/>');
+            $imageArea.append($oBottom);
+        }
+        if (!$oLeft) {
+            $oLeft = $('<div class="image-blur-overlay left"/>');
+            $imageArea.append($oLeft);
+        }
+        if (!$oRight) {
+            $oRight = $('<div class="image-blur-overlay right"/>');
+            $imageArea.append($oRight);
+        }
+
+        clickStart = getImageCoords(ev);
+        crop.x = clickStart.x;
+        crop.y = clickStart.y;
+        crop.w = 0;
+        crop.h = 0;
+        refreshSize();
+        ev.preventDefault(); // Don't let browser drag the image around
+
+        $('body').on('mousemove.resize', function (ev) {
+            var c = getImageCoords(ev);
+
+            if (c.x >= clickStart.x) {
+                crop.x = clickStart.x;
+                crop.w = c.x - clickStart.x;
+            } else {
+                crop.x = c.x;
+                crop.w = clickStart.x - c.x;
+            }
+
+            if (c.y >= clickStart.y) {
+                crop.y = clickStart.y;
+                crop.h = c.y - clickStart.y;
+            } else {
+                crop.y = c.y;
+                crop.h = clickStart.y - c.y;
+            }
+
+
+            refreshSize();
+        });
+
+
+        $('body').one('mouseup', function () {
+            $('body').off('mousemove.resize');
+            console.log('done selecting!');
+            // console.log(crop);
+
+            if (crop.h === 0 || crop.w === 0) {
+                crop = {};
+                $oTop.remove();
+                $oTop = null;
+                $oBottom.remove();
+                $oBottom = null;
+                $oLeft.remove();
+                $oLeft = null;
+                $oRight.remove();
+                $oRight = null;
+                $('.image-selection-overlay').toggleClass('hidden', true);
+                $('#form-crop input').val('');
+            } else {
+                remakeSelectionOVerlay();
+            }
+        });
+
+    });
 
     window.requestImage();
 
@@ -223,7 +237,6 @@ $(function () {
         var c = getImageCoords(ev);
         clickStart.x = c.x;
         clickStart.y = c.y;
-        console.log(c);
 
         $('body').on('mousemove.drag', function (ev) {
             var c = getImageCoords(ev);

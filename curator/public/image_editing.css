@@ -48,6 +48,10 @@
 
 #image-area-container {
     background: magenta;
+    position: relative;
     border: solid 15px magenta;
+    border-radius: 4px;
     text-align: center;
+    height: 100%;
+    box-sizing: border-box;
 }
