@@ -42,7 +42,6 @@
     cursor: -moz-grabbing;
 }
 
-
 #image-container {
 }
 
@@ -55,7 +54,7 @@
     height: 100%;
     box-sizing: border-box;
 }
-`.resize-handle {
+.resize-handle {
     width: 5px;
     height: 5px;
     background: black;

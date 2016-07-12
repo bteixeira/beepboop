@@ -4,7 +4,7 @@ var stream = require('stream');
 var util = require('util');
 
 var utils = require('../utils');
-var storage = require('../storage/diskdb');
+var storage = require('../storage/default');
 
 function ImageFeed(timestamp) {
     stream.Transform.call(this, {objectMode: true});

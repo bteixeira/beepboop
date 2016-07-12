@@ -1,7 +1,7 @@
 var stream = require('stream');
 var util = require('util');
 
-var storage = require('../storage/diskdb');
+var storage = require('../storage/default');
 
 function ModelFeeder(timestamp) {
     stream.Writable.call(this, {objectMode: true});

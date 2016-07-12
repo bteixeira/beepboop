@@ -8,7 +8,7 @@ var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
 
 var utils = require('../utils');
 
-var storage = require('../storage/diskdb');
+var storage = require('../storage/default');
 var connection;
 storage.getConnection(null, (err, db) => {
     if (err) {

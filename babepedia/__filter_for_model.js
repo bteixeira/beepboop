@@ -1,7 +1,7 @@
 var stream = require('stream');
 var util = require('util');
 
-var storage = require('../storage/diskdb');
+var storage = require('../storage/default');
 
 function FilterForModel() {
     stream.Transform.call(this, {objectMode: true});
