@@ -6,6 +6,8 @@ var cheerio = require('cheerio');
 var DirFilesIterator = require('./__dir_files_iterator');
 var FileContentsReader = require('./__file_contents_reader');
 var Wrapper = require('./__wrapper');
+var FilterModelsWithoutInfo = require('./__filter_models_without_info');
+var FilterModelsWithoutPhotos = require('./__filter_models_without_photos');
 var ImageFetcher = require('./__image_fetcher');
 var ImageFeed = require('./__image_feed');
 var FilterForModel = require('./__filter_for_model');
@@ -15,6 +17,8 @@ var timestamp = Date.now();
 new DirFilesIterator('../data/babepedia/pages_raw')
     .pipe(new FileContentsReader())
     .pipe(new Wrapper(JSON.parse))
+    .pipe(new FilterModelsWithoutInfo())
+    .pipe(new FilterModelsWithoutPhotos())
     .pipe(new stream.Transform({
         objectMode: true,
         transform: function (page, encoding, callback) {
@@ -25,6 +29,8 @@ new DirFilesIterator('../data/babepedia/pages_raw')
             var html = page.doc;
             var $ = cheerio.load(html);
             var $links = $('.gallery.useruploads .thumbnail a');
+
+            console.log('Checking', slug);
 
             if (!$links.length) {
                 console.log(`Page skipped, no links ${url_}`);

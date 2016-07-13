@@ -7,7 +7,7 @@ var utils = require('../utils');
 var storage = require('../storage/default');
 
 function ImageFeed(timestamp) {
-    stream.Transform.call(this, {objectMode: true});
+    stream.Writable.call(this, {objectMode: true});
 
     if (typeof timestamp === 'undefined') {
         timestamp = Date.now();
@@ -24,7 +24,10 @@ function ImageFeed(timestamp) {
             this._waiting = null;
         }
         this.on('finish', () => {
-            db.expireImages(timestamp, (images) => {
+            db.expireImages(timestamp, (err, images) => {
+                if (err) {
+                    throw err;
+                }
                 for (var image of images) {
                     console.log('[EVENT LOG] [IMAGE REMOVED] ' + image.filename);
                 }
@@ -37,7 +40,7 @@ function ImageFeed(timestamp) {
 }
 util.inherits(ImageFeed, stream.Transform);
 
-ImageFeed.prototype._transform = function (image, encoding, callback) {
+ImageFeed.prototype._write = function (image, encoding, callback) {
     // TODO ASSERT DATA IN RIGHT FORMAT
 
     var sha256 = crypto.createHash('sha256');
@@ -69,7 +72,6 @@ ImageFeed.prototype._transform = function (image, encoding, callback) {
                 } else {
                     console.log('[EVENT LOG] [IMAGE UPDATED] ' + old.filename + ' ' + old.revision);
                 }
-
                 callback();
             }
         });

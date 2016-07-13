@@ -11,17 +11,21 @@ function FilterForModel() {
         }
         this._db = db;
         if (this._waiting) {
-            db.getModel(this._waiting.source, this._waiting.slug, model => {
+            db.getModel(this._waiting.source, this._waiting.slug, (err, model) => {
                 if (model) {
                     this.push(this._waiting);
                 } else {
                     console.log('skipping image, no model')
                 }
                 this._waitingCB();
+                this._waiting = null;
+                this._waitingCB = null;
             });
-            this._waiting = null;
-            this._waitingCB = null;
         }
+
+        this.on('finish', () => {
+            this._db.close();
+        });
 
     });
 }
@@ -32,7 +36,7 @@ FilterForModel.prototype._transform = function (image, encoding, callback) {
         this._waiting = image;
         this._waitingCB = callback;
     } else {
-        this._db.getModel(image.source, image.slug, model => {
+        this._db.getModel(image.source, image.slug, (err, model) => {
             if (model) {
                 this.push(image);
             } else {
