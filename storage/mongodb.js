@@ -92,6 +92,15 @@ MongoDBConnection.prototype.expireImages = function (timestamp, callback) {
     });
 };
 
+MongoDBConnection.prototype.findImageByUrl = function (url, callback) {
+    this._images.find({url: url}).limit(1).next(callback);
+};
+
+MongoDBConnection.prototype.updateImageRevisionByUrl = function (img, callback) {
+    console.log('setting revision to', img.revision);
+    this._images.updateOne({url: img.url}, {$set: {revision: img.revision}}, callback);
+};
+
 // TODO FIND OUT HOW TO DO JOINS IN MONGO
 // MongoDBConnection.prototype.findUncuratedImage = function (query, skip, callback) {
 //     if (typeof skip !== 'number' || skip < 0) {

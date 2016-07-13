@@ -51,5 +51,5 @@ new DirFilesIterator('../data/babepedia/pages_raw')
     }))
     .pipe(new FilterForModel())
     .pipe(new ImageFetcher('babepedia'))
-    .pipe(new ImageFeed())
+    .pipe(new ImageFeed(timestamp))
 ;
