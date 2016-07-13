@@ -13,7 +13,9 @@ function FilterForModel() {
         if (this._waiting) {
             db.getModel(this._waiting.source, this._waiting.slug, model => {
                 if (model) {
-                    this.push(_waiting);
+                    this.push(this._waiting);
+                } else {
+                    console.log('skipping image, no model')
                 }
                 this._waitingCB();
             });
@@ -30,7 +32,7 @@ FilterForModel.prototype._transform = function (image, encoding, callback) {
         this._waiting = image;
         this._waitingCB = callback;
     } else {
-        db.getModel(image.source, image.slug, model => {
+        this._db.getModel(image.source, image.slug, model => {
             if (model) {
                 this.push(image);
             } else {

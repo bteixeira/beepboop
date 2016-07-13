@@ -21,9 +21,9 @@ function ModelFeeder(timestamp) {
             this._waiting = null;
         }
         this.on('finish', () => {
-            db.expireModels(timestamp, (models) => {
+            db.expireModels(timestamp, (err, models) => {
                 for (var model of models) {
-                    console.log('[EVENT LOG] [MODEL REMOVED] ' + model.slug + ' ' + model);
+                    console.log('[EVENT LOG] [MODEL REMOVED] ' + model.slug, model);
                 }
                 db.close();
             });
