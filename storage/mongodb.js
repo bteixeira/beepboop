@@ -101,90 +101,87 @@ MongoDBConnection.prototype.updateImageRevisionByUrl = function (img, callback) 
     this._images.updateOne({url: img.url}, {$set: {revision: img.revision}}, callback);
 };
 
-// TODO FIND OUT HOW TO DO JOINS IN MONGO
-// MongoDBConnection.prototype.findUncuratedImage = function (query, skip, callback) {
-//     if (typeof skip !== 'number' || skip < 0) {
-//         skip = 0;
-//     }
-//
-//     this._images.find({metadata: {$exists: false}, })
-//
-//
-//     var image = this._connection.images.findOne(img =>
-//         (
-//             !('metadata' in img) || !Object.keys(img.metadata).length
-//         ) && (
-//             this._connection.models.findOne(m => m.source === img.source && m.slug === img.slug)
-//         ) && (
-//             skip-- <= 0
-//         )
-//     );
-//     callback(null, image);
-// };
-
-
-// TODO
-MongoDBConnection.prototype.addImageMetadata = function (hash, metadata, callback) {
-    console.log('Changing image ' + hash + ':', metadata);
-    this._connection.images.update({hash: hash}, {metadata: metadata}, {multi: false});
-    callback();
-};
-
-// TODO
-MongoDBConnection.prototype.getRandomCroppedImage = function (query, callback) {
-    var images = this._connection.images.find(img => {
-        if (!('metadata' in img) || !('crop' in img.metadata)) {
-            return false;
-        }
-
-        if (!query) {
-            return true;
-        }
-
-        for (var p in query) {
-            if (img.metadata[p] !== query[p]) {
-                return false;
-            }
-        }
-        return true;
-    });
-
-    if (!images.length) {
-        throw 'No images found for query';
+MongoDBConnection.prototype.findUncuratedImage = function (query, skip, callback) {
+    if (typeof skip !== 'number' || skip < 0) {
+        skip = 0;
     }
 
-    var i = Math.floor(Math.random() * images.length);
-    var image = images[i];
-
-    // console.log('this is the image', image);
-
-    var filename = utils.getFullCroppedPath(image);
-    // console.log('reading file:', filename);
-    fs.readFile(filename, (err, contents) => {
-        if (err) {
-            // file does not exist, create
-            console.log('file does not exist, cropping');
-            graphics(utils.getFullSinglePath(image))
-                .crop(image.metadata.crop.w, image.metadata.crop.h, image.metadata.crop.x, image.metadata.crop.y)
-                .toBuffer((err, buffer) => {
-                    if (err) {
-                        throw err;
-                    }
-                    utils.justWrite(filename, buffer);
-                    // console.log('the buffer has', buffer.length, 'bytes');
-                    callback({
-                        image: image,
-                        cropped: buffer
-                    });
-                });
-        } else {
-            console.log('file found, streaming');
-            callback({
-                image: image,
-                cropped: contents
-            });
-        }
+    this._images.aggregate([
+        // TODO THIS AGGREGATION ONLY WORKS WITH A SINGLE SOURCE. IF WE WANNA USE MONGO IN A RELATIONAL MANNER, THE FOREIGN KEY MUST BE A SINGLE FIELD (CONSIDER HAVING A SINGLE FIELD WITH 'SOURCE:SLUG')
+        {$match: {metadata: {$exists: false}}},
+        {$lookup: {
+            from: 'models',
+            localField: 'slug',
+            foreignField: 'slug',
+            as: '_model'
+        }},
+        {$unwind: '$_model'},
+        {$limit: 1}
+    ], (err, images) => {
+        callback(err, images[0]);
     });
+
+};
+
+MongoDBConnection.prototype.addImageMetadata = function (hash, metadata, callback) {
+    console.log('Changing image ' + hash + ':', metadata);
+    this._images.updateOne({hash: hash}, {$set: {metadata: metadata}}, callback);
+};
+
+MongoDBConnection.prototype.getRandomCroppedImage = function (parameters, callback) {
+    var query = {
+        metadata: {$exists: true},
+        'metadata.crop': {$exists: true}
+    };
+
+    if (parameters) {
+        Object.keys(parameters).forEach(p => {
+            query['metadata.' + p] = parameters[p];
+        });
+    }
+
+    this._images.aggregate([{$match: query}, {$sample: {size: 1}}]).next((err, image) => {
+        if (err) {
+            throw err;
+        }
+        if (!image) {
+            throw 'No images found for query';
+        }
+
+        // TODO FILE ACCESS AND IMAGE CROPPING SHOULD NOT BE IN THE DATABASE DRIVER!!!
+
+        var filename = utils.getFullCroppedPath(image);
+        fs.readFile(filename, (err, contents) => {
+            if (err) {
+                // file does not exist, create
+                console.log('file does not exist, cropping');
+                graphics(utils.getFullSinglePath(image))
+                    .crop(
+                        image.metadata.crop.w,
+                        image.metadata.crop.h,
+                        image.metadata.crop.x,
+                        image.metadata.crop.y
+                    ).toBuffer((err, buffer) => {
+                        if (err) {
+                            throw err;
+                        }
+                        utils.justWrite(filename, buffer);
+                        // console.log('the buffer has', buffer.length, 'bytes');
+                        callback({
+                            image: image,
+                            cropped: buffer
+                        });
+                });
+            } else {
+                console.log('file found, streaming');
+                callback({
+                    image: image,
+                    cropped: contents
+                });
+            }
+        });
+    });
+
 };
 
 MongoDBConnection.prototype.close = function (callback) {
