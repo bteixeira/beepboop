@@ -5,13 +5,13 @@ var util = require('util');
 var utils = require('../utils');
 
 function PageDump(prefix, suffix) {
-    stream.Transform.call(this, {objectMode: true});
+    stream.Writable.call(this, {objectMode: true});
     this._prefix = prefix;
     this._suffix = suffix;
 }
-util.inherits(PageDump, stream.Transform);
+util.inherits(PageDump, stream.Writable);
 
-PageDump.prototype._transform = function (page, encoding, callback) {
+PageDump.prototype._write = function (page, encoding, callback) {
     var filename =
         this._prefix +
         page.url

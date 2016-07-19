@@ -6,9 +6,16 @@ var lineOutputter = new LineOutputter();
 var Boxed = require('./' + process.argv[2]);
 var boxed = new Boxed();
 
-process.stdin
-    .pipe(split())
-    .pipe(boxed)
-    .pipe(lineOutputter)
-    .pipe(process.stdout)
-;
+if (boxed.write) { // Should be writable
+    process.stdin
+        .pipe(split())
+        .pipe(boxed)
+    ;
+}
+
+if (boxed.pipe) {
+    boxed
+        .pipe(lineOutputter)
+        .pipe(process.stdout)
+    ;
+}

@@ -3,13 +3,16 @@ var util = require('util');
 
 var request = require('request');
 
+var n = 1;
+
 function UrlFetcher() {
-    stream.Transform.call(this, {objectMode: true})
+    stream.Transform.call(this, {objectMode: true});
+    this._n = n++;
 }
 util.inherits(UrlFetcher, stream.Transform);
 
 UrlFetcher.prototype._transform = function UrlFetcher(url, encoding, callback) {
-    console.log(`Fetching ${url}...`);
+    console.log(`#${this._n} Fetching ${url}...`);
     request(url, (err, res, body) => {
         this.push({
             url: url,

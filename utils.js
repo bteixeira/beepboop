@@ -112,14 +112,18 @@ module.exports = {
         mkpath.sync(options.target);
         fs.readdir(options.origin, (err, files) => {
             console.log('files read');
-            for (var file of files.map(f => path.resolve(options.origin, f))) {
+            files = files.map(f => path.resolve(options.origin, f));
+            for (var file of files) {
                 var stats = fs.statSync(file);
                 if (stats.mtime < options.timestamp) {
                     console.log('moving file ' + file);
-                    fs.rename(file, path.resolve(options.target, path.basename(file)));
+                    fs.renameSync(file, path.resolve(options.target, path.basename(file)));
                 } else {
                     console.log('file not old ' + file);
                 }
+            }
+            if (options.done) {
+                options.done();
             }
         });
     },

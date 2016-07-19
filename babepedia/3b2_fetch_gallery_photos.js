@@ -6,10 +6,13 @@ var cheerio = require('cheerio');
 var DirFilesIterator = require('./__dir_files_iterator');
 var FileContentsReader = require('./__file_contents_reader');
 var Wrapper = require('./__wrapper');
-var PageFetcher = require('./__page_fetcher');
-var PageDump = require('./__page_dump');
+var FilterForModel = require('./__filter_for_model');
+var ImageFetcher = require('./__image_fetcher');
+var ImageFeed = require('./__image_feed');
 
-new DirFilesIterator('../data/babepedia/pages_raw')
+var timestamp = Date.now();
+
+new DirFilesIterator('../data/babepedia/galleries_raw')
     .pipe(new FileContentsReader())
     .pipe(new Wrapper(JSON.parse))
     .pipe(new stream.Transform({
@@ -18,10 +21,11 @@ new DirFilesIterator('../data/babepedia/pages_raw')
 
             var url_ = page.url;
             var l = url_.lastIndexOf('/');
-            var slug = url_.slice(l);
+            var slug = page.slug;
+            console.log(slug);
             var html = page.doc;
             var $ = cheerio.load(html);
-            var $links = $('#content .separate .thumbshot a');
+            var $links = $('#gallery a.img');
 
             if (!$links.length) {
                 callback();
@@ -30,13 +34,16 @@ new DirFilesIterator('../data/babepedia/pages_raw')
 
             $links.each((i, a) => {
                 this.push({
+                    source: 'babepedia',
                     slug: slug,
-                    url: url.resolve('http://www.babepedia.com', $(a).attr('href'))
+                    url: url.resolve(url_, $(a).attr('href')),
+                    revision: timestamp
                 });
             });
             callback();
         }
     }))
-    .pipe(new PageFetcher())
-    .pipe(new PageDump('../data/babepedia/galleries_raw/', '.html.json'))
+    .pipe(new FilterForModel())
+    .pipe(new ImageFetcher('babepedia'))
+    .pipe(new ImageFeed(timestamp))
 ;
