@@ -8,6 +8,8 @@ var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
 
 var utils = require('../utils');
 
+const META = require('./public/meta.config.json');
+
 var storage = require('../storage/default');
 var connection;
 storage.getConnection(null, (err, db) => {
@@ -74,39 +76,35 @@ router.get('/getCroppedImage', function (req, res) {
     console.log('pang');
 
     var query = {};
-    const CONVERSION = {
-        horizontalAngle: {
-            '1': 'full-frontal',
-            '2': 'three-quarters',
-            '3': 'side',
-            '4': 'reverse-three-quarters',
-            '5': 'back'
-        },
-        exposure: {
-            '0': 'not in the picture (body not shown)',
-            '1': 'completely covered, curve barely visible',
-            '2': 'completely covered but prominent curve',
-            '3': 'bra or bikini',
-            '4': 'hand-bra or other minor cover', // the model is not dressed anymore
-            '5': 'full disclosure'
-        }
-    };
+
     for (var p in req.query) {
-        console.log('checking', p);
-        console.log('checking', req.query[p]);
-        if (p in CONVERSION && req.query[p] in CONVERSION[p]) {
-            query[p] = CONVERSION[p][req.query[p]];
-        } else {
-            console.log('nope');
+        if (p in META) {
+            META[p].values.forEach((value) => {
+                var val = value;
+                if ('value' in val) {
+                    val = val.value;
+                }
+                if (req.query[p] === val) {
+                    query[p] = val;
+                }
+            });
+            if (!(p in query) && (!isNaN(parseInt(req.query[p], 10))) && req.query[p] < META[p].values.length) {
+                query[p] = META[p].values[req.query[p]];
+                if ('value' in query[p]) {
+                    query[p] = query[p].value;
+                }
+            }
         }
     }
 
-    console.log('processed parameters', query);
-
-
-    connection.getRandomCroppedImage(query, img => {
-        console.log('got bytes', img.cropped.length);
-        res.end(img.cropped);
+    connection.getRandomCroppedImage(query, (err, img) => {
+        if (err) {
+            res.status(500);
+            res.end(err);
+        } else {
+            console.log('got bytes', img.cropped.length);
+            res.end(img.cropped);
+        }
     });
 });
 

@@ -7,7 +7,7 @@ $(function () {
         for (var m in META) {
             $('#controls').append(
                 '<div>' +
-                '<label for="control-' + m + '">' + META[m].name + '</label>' +
+                '<label for="control-' + m + '" title="' + META[m].description + '">' + META[m].name + '</label>' +
                 '<select name="' + m + '">' +
                 '<option value=""' + ('default' in META[m] ? '' : ' selected') + '></option>' +
                 META[m].values.map(function (value) {

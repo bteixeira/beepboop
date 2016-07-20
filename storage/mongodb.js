@@ -145,7 +145,8 @@ MongoDBConnection.prototype.getRandomCroppedImage = function (parameters, callba
             throw err;
         }
         if (!image) {
-            throw 'No images found for query';
+            callback('No images found for query', null);
+            return;
         }
 
         // TODO FILE ACCESS AND IMAGE CROPPING SHOULD NOT BE IN THE DATABASE DRIVER!!!
@@ -167,14 +168,14 @@ MongoDBConnection.prototype.getRandomCroppedImage = function (parameters, callba
                         }
                         utils.justWrite(filename, buffer);
                         // console.log('the buffer has', buffer.length, 'bytes');
-                        callback({
+                        callback(null, {
                             image: image,
                             cropped: buffer
                         });
                 });
             } else {
                 console.log('file found, streaming');
-                callback({
+                callback(null, {
                     image: image,
                     cropped: contents
                 });
