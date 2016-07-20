@@ -28,10 +28,11 @@ function BabepediaBabeSlugParser() {
 }
 util.inherits(BabepediaBabeSlugParser, stream.Transform);
 BabepediaBabeSlugParser.prototype._transform = function (doc, encoding, callback) {
-    console.log('Yeah...');
     var $ = doc.$;
     var $links = $('#content > ul li a');
-    $links.each((i, a) => this.push($(a).attr('href')));
+    $links.each((i, a) => {
+        this.push($(a).attr('href'));
+    });
     callback();
 };
 
