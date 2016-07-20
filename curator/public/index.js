@@ -1,16 +1,34 @@
 $(function () {
 
+    var META;
+
+    $.getJSON('/meta.config.json', function (data) {
+        META = data;
+        for (var m in META) {
+            $('#controls').append(
+                '<div>' +
+                '<label for="control-' + m + '">' + META[m].name + '</label>' +
+                '<select name="' + m + '">' +
+                '<option value=""' + ('default' in META[m] ? '' : ' selected') + '></option>' +
+                META[m].values.map(function (value) {
+                    var val, desc;
+                    if (typeof value === 'object') {
+                        val = desc = value.value;
+                        if ('description' in value) {
+                            desc = value.description;
+                        }
+                    } else {
+                        val = desc = value;
+                    }
+                    return '<option value="' + val + '"' + (val === META[m].default ? ' selected' : '') + '>' + desc + '</option>'
+                }).join('') +
+                '</select>' +
+                '</div>'
+            );
+        }
+    });
+
     var Controller = window.Controller = {};
-
-    for (var m in META) {
-        $('#controls').append('<div><label for="control-' + m + '">' + m + '</label><select name="' + m + '">' +
-            '<option value=""' + (m in META_DEFAULTS ? '' : ' selected') + '></option>' +
-            META[m].map(function (value) {
-                return '<option value="' + value + '"' + (m in META_DEFAULTS && value === META_DEFAULTS[m] ? ' selected' : '') + '>' + value + '</option>'
-            }).join('') +
-
-            '</select>');
-    }
 
     var $img = $('#image');
     var $imageArea = $('#image-area');

@@ -1,0 +1,66 @@
+{
+	"use": {
+		"name": "Use",
+		"description": "Whether to use this image on the client, during guessing. This allows overriding any search parameters from the client and making sure that an image will not be seen for whatever reason.",
+		"values": [true, false],
+		"default": true
+	},
+	"qualityIssues": {
+		"name": "Quality Issues",
+		"description": "Specific quality issues present on this image, if any.",
+		"values": [
+			{
+				"value": "ok",
+				"description": "All OK"
+			}, {
+				"value": "size-too-small",
+				"description": "Image size too small"
+			}, {
+				"value": "quality-too-low",
+				"description": "Image quality too low"
+			}
+		],
+		"default": "ok"
+	},
+	"horizontalAngle": {
+		"name": "Horizontal Angle",
+		"description": "The angle in which the model's body is displayed with reference to the camera",
+		"values": [
+			"full-frontal",
+			"three-quarters",
+			"side",
+			"reverse-three-quarters",
+			"back"
+		]
+	},
+	"exposure": {
+		"name": "Exposure",
+		"description": "How much is visible.",
+		"values": [
+			{
+				"value": "not-in-picture",
+				"description": "Not in the picture (body not shown)"
+			}, {
+				"value": "dressed",
+				"description": "Completely covered"
+			}, {
+				"value": "cleavage",
+				"description": "Dressed with cleavage"
+			}, {
+				"value": "bra-bikini",
+				"description": "Bra or bikini"
+			}, {
+				"value": "no-clothes-concealed",
+				"description": "Hand-bra or other minor cover"
+			}, {
+				"value": "full-disclosure",
+				"description": "Full disclosure"
+			}
+		]
+	},
+	"pushUp": {
+		"name": "Push-up",
+		"description": "In images in which the model is naked, whether the breasts are pushed-up in a way that makes guessing harder.",
+		"values": [true, false]
+	}
+}
