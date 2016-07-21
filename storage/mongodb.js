@@ -118,7 +118,7 @@ MongoDBConnection.prototype.findUncuratedImage = function (query, skip, callback
         {$unwind: '$_model'},
         {$limit: 1}
     ], (err, images) => {
-        callback(err, images[0]);
+        callback(err, images && images[0]);
     });
 
 };
