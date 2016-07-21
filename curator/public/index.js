@@ -145,7 +145,7 @@ $(function () {
 
         $oTop = $oBottom = $oLeft = $oRight = null;
 
-        $.get('http://localhost:9000/api/getImage' + (skip ? '?skip=' + skip : ''), function (data) {
+        $.get('/api/getImage' + (skip ? '?skip=' + skip : ''), function (data) {
 
             setModel(data.model);
             setImage(data.image);
