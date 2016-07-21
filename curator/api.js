@@ -1,4 +1,5 @@
 var fs = require('fs');
+var util = require('util');
 
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -156,6 +157,12 @@ router.get('/getNextSet', function (req, res) {
             });
         }
     });
+});
+
+router.post('/makeGuess', function (req, res) {
+    // required: user handle, image id, guess
+    console.log(`User Guessing ${util.inspect(req.body)} `);
+    res.send('???');
 });
 
 module.exports = router;
