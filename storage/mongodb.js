@@ -116,6 +116,7 @@ MongoDBConnection.prototype.findUncuratedImage = function (query, skip, callback
             as: '_model'
         }},
         {$unwind: '$_model'},
+        {$skip: skip},
         {$limit: 1}
     ], (err, images) => {
         callback(err, images && images[0]);
@@ -187,6 +188,32 @@ MongoDBConnection.prototype.getRandomCroppedImage = function (parameters, callba
 
 MongoDBConnection.prototype.close = function (callback) {
     this._connection.close(false, callback);
+};
+
+MongoDBConnection.prototype.getRandomCuratedImages = function (metadataQuery, size, callback) {
+    if (typeof size !== 'number') {
+        throw '"size" argument must be a number';
+    }
+
+    var query = {
+        metadata: {$exists: true},
+        'metadata.crop': {$exists: true}
+    };
+
+    if (metadataQuery) {
+        Object.keys(metadataQuery).forEach(p => {
+            query['metadata.' + p] = String(metadataQuery[p]);
+        });
+    }
+
+    console.log('SIZE  IS', size);
+    console.log('QUERY IS', query);
+
+    this._images.aggregate([
+        {$match: query},
+        {$sample: {size: size}}
+    ]).
+    toArray(callback);
 };
 
 module.exports = {

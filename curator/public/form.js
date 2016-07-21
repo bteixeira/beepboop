@@ -28,7 +28,7 @@ $(function () {
             metadata: metadata
         }, function (data) {
             $('#controls select').each(function (i, el) {
-                $(this).val(String(META_DEFAULTS[this.name]));
+                $(this).val('default' in META[this.name] ? String(META[this.name].default) : '');
             });
             Controller.requestImage();
             $('#form-crop input').val('');

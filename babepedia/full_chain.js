@@ -130,7 +130,8 @@ function makePass() {
                         .pipe(new ImageFetcher('babepedia'))
                         .pipe(new ImageFeed(timestamp))
                             .on('finish', () => {
-                                console.log('Pass finished at', new Date());
+                                var now = new Date();
+                                console.log(`Pass finished at ${now} (took ${now.getTime() - timestamp}ms)`);
                             })
                     ;
 

@@ -108,5 +108,54 @@ router.get('/getCroppedImage', function (req, res) {
     });
 });
 
+router.get('/getNextSet', function (req, res) {
+    var size = req.query.size;
+    if (typeof size === 'string') {
+        size = parseInt(size, 10);
+    } if (typeof size !== 'number' || isNaN(size)) {
+        size = 5;
+    }
+
+    var query = {
+        use: true,
+        exposure: 'full-disclosure',
+        pushUp: false
+    };
+
+    connection.getRandomCuratedImages(query, size, (err, imgs) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send(err);
+        } else {
+            console.log('got images', imgs.length);
+
+            var n = 0;
+            var result = [];
+            imgs.forEach(img => {
+                utils.getCroppedContent(img, (err, contents) => {
+                    if (err) {
+                        console.error(err);
+                        res.status(500).send(err);
+                    }
+                    magic.detect(contents, (err, mimeType) => {
+                        if (err) {
+                            console.error(err);
+                            res.status(500).send(err);
+                        }
+                        result.push({
+                            id: img._id,
+                            contents: contents.toString('base64'),
+                            mimeType: mimeType
+                        });
+                        n = n + 1;
+                        if (n >= imgs.length) {
+                            res.send(result);
+                        }
+                    });
+                });
+            });
+        }
+    });
+});
 
 module.exports = router;

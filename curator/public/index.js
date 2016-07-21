@@ -1,9 +1,7 @@
 $(function () {
 
-    var META;
-
     $.getJSON('/meta.config.json', function (data) {
-        META = data;
+        window.META = data;
         for (var m in META) {
             $('#controls').append(
                 '<div>' +

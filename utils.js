@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 var cheerio = require('cheerio');
+var graphics = require('gm');
 var mkpath = require('mkpath');
 var request = require('request');
 
@@ -13,7 +14,7 @@ function noop() {}
 
 const DATA_PATH = path.resolve(__dirname, 'data');
 
-module.exports = {
+var utils = module.exports = {
     readAll: function (stream, callback) {
         if (typeof stream === 'string') {
             stream = fs.createReadStream(stream);
@@ -136,5 +137,31 @@ module.exports = {
     },
     getFullCroppedPath: function (image) {
         return this.getDataPath(image.source, 'singles_crop', image.hash + path.extname(image.filename));
+    },
+    getCroppedContent: function (image, callback) {
+        var filename = utils.getFullCroppedPath(image);
+        fs.readFile(filename, (err, contents) => {
+            if (err) {
+                // file does not exist, create
+                console.log('file does not exist, cropping');
+                graphics(utils.getFullSinglePath(image))
+                .crop(
+                    image.metadata.crop.w,
+                    image.metadata.crop.h,
+                    image.metadata.crop.x,
+                    image.metadata.crop.y
+                ).toBuffer((err, buffer) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    utils.justWrite(filename, buffer);
+                    // console.log('the buffer has', buffer.length, 'bytes');
+                    callback(null, buffer);
+                });
+            } else {
+                console.log('file found, streaming');
+                callback(null, contents);
+            }
+        });
     }
 };

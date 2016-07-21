@@ -71,6 +71,7 @@ ImageFeed.prototype._write = function (image, encoding, callback) {
                     utils.justWrite(filepath, content);
                 } else {
                     console.log('[EVENT LOG] [IMAGE UPDATED] ' + old.filename + ' ' + old.revision);
+                    // TODO IF FILENAME CHANGED WE HAVE TO RENAME THE FILE, OTHERWISE WE CAN NEVER FIND IT! THIS ACTUALLY HAPPENED
                 }
                 callback();
             }
