@@ -152,7 +152,7 @@ var utils = module.exports = {
                     image.metadata.crop.y
                 ).toBuffer((err, buffer) => {
                     if (err) {
-                        callback(err);
+                        return callback(err);
                     }
                     utils.justWrite(filename, buffer);
                     // console.log('the buffer has', buffer.length, 'bytes');
