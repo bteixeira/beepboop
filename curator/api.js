@@ -121,6 +121,8 @@ router.get('/getNextSet', function (req, res) {
     var query = {
         use: true,
         exposure: 'full-disclosure',
+        qualityIssues: 'ok',
+        horizontalAngle: ['full-frontal', 'three-quarters'],
         pushUp: false
     };
 

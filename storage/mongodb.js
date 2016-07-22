@@ -203,7 +203,12 @@ MongoDBConnection.prototype.getRandomCuratedImages = function (metadataQuery, si
 
     if (metadataQuery) {
         Object.keys(metadataQuery).forEach(p => {
-            query['metadata.' + p] = String(metadataQuery[p]);
+            var v = metadataQuery[p];
+            if (typeof v === 'object' && 'length' in v) {
+                query['metadata.' + p] = {$in: v};
+            } else {
+                query['metadata.' + p] = String(v);
+            }
         });
     }
 
