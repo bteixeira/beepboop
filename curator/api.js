@@ -138,11 +138,13 @@ router.get('/getNextSet', function (req, res) {
                     if (err) {
                         console.error(err);
                         res.status(500).send(err);
+                        return;
                     }
                     magic.detect(contents, (err, mimeType) => {
                         if (err) {
                             console.error(err);
                             res.status(500).send(err);
+                            return;
                         }
                         result.push({
                             id: img._id,
