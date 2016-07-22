@@ -163,5 +163,9 @@ var utils = module.exports = {
                 callback(null, contents);
             }
         });
+    },
+    getFullContent: function (image, callback) {
+        var filename = utils.getFullSinglePath(image);
+        fs.readFile(filename, callback);
     }
 };

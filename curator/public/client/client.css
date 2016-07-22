@@ -15,6 +15,10 @@ body, html {
     max-height: 300px;
     max-width: 300px;
 }
+.section img.expanded {
+    max-height: none;
+    max-width: 100%;
+}
 
 .section .buttons button {
     margin: 15px;

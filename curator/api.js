@@ -188,4 +188,31 @@ router.post('/makeGuess', function (req, res) {
     });
 });
 
+router.get('/getImageById', function (req, res) {
+    connection.findImageById(req.query.id, (err, image) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send(err);
+            return;
+        }
+        utils.getFullContent(image, (err, contents) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send(err);
+                return;
+            }
+            magic.detect(contents, (err, mimeType) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).send(err);
+                    return;
+                }
+                image.contents = contents.toString('base64');
+                image.mimeType = mimeType;
+                res.send(image);
+            });
+        });
+    });
+});
+
 module.exports = router;
