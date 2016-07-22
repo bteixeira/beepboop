@@ -1,0 +1,35 @@
+body, html {
+    padding: 0;
+    margin: 0;
+}
+
+.section {
+    background: rgb(60, 90, 170);
+    border-radius: 5px;
+    text-align: center;
+    margin: 15px;
+    padding: 15px;
+}
+
+.section img {
+    max-height: 300px;
+    max-width: 300px;
+}
+
+.section .buttons button {
+    margin: 15px;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.section .result {
+    font: 16px bold;
+}
+
+.section .result .correct {
+    color: lawngreen;
+}
+
+.section .result .wrong {
+    color: red;
+}

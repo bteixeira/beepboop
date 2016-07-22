@@ -113,7 +113,8 @@ router.get('/getNextSet', function (req, res) {
     var size = req.query.size;
     if (typeof size === 'string') {
         size = parseInt(size, 10);
-    } if (typeof size !== 'number' || isNaN(size)) {
+    }
+    if (typeof size !== 'number' || isNaN(size)) {
         size = 5;
     }
 
@@ -161,8 +162,30 @@ router.get('/getNextSet', function (req, res) {
 
 router.post('/makeGuess', function (req, res) {
     // required: user handle, image id, guess
-    console.log(`User Guessing ${util.inspect(req.body)} `);
-    res.send('???');
+    console.log(`User Guessing ${util.inspect(req.body)}`);
+    var guess = req.body.guess;
+    if (guess === 'real') {
+        guess = 'Real/Natural';
+    } else if (guess === 'fake') {
+        guess = 'Fake/Enhanced';
+    }
+
+    connection.findImageById(req.body.id, (err, image) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send(err);
+            return;
+        }
+        connection.findModelByImage(image, (err, model) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send(err);
+                return;
+            }
+            var result = (guess === model.attributes.Boobs);
+            res.send({correct: result});
+        });
+    });
 });
 
 module.exports = router;

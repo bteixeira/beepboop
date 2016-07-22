@@ -5,6 +5,7 @@ var graphics = require('gm');
 var utils = require('../utils');
 
 var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 var URL = 'mongodb://localhost:27017/beepboop';
 
 
@@ -214,6 +215,14 @@ MongoDBConnection.prototype.getRandomCuratedImages = function (metadataQuery, si
         {$sample: {size: size}}
     ]).
     toArray(callback);
+};
+
+MongoDBConnection.prototype.findImageById = function (id, callback) {
+    this._images.find({_id: new ObjectID(id)}).limit(1).next(callback);
+};
+
+MongoDBConnection.prototype.findModelByImage = function (image, callback) {
+    this._models.find({source: image.source, slug: image.slug}).limit(1).next(callback);
 };
 
 module.exports = {
