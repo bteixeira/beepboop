@@ -112,19 +112,23 @@ var utils = module.exports = {
 
     },
     expireFiles: function (options) {
+        var logger = utils.getLogger('Expire Files');
         mkpath.sync(options.target);
         fs.readdir(options.origin, (err, files) => {
-            console.log('files read');
+            logger.debug('Files read');
             files = files.map(f => path.resolve(options.origin, f));
+            var n = 0;
             for (var file of files) {
                 var stats = fs.statSync(file);
                 if (stats.mtime < options.timestamp) {
-                    console.log('moving file ' + file);
+                    logger.debug(`Moving file: ${file}`);
                     fs.renameSync(file, path.resolve(options.target, path.basename(file)));
+                    n += 1;
                 } else {
-                    console.log('file not old ' + file);
+                    logger.debug(`File is not old: ${file}`);
                 }
             }
+            logger.info(`Expired ${n} files into ${options.target}`);
             if (options.done) {
                 options.done();
             }
@@ -190,8 +194,6 @@ var utils = module.exports = {
         return logger;
     }
 };
-
-
 
 function formatLog(line) {
     line = JSON.parse(line);

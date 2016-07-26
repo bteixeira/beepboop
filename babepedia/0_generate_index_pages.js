@@ -4,7 +4,7 @@ var url = require('url');
 var AlphabetGenerator = require('./__alphabet_generator');
 var LineOutputter = require('./__line_outputter');
 var SimpleAppender = require('./__simple_appender');
-var SlugAppender = require('./__slug_appender');
+var SlugAppender = require('../transforms/urlPrepender');
 
 new AlphabetGenerator()
     .pipe(new SimpleAppender('index/'))

@@ -1,7 +1,7 @@
 var split = require('split2');
 
 var utils = require('../utils');
-var SlugAppender = require('./__slug_appender');
+var SlugAppender = require('../transforms/urlPrepender');
 var Parallelizer = require('./__parallelizer');
 var UrlFetcher = require('./__url_fetcher');
 var PageDump = require('./__page_dump');
