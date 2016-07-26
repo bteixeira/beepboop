@@ -8,7 +8,6 @@ var utils = require('../utils');
 
 var AlphabetGenerator = require('./__alphabet_generator');
 var UrlPrepender = require('../transforms/urlPrepender');
-var SimpleFetcher = require('./__simple_fetcher');
 var Parallelizer = require('./__parallelizer');
 var UrlFetcher = require('./__url_fetcher');
 var PageDump = require('./__page_dump');
@@ -23,6 +22,7 @@ var ImageFeed = require('./__image_feed');
 var FilterForModel = require('./__filter_for_model');
 var LinkExtractor = require('../transforms/linkExtractor');
 var BabepediaModelInfoExtractor = require('./babepediaModelInfoExtractor');
+var PageFetcher = require('../transforms/pageFetcher');
 
 function makePass() {
     var timestamp = Date.now();
@@ -32,9 +32,9 @@ function makePass() {
 
     new AlphabetGenerator()
         .pipe(new UrlPrepender('http://www.babepedia.com/index/'))
-        .pipe(new SimpleFetcher())
+        .pipe(new PageFetcher())
         .pipe(new LinkExtractor('#content > ul li a'))
-        .pipe(new UrlPrepender('http://www.babepedia.com'))
+        // .pipe(new UrlPrepender('http://www.babepedia.com'))
         .pipe(new Parallelizer(5, UrlFetcher))
         .pipe(new PageDump('../data/babepedia/pages_raw/', '.html.json'))
         .on('finish', function () {

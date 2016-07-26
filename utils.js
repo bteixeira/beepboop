@@ -184,18 +184,35 @@ var utils = module.exports = {
         });
         formatter.pipe(process.stdout);
 
-        var logger = bunyan.createLogger({
+        var options = {
             name: name,
-            // TODO LOOK UP OPTIONS FOR EACH NAME
             level: 'info',
             stream: formatter
-        });
+        };
 
-        return logger;
+        if (name in LOG_CONFIG) {
+            Object.assign(options, LOG_CONFIG[name]);
+        }
+
+        return bunyan.createLogger(options);
+    }
+};
+
+
+const LOG_CONFIG = {
+    PageFetcher: {
+        level: 'debug'
+    },
+    UrlFetcher: {
+        level: 'debug'
     }
 };
 
 function formatLog(line) {
     line = JSON.parse(line);
-    return `${line.time} ${bunyan.nameFromLevel[line.level].toUpperCase()} [${line.name}] ${line.msg}\n`;
+    var level = bunyan.nameFromLevel[line.level].toUpperCase();
+    if (level.length < 5) {
+        level += new Array(5 - level.length + 1).join(' ');
+    }
+    return `${line.time} ${level} [${line.name}] ${line.msg}\n`;
 }
