@@ -4,6 +4,8 @@ var util = require('util');
 
 var utils = require('../utils');
 
+var logger = utils.getLogger('PageDump');
+
 function PageDump(prefix, suffix) {
     stream.Writable.call(this, {objectMode: true});
     this._prefix = prefix;
@@ -19,11 +21,15 @@ PageDump.prototype._write = function (page, encoding, callback) {
             .replace(/[ \.\:-]+/g, '_')
             .replace(/\//g, '___') +
         this._suffix;
-    console.log(`Writing to ${filename}...`);
+    logger.debug(`(Writing) ${filename}`);
     var contents = JSON.stringify(page);
     utils.justWrite(filename, contents, function (err) {
+        if (err) {
+            logger.error(err, `While writing ${filename}`);
+        } else {
+            logger.info(`(Wrote) ${filename}`);
+        }
         callback(err);
-        console.log('done!');
     });
 };
 

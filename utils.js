@@ -1,6 +1,8 @@
 var fs = require('fs');
 var path = require('path');
+var stream = require('stream');
 
+var bunyan = require('bunyan');
 var cheerio = require('cheerio');
 var graphics = require('gm');
 var mkpath = require('mkpath');
@@ -167,5 +169,31 @@ var utils = module.exports = {
     getFullContent: function (image, callback) {
         var filename = utils.getFullSinglePath(image);
         fs.readFile(filename, callback);
+    },
+    getLogger: function (name) {
+        var formatter = new stream.Transform({
+            objectMode: true,
+            transform: function (chunk, encoding, callback) {
+                var line = formatLog(chunk);
+                callback(null, line);
+            }
+        });
+        formatter.pipe(process.stdout);
+
+        var logger = bunyan.createLogger({
+            name: name,
+            // TODO LOOK UP OPTIONS FOR EACH NAME
+            level: 'info',
+            stream: formatter
+        });
+
+        return logger;
     }
 };
+
+
+
+function formatLog(line) {
+    line = JSON.parse(line);
+    return `${line.time} ${bunyan.nameFromLevel[line.level].toUpperCase()} [${line.name}] ${line.msg}\n`;
+}
