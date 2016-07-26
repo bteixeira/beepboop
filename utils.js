@@ -201,10 +201,10 @@ var utils = module.exports = {
 
 const LOG_CONFIG = {
     PageFetcher: {
-        level: 'debug'
+        // level: 'debug'
     },
     UrlFetcher: {
-        level: 'debug'
+        // level: 'debug'
     }
 };
 

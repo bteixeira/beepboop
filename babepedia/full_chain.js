@@ -34,7 +34,6 @@ function makePass() {
         .pipe(new UrlPrepender('http://www.babepedia.com/index/'))
         .pipe(new PageFetcher())
         .pipe(new LinkExtractor('#content > ul li a'))
-        // .pipe(new UrlPrepender('http://www.babepedia.com'))
         .pipe(new Parallelizer(5, UrlFetcher))
         .pipe(new PageDump('../data/babepedia/pages_raw/', '.html.json'))
         .on('finish', function () {
@@ -44,6 +43,8 @@ function makePass() {
                 target: '../data/babepedia/pages_old/',
                 timestamp: timestamp,
                 done: () => {
+
+                    logger.info('Processing model pages');
 
                     var filter = new FilterModelsWithoutPhotos();
 
@@ -59,37 +60,7 @@ function makePass() {
                     ;
 
                     filter
-                        .pipe(new stream.Transform({
-                            objectMode: true,
-                            transform: function (page, encoding, callback) {
-
-                                var url_ = page.url;
-                                var l = url_.lastIndexOf('/');
-                                var slug = url_.slice(l + 1);
-                                var html = page.doc;
-                                var $ = cheerio.load(html);
-                                var $links = $('.gallery.useruploads .thumbnail a');
-
-                                console.log('Checking', slug);
-
-                                if (!$links.length) {
-                                    console.log(`Page skipped, no links ${url_}`);
-                                    callback();
-                                    return;
-                                }
-
-                                $links.each((i, a) => {
-                                    this.push({
-                                        source: 'babepedia',
-                                        slug: slug,
-                                        url: url.resolve('http://www.babepedia.com', $(a).attr('href')),
-                                        revision: timestamp
-                                    });
-                                });
-                                callback();
-                            }
-                        }))
-                        // .pipe(new LinkExtractor('.gallery.useruploads .thumbnail a'))
+                        .pipe(new LinkExtractor('.gallery.useruploads .thumbnail a'))
                         .pipe(new FilterForModel())
                         .pipe(new ImageFetcher('babepedia'))
                         .pipe(new ImageFeed(timestamp))

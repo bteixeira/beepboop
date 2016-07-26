@@ -27,7 +27,7 @@ PageDump.prototype._write = function (page, encoding, callback) {
         if (err) {
             logger.error(err, `While writing ${filename}`);
         } else {
-            logger.info(`(Wrote) ${filename}`);
+            logger.info(`Dumped ${filename}`);
         }
         callback(err);
     });

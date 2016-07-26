@@ -1,7 +1,10 @@
 var stream = require('stream');
 var util = require('util');
-
 var cheerio = require('cheerio');
+
+var utils = require('../utils');
+
+var logger = utils.getLogger('ModelFilter');
 
 function FilterModelsWithoutInfo() {
     stream.Transform.call(this, {objectMode: true});
@@ -30,7 +33,7 @@ FilterModelsWithoutInfo.prototype._transform = function (page, encoding, callbac
     if (hasInfo) {
         this.push(page);
     } else {
-        console.log(`Page ${page.url} discarded, no enhancement information`);
+        logger.info(`Page ${page.url} discarded, no enhancement information`);
     }
     callback();
 };

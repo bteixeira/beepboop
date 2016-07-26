@@ -2,6 +2,9 @@ var stream = require('stream');
 var util = require('util');
 
 var storage = require('../storage/default');
+var utils = require('../utils');
+
+var logger = utils.getLogger('FilterForModel');
 
 function FilterForModel() {
     stream.Transform.call(this, {objectMode: true});
@@ -15,7 +18,7 @@ function FilterForModel() {
                 if (model) {
                     this.push(this._waiting);
                 } else {
-                    console.log('skipping image, no model')
+                    logger.info('Skipping image, no model: ' + this._waiting.url);
                 }
                 this._waitingCB();
                 this._waiting = null;
@@ -40,7 +43,7 @@ FilterForModel.prototype._transform = function (image, encoding, callback) {
             if (model) {
                 this.push(image);
             } else {
-                console.log('skipping image, no model')
+                logger.info('Skipping image, no model: ' + image.url);
             }
             callback();
         });

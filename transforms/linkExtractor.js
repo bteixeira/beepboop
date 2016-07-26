@@ -20,6 +20,7 @@ LinkExtractor.prototype._transform = function (page, encoding, callback) {
     }
     var $links = $(this._selector);
     var base = page.url || '';
+    // TODO LOG DEBUG OR INFO WHEN NO LINKS, MAYBE JUST DEBUG TOTAL NUMBER OF LINKS
     $links.each((i, a) => {
         var href = $(a).attr('href');
         var link = {url: url.resolve(base, href)};
