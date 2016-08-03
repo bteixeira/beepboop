@@ -34,9 +34,13 @@ router.get('/getImage', function (req, res) {
     var skip = parseInt(req.query.skip, 10) || 0;
     console.log('skipping?', skip);
     connection.findUncuratedImage({}, skip, (err, image) => {
-        console.log('found image');
+        console.log('found image', image);
         if (err) {
             throw err;
+        }
+        if (!image) {
+            res.end();
+            return;
         }
         connection.getModel(image.source, image.slug, (err, model) => {
             console.log('found model');
@@ -55,7 +59,6 @@ router.get('/getImage', function (req, res) {
                     }
                     image.mimeType = result;
                     console.log(model);
-                    // console.log(image);
                     res.json({model: model, image: image});
                 });
 

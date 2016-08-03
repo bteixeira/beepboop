@@ -33,7 +33,6 @@ PageFetcher.prototype._transform = function PageFetcher(page, encoding, callback
             if (this._source) {
                 page.source = this._source;
             }
-            console.log(Object.keys(page));
             callback(null, page);
         }
     })
