@@ -32,8 +32,8 @@ function makePass() {
 
     new AlphabetGenerator()
         .pipe(new UrlPrepender('http://www.babepedia.com/index/'))
-        .pipe(new PageFetcher())
-        .pipe(new LinkExtractor('#content > ul li a'))
+        .pipe(new PageFetcher('babepedia'))
+        .pipe(new LinkExtractor('#content > ul li a', {applySlug: true}))
         .pipe(new Parallelizer(5, UrlFetcher))
         .pipe(new PageDump('../data/babepedia/pages_raw/', '.html.json'))
         .on('finish', function () {

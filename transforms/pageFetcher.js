@@ -6,8 +6,11 @@ var request = require('request');
 const utils = require('../utils');
 var logger = utils.getLogger('PageFetcher');
 
-function PageFetcher(options) {
+function PageFetcher(source) {
     stream.Transform.call(this, {objectMode: true});
+    if (source) {
+        this._source = source;
+    }
 }
 util.inherits(PageFetcher, stream.Transform);
 
@@ -27,6 +30,10 @@ PageFetcher.prototype._transform = function PageFetcher(page, encoding, callback
         } else {
             logger.info(`(Fetched) ${page.url}`);
             page.doc = body;
+            if (this._source) {
+                page.source = this._source;
+            }
+            console.log(Object.keys(page));
             callback(null, page);
         }
     })

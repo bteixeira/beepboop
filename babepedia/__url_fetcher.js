@@ -16,26 +16,20 @@ function UrlFetcher() {
 util.inherits(UrlFetcher, stream.Transform);
 
 UrlFetcher.prototype._transform = function UrlFetcher(page, encoding, callback) {
-    var url;
     if (typeof page === 'string') {
-        url = page;
+        page = {url: page};
     } else {
-        url = page.url;
+        page = Object.assign({}, page);
     }
-    this._logger.debug(`#${this._n} (Fetching) ${url}`);
-    // logger.debug(`(Fetching) ${url}`);
-    request(url, (err, res, body) => {
+    this._logger.debug(`#${this._n} (Fetching) ${page.url}`);
+    request(page.url, (err, res, body) => {
         if (err) {
-            this._logger.error(err, `#${this._n} While fetching ${url}`);
-            // logger.error(err, `While fetching ${url}`);
+            this._logger.error(err, `#${this._n} While fetching ${page.url}`);
             callback(err);
         } else {
-            this._logger.info(`#${this._n} (Fetched) ${url}`);
-            // logger.info(`(Fetched) ${url}`);
-            callback(null, {
-                url: url,
-                doc: body
-            });
+            this._logger.info(`#${this._n} (Fetched) ${page.url}`);
+            page.doc = body;
+            callback(null, page);
         }
     })
 };

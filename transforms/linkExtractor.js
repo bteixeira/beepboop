@@ -4,9 +4,12 @@ var util = require('util');
 
 var cheerio = require('cheerio');
 
-function LinkExtractor(selector) {
+function LinkExtractor(selector, options) {
     stream.Transform.call(this, {objectMode: true});
     this._selector = selector;
+    if (options && options.applySlug) {
+        this._applySlug = true;
+    }
 }
 util.inherits(LinkExtractor, stream.Transform);
 LinkExtractor.prototype._transform = function (page, encoding, callback) {
@@ -27,7 +30,9 @@ LinkExtractor.prototype._transform = function (page, encoding, callback) {
         if ('source' in page) {
             link.source = page.source;
         }
-        if ('slug' in page) {
+        if (this._applySlug) {
+            link.slug = href.slice(href.lastIndexOf('/') + 1).replace(/\.html$/, '');
+        } else if ('slug' in page) {
             link.slug = page.slug;
         }
         this.push(link);
