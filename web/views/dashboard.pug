@@ -1,0 +1,12 @@
+doctype html
+html(lang="en")
+    head
+        title Papaya &#x2022; Dashboard
+        link(rel="stylesheet" href="css/dashboard.css")
+    body
+        .dashboard-container
+            h1.name= user.name
+            h3.line.
+                Credits: #{user.credits}
+            button Start Game
+            button Log Out
