@@ -8,5 +8,10 @@ P.API = {
             });
             callback(data);
         });
+    },
+    makeGuess: function (id, guess, callback) {
+        $.post('/api/makeGuess', {user: 'Kintaro', id: id, guess: guess}, function (data) {
+            callback(data.correct);
+        });
     }
 };

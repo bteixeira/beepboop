@@ -1,6 +1,7 @@
 window.P = window.P || {};
 
-var SAFE_MODE = 'cage';
+// var SAFE_MODE = 'cage';
+var SAFE_MODE = false;
 
 P.comps = {
     guessItem: function (item) {
@@ -32,10 +33,6 @@ P.comps = {
                 $('body').off('.drag');
                 $comp.off('.drag');
 
-
-
-                $comp.css({top: '', left: ''});
-
                 var pageX = ev.pageX;
                 if (typeof pageX === 'undefined') {
                     pageX = lastX;
@@ -43,11 +40,30 @@ P.comps = {
                 var diff = pageX - x;
                 var w = $('#guess-items').outerWidth();
                 if (diff + w/2 < 0) {
-                    console.log('swipe left');
+                    // console.log('swipe left');
+                    P.overlay.show();
+                    $comp.remove();
+                    P.API.makeGuess(item.id, 'fake', function (correct) {
+                        if (correct) {
+                            P.overlay.showAlert('Correct!<br>They\'re Fake!');
+                        } else {
+                            P.overlay.showAlert('Wrong!<br>They\'re Real!');
+                        }
+                    });
                 } else if (diff + w/2 > w) {
-                    console.log('swipe right');
+                    // console.log('swipe right');
+                    P.overlay.show();
+                    $comp.remove();
+                    P.API.makeGuess(item.id, 'real', function (correct) {
+                        if (correct) {
+                            P.overlay.showAlert('Correct!<br>They\'re Real!');
+                        } else {
+                            P.overlay.showAlert('Wrong!<br>They\'re Fake!');
+                        }
+                    });
                 } else {
-                    console.log('no swipe');
+                    // console.log('no swipe');
+                    $comp.css({top: '', left: ''});
                 }
             });
             $('body').on('mousemove.drag', function (ev) {
