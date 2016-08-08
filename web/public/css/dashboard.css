@@ -1,0 +1,62 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #48AD00;
+    color: white;
+}
+
+body {
+    box-sizing: border-box;
+    padding: 30px;
+}
+
+.mega-container {
+    box-sizing: border-box;
+    padding: 30px;
+    border: solid 3px white;
+    border-radius: 30px;
+    height: 100%;
+    text-align: center;
+}
+
+.mega-container button {
+    background: #ff6717;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: 0;
+    outline: 0;
+    border-radius: 4px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 5px 11px;
+    cursor: pointer;
+}
+
+body.show-dashboard #game {
+    display: none;
+}
+
+body.show-game #dashboard {
+    display: none;
+}
+
+h1, h3 {
+    margin: 0;
+}
+h1 {
+    margin-bottom: 30px;
+}
+
+.control-group:not(:first-of-type) {
+    margin-top: 15px;
+}
+
+#btn-fake {
+    float: left;
+}
+
+#btn-real {
+    float: right;
+}

@@ -7,6 +7,7 @@ html, body {
 }
 
 body {
+    box-sizing: border-box;
     padding: 30px;
 }
 
@@ -15,7 +16,7 @@ body {
     padding: 30px;
     border: solid 3px white;
     border-radius: 30px;
-    height: calc(100% - 60px);
+    height: 100%;
 }
 .mega-container > form {
 }

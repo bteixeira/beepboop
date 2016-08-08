@@ -2,11 +2,35 @@ doctype html
 html(lang="en")
     head
         title Papaya &#x2022; Dashboard
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
         link(rel="stylesheet" href="css/dashboard.css")
-    body
-        .dashboard-container
-            h1.name= user.name
-            h3.line.
-                Credits: #{user.credits}
-            button Start Game
-            button Log Out
+        link(rel="stylesheet" href="css/overlay.css")
+        link(rel="stylesheet" href="css/guessing.css")
+    body.show-dashboard
+        #dashboard.mega-container
+            .control-group
+                h1.name= user.name
+            .control-group
+                h3.line.
+                    Credits: #{user.credits}
+            .control-group
+                button#btn-start(type="button") Start Game
+            .control-group
+                button#btn-logout(type="button") Log Out
+        #game.mega-container
+            #guess-items
+            .control-group
+                button#btn-fake(type="button") Enhanced
+                button#btn-real(type="button") Natural
+        #overlay.hidden
+            .inner
+                #bowlG
+                    #bowl_ringG
+                        .ball_holderG
+                            .ballG
+        script(src="jquery-2.2.0.js")
+        script(src="client/overlay.js")
+        script(src="client/api.js")
+        script(src="client/components.js")
+        script(src="client/model-item.js")
+        script(src="client/client-main.js")
