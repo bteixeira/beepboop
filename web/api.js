@@ -2,6 +2,7 @@ var fs = require('fs');
 var util = require('util');
 
 var express = require('express');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var mmm = require('mmmagic');
@@ -22,6 +23,11 @@ storage.getConnection(null, (err, db) => {
 
 var router = express.Router();
 
+router.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'CANJA-DE-GALINHA'
+}));
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
@@ -170,6 +176,7 @@ router.get('/getNextSet', function (req, res) {
 router.post('/makeGuess', function (req, res) {
     // required: user handle, image id, guess
     console.log(`User Guessing ${util.inspect(req.body)}`);
+    console.log(`User Session ${util.inspect(req.session)}`);
     var guess = req.body.guess;
     if (guess === 'real') {
         guess = 'Real/Natural';
@@ -190,6 +197,9 @@ router.post('/makeGuess', function (req, res) {
                 return;
             }
             var result = (guess === model.attributes.Boobs);
+            if (result) {
+                req.session.user.credits += 1;
+            }
             res.send({correct: result});
         });
     });
