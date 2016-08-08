@@ -10,13 +10,16 @@ P.overlay = {
     hide: function () {
         this._$overlay.toggleClass('hidden', true);
     },
-    showAlert: function (msg) {
+    showAlert: function (msg, callback) {
         this._$msgBox.html(msg);
         this._$overlayMsg.removeClass('hidden');
         this.hide();
         var me = this;
         window.setTimeout(function () {
             me._$overlayMsg.toggleClass('hidden', true);
+            if (callback) {
+                callback();
+            }
         }, 1000);
     }
 };

@@ -13,11 +13,21 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 15px;
+    border-radius: 30px;
     background: white;
     color: #333;
     text-align: center;
-    padding: 15px;
+    padding: 30px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#overlay-msg .msg-box .correct {
+    color: #48AD00;
+}
+
+#overlay-msg .msg-box .wrong {
+    color: red;
 }
 
 

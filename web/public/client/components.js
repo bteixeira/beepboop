@@ -13,6 +13,14 @@ P.comps = {
         $comp.append($img);
         var r = Math.round(Math.random() * 14) - 7;
         $comp.css('transform', 'translate(-50%, -50%) rotate(' + r + 'deg)');
+
+        function checkRemaining () {
+            if (!$('.guess-item').length) {
+                P.overlay.show();
+                window.location = '/dashboard';
+            }
+        }
+
         $comp.on('mousedown touchstart', function (ev) {
             ev.preventDefault();
             var x = ev.pageX;
@@ -45,9 +53,9 @@ P.comps = {
                     $comp.remove();
                     P.API.makeGuess(item.id, 'fake', function (correct) {
                         if (correct) {
-                            P.overlay.showAlert('Correct!<br>They\'re Fake!');
+                            P.overlay.showAlert('<span class="correct">Correct!</span><br>They\'re Fake!', checkRemaining);
                         } else {
-                            P.overlay.showAlert('Wrong!<br>They\'re Real!');
+                            P.overlay.showAlert('<span class="wrong">Wrong!</span><br>They\'re Real!', checkRemaining);
                         }
                     });
                 } else if (diff + w/2 > w) {
@@ -56,9 +64,9 @@ P.comps = {
                     $comp.remove();
                     P.API.makeGuess(item.id, 'real', function (correct) {
                         if (correct) {
-                            P.overlay.showAlert('Correct!<br>They\'re Real!');
+                            P.overlay.showAlert('<span class="correct">Correct!</span><br>They\'re Real!', checkRemaining);
                         } else {
-                            P.overlay.showAlert('Wrong!<br>They\'re Fake!');
+                            P.overlay.showAlert('<span class="wrong">Wrong!</span><br>They\'re Fake!', checkRemaining);
                         }
                     });
                 } else {
