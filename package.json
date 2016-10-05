@@ -29,6 +29,7 @@
     "mkpath": "^1.0.0",
     "mmmagic": "^0.4.4",
     "mongodb": "^2.2.1",
+    "node-sass-middleware": "^0.9.8",
     "pg": "^4.4.3",
     "pug": "^2.0.0-beta4",
     "request": "^2.67.0",
