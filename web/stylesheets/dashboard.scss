@@ -1,12 +1,12 @@
 .mega-container button {
-  background: #ff6717;
-  color: white;
+  background: $bg-button;
+  color: $color-button;
   font-size: 18px;
   font-weight: bold;
   border: 0;
   outline: 0;
   border-radius: 4px;
-  height: 40px;
+  height: $button-size;
   box-sizing: border-box;
   padding: 5px 11px;
   cursor: pointer;

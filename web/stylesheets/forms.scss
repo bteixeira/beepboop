@@ -20,23 +20,23 @@
   outline: 0;
   border-radius: 2px;
   color: #666;
-  height: 40px;
+  height: $button-size;
   font-size: 18px;
   padding: 10px;
-  background: white;
+  background: $bg-input;
   box-sizing: border-box;
 }
 
 .control-group .input-wrapper button {
   background: #ff6717;
-  color: white;
+  color: $color-button;
   font-size: 18px;
   font-weight: bold;
   border: 0;
   outline: 0;
   border-radius: 4px;
-  height: 40px;
-  width: 40px;
+  height: $button-size;
+  width: $button-size;
   box-sizing: border-box;
   padding: 5px;
   margin-left: 5px;
