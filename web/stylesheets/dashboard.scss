@@ -1,15 +1,18 @@
-.mega-container button {
+.mega-container button, .mega-container .button {
   background: $bg-button;
+  border: 0;
+  border-radius: 4px;
+  box-sizing: border-box;
   color: $color-button;
+  cursor: pointer;
+  display: inline-block;
   font-size: 18px;
   font-weight: bold;
-  border: 0;
-  outline: 0;
-  border-radius: 4px;
   height: $button-size;
-  box-sizing: border-box;
-  padding: 5px 11px;
-  cursor: pointer;
+  line-height: 1;
+  outline: 0;
+  padding: 11px;
+  text-decoration: none;
 }
 
 body.show-dashboard #game {

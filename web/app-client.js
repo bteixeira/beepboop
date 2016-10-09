@@ -41,6 +41,16 @@ app.post('/login', function (req, res) {
     }
 });
 
+app.get('/logout', function (req, res) {
+    if (req.session.user) {
+        req.session.destroy(() => {
+            res.redirect('/');
+        });
+    } else {
+        res.redirect('/');
+    }
+});
+
 app.get('/dashboard', function (req, res) {
     if (!req.session.user) {
         res.redirect('/');
