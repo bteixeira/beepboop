@@ -4,7 +4,7 @@ P.API = {
     getBatch: function (callback) {
         $.get('/api/getNextSet', function (data) {
             data = data.map(function (it) {
-                return new P.models.modelItem(it);
+                return new P.models.guessItem(it);
             });
             callback(data);
         });

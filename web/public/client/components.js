@@ -5,14 +5,39 @@ var SAFE_MODE = false;
 
 P.comps = {
     guessItem: function (item) {
-        var $comp = $('<div class="guess-item"></div>');
+        var $el = $('<div class="guess-item"></div>');
         var $img = $('<img src="' + item.getSrc() + '">');
         if (SAFE_MODE === 'cage') {
             $img.attr('src', 'http://www.placecage.com/' + $img[0].naturalWidth + '/' + $img[0].naturalHeight);
         }
-        $comp.append($img);
-        var r = Math.round(Math.random() * 14) - 7;
-        $comp.css('transform', 'translate(-50%, -50%) rotate(' + r + 'deg)');
+        $el.append($img);
+        var r = Math.round(Math.random() * 6) - 3;
+        $el.css('transform', 'translate(-50%, -50%) rotate(' + r + 'deg)');
+
+        var comp = {
+            $el: $el,
+            makeGuess: function (guess) {
+                P.overlay.show();
+
+                P.API.makeGuess(item.id, guess, function (correct) {
+                    var truth = (guess === 'fake' && correct || guess === 'real' && !correct) ? 'Fake' : 'Real';
+                    var verdict;
+                    if (correct) {
+                        verdict = '<span class="correct">Correct!</span>';
+                    } else {
+                        verdict = '<span class="wrong">Wrong!</span>';
+                    }
+                    P.overlay.showAlert(verdict + '<br>They\'re ' + truth + '!', function () {
+                        $el.remove();
+                        comp.trigger('remove');
+                        checkRemaining();
+                    });
+                });
+
+            }
+        };
+
+        _.extend(comp, Backbone.Events);
 
         function checkRemaining () {
             if (!$('.guess-item').length) {
@@ -21,7 +46,7 @@ P.comps = {
             }
         }
 
-        $comp.on('mousedown touchstart', function (ev) {
+        $el.on('mousedown touchstart', function (ev) {
             ev.preventDefault();
             var x = ev.pageX;
             var y = ev.pageY;
@@ -33,13 +58,13 @@ P.comps = {
             }
             var top = $('#guess-items').outerHeight() / 2;
             var left = $('#guess-items').outerWidth() / 2;
-            $comp.css('top', top);
-            $comp.css('left', left);
-            $comp.toggleClass('dragging', true);
+            $el.css('top', top);
+            $el.css('left', left);
+            $el.toggleClass('dragging', true);
             $('body').on('mouseup.drag touchend.drag', function (ev) {
-                $comp.removeClass('dragging');
+                $el.removeClass('dragging');
                 $('body').off('.drag');
-                $comp.off('.drag');
+                $el.off('.drag');
 
                 var pageX = ev.pageX;
                 if (typeof pageX === 'undefined') {
@@ -49,46 +74,50 @@ P.comps = {
                 var w = $('#guess-items').outerWidth();
                 if (diff + w/2 < 0) {
                     // console.log('swipe left');
-                    P.overlay.show();
-                    $comp.remove();
-                    P.API.makeGuess(item.id, 'fake', function (correct) {
-                        if (correct) {
-                            P.overlay.showAlert('<span class="correct">Correct!</span><br>They\'re Fake!', checkRemaining);
-                        } else {
-                            P.overlay.showAlert('<span class="wrong">Wrong!</span><br>They\'re Real!', checkRemaining);
-                        }
-                    });
+                    comp.makeGuess('fake');
                 } else if (diff + w/2 > w) {
                     // console.log('swipe right');
-                    P.overlay.show();
-                    $comp.remove();
-                    P.API.makeGuess(item.id, 'real', function (correct) {
-                        if (correct) {
-                            P.overlay.showAlert('<span class="correct">Correct!</span><br>They\'re Real!', checkRemaining);
-                        } else {
-                            P.overlay.showAlert('<span class="wrong">Wrong!</span><br>They\'re Fake!', checkRemaining);
-                        }
-                    });
+                    comp.makeGuess('real');
                 } else {
                     // console.log('no swipe');
-                    $comp.css({top: '', left: ''});
+                    $el.css({top: '', left: ''});
                 }
             });
             $('body').on('mousemove.drag', function (ev) {
                 // console.log('' + (ev.pageX - x) + 'x' + (ev.pageY - y));
-                $comp.css('top', (ev.pageY - y + top));
-                $comp.css('left', (ev.pageX - x + left));
+                $el.css('top', (ev.pageY - y + top));
+                $el.css('left', (ev.pageX - x + left));
             });
-            $comp.on('touchmove.drag', function (ev) {
+            $el.on('touchmove.drag', function (ev) {
                 var touch = ev.originalEvent.touches.item(0);
                 // console.log('' + (touch.pageX - x) + 'x' + (touch.pageY - y));
-                $comp.css('top', (touch.pageY - y + top));
-                $comp.css('left', (touch.pageX - x + left));
+                $el.css('top', (touch.pageY - y + top));
+                $el.css('left', (touch.pageX - x + left));
                 lastX = touch.pageX;
                 lastY = touch.pageY;
             });
         });
 
-        return $comp;
+        return comp;
+    },
+
+    guessQueue: function (el) {
+        var $el = $(el);
+
+        var items = [];
+
+        return {
+            addItem: function (guessItem) {
+                items.push(guessItem);
+                $el.prepend(guessItem.$el);
+                guessItem.on('remove', function () {
+                    items = _.without(items, guessItem);
+                });
+            },
+            getTopItem: function () {
+                return items[0];
+            }
+        }
+
     }
 };
