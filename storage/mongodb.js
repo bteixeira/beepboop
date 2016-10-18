@@ -13,6 +13,7 @@ function MongoDBConnection(db) {
 	this._connection = db;
 	this._models = db.collection('models');
 	this._images = db.collection('images');
+	this._users = db.collection('users');
 }
 
 MongoDBConnection.prototype.addOrUpdateModel = function (model, callback) {
@@ -229,6 +230,26 @@ MongoDBConnection.prototype.findImageById = function (id, callback) {
 
 MongoDBConnection.prototype.findModelByImage = function (image, callback) {
 	this._models.find({source: image.source, slug: image.slug}).limit(1).next(callback);
+};
+
+MongoDBConnection.prototype.findUserByName = function (name, callback) {
+	this._users.find({name: name}).limit(1).next(callback);
+};
+
+MongoDBConnection.prototype.insertUser = function (user, callback) {
+	this._users.insertOne(user, callback);
+};
+
+MongoDBConnection.prototype.incrementUserCredits = function (user, increment, callback) {
+	this._users.findOneAndUpdate(
+		{name: user.name},
+		{$inc: {credits: increment}},
+		{returnOriginal: false},
+		(err, result) => {
+			console.log('incremented', result);
+			callback(err, result.value)
+		}
+	);
 };
 
 module.exports = {

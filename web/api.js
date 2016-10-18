@@ -198,12 +198,16 @@ router.post('/makeGuess', function (req, res) {
 				return;
 			}
 			var result = (guess === model.attributes.Boobs);
-			if (result) {
-				req.session.user.credits += 1;
-			}
-			res.send({
-				correct: result,
-				credits: req.session.user.credits
+			connection.incrementUserCredits({name: req.session.name}, result ? 1 : 0, (err, user) => {
+				if (err) {
+					console.error(err);
+					res.status(500).send(err);
+					return;
+				}
+				res.send({
+					correct: result,
+					credits: user.credits
+				});
 			});
 		});
 	});
@@ -216,28 +220,46 @@ router.post('/makeGuess', function (req, res) {
 const IMAGE_PRICE = 10;
 router.post('/buyImage', function (req, res) {
 	console.log('session:', req.session);
-	if (req.session.user.credits < IMAGE_PRICE) {
-		res.send({error: true, message: 'Not enough credits'});
-	} else {
-		getImage(req.body.id, (err, image) => {
-			if (err) {
-				res.send(err);
-			} else {
-				connection.findModelByImage(image, (err, model) => {
-					if (err) {
-						res.send(err);
-					} else {
-						req.session.user.credits -= IMAGE_PRICE;
-						res.send({
-							image: image,
-							model: model,
-							credits: req.session.user.credits
-						});
-					}
-				});
-			}
-		});
-	}
+
+	connection.findUserByName(req.session.name, (err, user) => {
+		if (err) {
+			console.error(err);
+			res.status(500).send(err);
+			return;
+		}
+		if (user.credits < IMAGE_PRICE) {
+			res.send({error: true, message: 'Not enough credits'});
+		} else {
+			getImage(req.body.id, (err, image) => {
+				if (err) {
+					res.send(err);
+				} else {
+					connection.findModelByImage(image, (err, model) => {
+						if (err) {
+							res.send(err);
+						} else {
+							connection.incrementUserCredits(user, -IMAGE_PRICE, (err, user) => {
+								if (err) {
+									console.error(err);
+									res.status(500).send(err);
+									return;
+								}
+								res.send({
+									image: image,
+									model: model,
+									credits: user.credits
+								});
+							});
+						}
+					});
+				}
+			});
+		}
+	});
+
+
+
+
 });
 
 function getImage(id, callback) {
