@@ -130,6 +130,9 @@ P.comps = {
         $el.append($thumbnailContainer);
         $el.append('<div class="truth-box ' + (truth === guess ? 'correct' : 'wrong') + '">' + truth[0].toUpperCase() + truth.slice(1) + '</div>');
         var $button = $('<button type="button">Full Image (10 Credits)</button>');
+        if (P.user.get('credits') < 10) {
+            $button.attr('disabled', '');
+        }
         $button.on('click', function () {
             P.overlay.show();
             P.API.buyImage(guessItem.id, function (data) {

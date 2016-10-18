@@ -11,13 +11,13 @@ P.API = {
     },
     makeGuess: function (id, guess, callback) {
         $.post('/api/makeGuess', {user: 'Kintaro', id: id, guess: guess}, function (data) {
-            $('.credits-data').text(data.credits);
+            P.user.set('credits', data.credits);
             callback(data.correct);
         });
     },
     buyImage: function (id, callback) {
         $.post('/api/buyImage', {id: id}, function (data) {
-            $('.credits-data').text(data.credits);
+            P.user.set('credits', data.credits);
             callback(data);
         });
     }
