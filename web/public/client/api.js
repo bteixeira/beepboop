@@ -17,6 +17,7 @@ P.API = {
     },
     buyImage: function (id, callback) {
         $.post('/api/buyImage', {id: id}, function (data) {
+            $('.credits-data').text(data.credits);
             callback(data);
         });
     }

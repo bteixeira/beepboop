@@ -10,21 +10,19 @@ html(lang="en")
                 h1.name= user.name
             .control-group
                 h3.line.credits
-                    = 'Credits: '
-                    span.credits-data #{user.credits}
+                    include credits
             .control-group
                 button#btn-start(type="button") Start Game
             .control-group
                 a.button#btn-logout(href="/logout") Log Out
         #game.mega-container
             .credits
-                = 'Credits: '
-                span.credits-data #{user.credits}
+                include credits
             #guess-items
             .control-group
                 button#btn-fake(type="button") Enhanced
                 button#btn-real(type="button") Natural
-        include game-summary.pug
+        include game-summary
         #overlay.hidden
             .inner
                 #bowlG

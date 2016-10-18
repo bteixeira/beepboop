@@ -230,7 +230,8 @@ router.post('/buyImage', function (req, res) {
                         req.session.user.credits -= IMAGE_PRICE;
                         res.send({
                             image: image,
-                            model: model
+                            model: model,
+                            credits: req.session.user.credits
                         });
                     }
                 });
