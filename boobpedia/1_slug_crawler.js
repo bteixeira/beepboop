@@ -4,7 +4,7 @@ var cheerio = require('cheerio');
 
 var slugCrawler = new stream.Transform({objectMode: true});
 slugCrawler._transform = function (url, encoding, callback) {
-    fetch(url, $ => {
+	fetch(url, $ => {
 
-    });
+	});
 };

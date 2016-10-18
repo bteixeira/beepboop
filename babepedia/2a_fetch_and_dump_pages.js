@@ -9,18 +9,18 @@ var PageDump = require('./__page_dump');
 var timestamp = new Date();
 
 process.stdin
-    .pipe(split = split())
-    .pipe(appender = new SlugAppender('http://www.babepedia.com'))
-    .pipe(parallelizer = new Parallelizer(
-        5, UrlFetcher)
-    )
-    .pipe(new PageDump('../data/babepedia/pages_raw/', '.html.json'))
-    .on('finish', function () {
-        console.log('expiring files');
-        utils.expireFiles({
-            origin: '../data/babepedia/pages_raw/',
-            target: '../data/babepedia/pages_old/',
-            timestamp: timestamp
-        });
-    })
+	.pipe(split = split())
+	.pipe(appender = new SlugAppender('http://www.babepedia.com'))
+	.pipe(parallelizer = new Parallelizer(
+		5, UrlFetcher)
+	)
+	.pipe(new PageDump('../data/babepedia/pages_raw/', '.html.json'))
+	.on('finish', function () {
+		console.log('expiring files');
+		utils.expireFiles({
+			origin: '../data/babepedia/pages_raw/',
+			target: '../data/babepedia/pages_old/',
+			timestamp: timestamp
+		});
+	})
 ;

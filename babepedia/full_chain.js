@@ -25,55 +25,55 @@ var BabepediaModelInfoExtractor = require('./babepediaModelInfoExtractor');
 var PageFetcher = require('../transforms/pageFetcher');
 
 function makePass() {
-    var timestamp = Date.now();
-    var logger = utils.getLogger('PASS');
+	var timestamp = Date.now();
+	var logger = utils.getLogger('PASS');
 
-    logger.info('Starting');
+	logger.info('Starting');
 
-    new AlphabetGenerator()
-        .pipe(new UrlPrepender('http://www.babepedia.com/index/'))
-        .pipe(new PageFetcher('babepedia'))
-        .pipe(new LinkExtractor('#content > ul li a', {applySlug: true}))
-        .pipe(new Parallelizer(5, UrlFetcher))
-        .pipe(new PageDump('../data/babepedia/pages_raw/', '.html.json'))
-        .on('finish', function () {
-            logger.info('Expiring files');
-            utils.expireFiles({
-                origin: '../data/babepedia/pages_raw/',
-                target: '../data/babepedia/pages_old/',
-                timestamp: timestamp,
-                done: () => {
+	new AlphabetGenerator()
+		.pipe(new UrlPrepender('http://www.babepedia.com/index/'))
+		.pipe(new PageFetcher('babepedia'))
+		.pipe(new LinkExtractor('#content > ul li a', {applySlug: true}))
+		.pipe(new Parallelizer(5, UrlFetcher))
+		.pipe(new PageDump('../data/babepedia/pages_raw/', '.html.json'))
+		.on('finish', function () {
+			logger.info('Expiring files');
+			utils.expireFiles({
+				origin: '../data/babepedia/pages_raw/',
+				target: '../data/babepedia/pages_old/',
+				timestamp: timestamp,
+				done: () => {
 
-                    logger.info('Processing model pages');
+					logger.info('Processing model pages');
 
-                    var filter = new FilterModelsWithoutPhotos();
+					var filter = new FilterModelsWithoutPhotos();
 
-                    new DirFilesIterator('../data/babepedia/pages_raw')
-                        .pipe(new FileContentsReader())
-                        .pipe(new Wrapper(JSON.parse))
-                        .pipe(new FilterModelsWithoutInfo())
-                        .pipe(filter);
+					new DirFilesIterator('../data/babepedia/pages_raw')
+						.pipe(new FileContentsReader())
+						.pipe(new Wrapper(JSON.parse))
+						.pipe(new FilterModelsWithoutInfo())
+						.pipe(filter);
 
-                    filter
-                        .pipe(new BabepediaModelInfoExtractor())
-                        .pipe(new ModelFeeder())
-                    ;
+					filter
+						.pipe(new BabepediaModelInfoExtractor())
+						.pipe(new ModelFeeder())
+					;
 
-                    filter
-                        .pipe(new LinkExtractor('.gallery.useruploads .thumbnail a'))
-                        .pipe(new FilterForModel())
-                        .pipe(new ImageFetcher('babepedia'))
-                        .pipe(new ImageFeed(timestamp))
-                            .on('finish', () => {
-                                var now = new Date();
-                                logger.info(`Pass finished (took ${now.getTime() - timestamp}ms)`);
-                            })
-                    ;
+					filter
+						.pipe(new LinkExtractor('.gallery.useruploads .thumbnail a'))
+						.pipe(new FilterForModel())
+						.pipe(new ImageFetcher('babepedia'))
+						.pipe(new ImageFeed(timestamp))
+						.on('finish', () => {
+							var now = new Date();
+							logger.info(`Pass finished (took ${now.getTime() - timestamp}ms)`);
+						})
+					;
 
-                }
-            });
-        })
-    ;
+				}
+			});
+		})
+	;
 }
 
 makePass();

@@ -3,7 +3,7 @@ var diskdb = require('./diskdb-custom');
 conn = diskdb.connect('./data/storage/diskdb', ['models', 'images']);
 
 examples = function () {
-    console.log(`
+	console.log(`
 Access Data
 Examples:
 

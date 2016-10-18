@@ -7,8 +7,8 @@ var SimpleAppender = require('./__simple_appender');
 var SlugAppender = require('../transforms/urlPrepender');
 
 new AlphabetGenerator()
-    .pipe(new SimpleAppender('index/'))
-    .pipe(new SlugAppender('http://www.babepedia.com'))
-    .pipe(new LineOutputter())
-    .pipe(process.stdout)
+	.pipe(new SimpleAppender('index/'))
+	.pipe(new SlugAppender('http://www.babepedia.com'))
+	.pipe(new LineOutputter())
+	.pipe(process.stdout)
 ;

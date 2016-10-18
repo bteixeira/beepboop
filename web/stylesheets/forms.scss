@@ -1,44 +1,44 @@
 .control-group {
-  text-align: center;
+	text-align: center;
 }
 
 .control-group label {
-  display: block;
+	display: block;
 }
 
 .control-group label {
-  font-size: 18px;
-  font-weight: bold;
+	font-size: 18px;
+	font-weight: bold;
 }
 
 .control-group .input-wrapper {
-  margin-top: 15px;
+	margin-top: 15px;
 }
 
 .control-group input {
-  border: 0;
-  outline: 0;
-  border-radius: 2px;
-  color: #666;
-  height: $button-size;
-  font-size: 18px;
-  padding: 10px;
-  background: $bg-input;
-  box-sizing: border-box;
+	border: 0;
+	outline: 0;
+	border-radius: 2px;
+	color: #666;
+	height: $button-size;
+	font-size: 18px;
+	padding: 10px;
+	background: $bg-input;
+	box-sizing: border-box;
 }
 
 .control-group .input-wrapper button {
-  background: #ff6717;
-  color: $color-button;
-  font-size: 18px;
-  font-weight: bold;
-  border: 0;
-  outline: 0;
-  border-radius: 4px;
-  height: $button-size;
-  width: $button-size;
-  box-sizing: border-box;
-  padding: 5px;
-  margin-left: 5px;
-  cursor: pointer;
+	background: #ff6717;
+	color: $color-button;
+	font-size: 18px;
+	font-weight: bold;
+	border: 0;
+	outline: 0;
+	border-radius: 4px;
+	height: $button-size;
+	width: $button-size;
+	box-sizing: border-box;
+	padding: 5px;
+	margin-left: 5px;
+	cursor: pointer;
 }

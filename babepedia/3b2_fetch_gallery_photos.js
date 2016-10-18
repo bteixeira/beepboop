@@ -13,37 +13,37 @@ var ImageFeed = require('./__image_feed');
 var timestamp = Date.now();
 
 new DirFilesIterator('../data/babepedia/galleries_raw')
-    .pipe(new FileContentsReader())
-    .pipe(new Wrapper(JSON.parse))
-    .pipe(new stream.Transform({
-        objectMode: true,
-        transform: function (page, encoding, callback) {
+	.pipe(new FileContentsReader())
+	.pipe(new Wrapper(JSON.parse))
+	.pipe(new stream.Transform({
+		objectMode: true,
+		transform: function (page, encoding, callback) {
 
-            var url_ = page.url;
-            var l = url_.lastIndexOf('/');
-            var slug = page.slug;
-            console.log(slug);
-            var html = page.doc;
-            var $ = cheerio.load(html);
-            var $links = $('#gallery a.img');
+			var url_ = page.url;
+			var l = url_.lastIndexOf('/');
+			var slug = page.slug;
+			console.log(slug);
+			var html = page.doc;
+			var $ = cheerio.load(html);
+			var $links = $('#gallery a.img');
 
-            if (!$links.length) {
-                callback();
-                return;
-            }
+			if (!$links.length) {
+				callback();
+				return;
+			}
 
-            $links.each((i, a) => {
-                this.push({
-                    source: 'babepedia',
-                    slug: slug,
-                    url: url.resolve(url_, $(a).attr('href')),
-                    revision: timestamp
-                });
-            });
-            callback();
-        }
-    }))
-    .pipe(new FilterForModel())
-    .pipe(new ImageFetcher('babepedia'))
-    .pipe(new ImageFeed(timestamp))
+			$links.each((i, a) => {
+				this.push({
+					source: 'babepedia',
+					slug: slug,
+					url: url.resolve(url_, $(a).attr('href')),
+					revision: timestamp
+				});
+			});
+			callback();
+		}
+	}))
+	.pipe(new FilterForModel())
+	.pipe(new ImageFetcher('babepedia'))
+	.pipe(new ImageFeed(timestamp))
 ;

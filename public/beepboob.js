@@ -3,23 +3,23 @@
  */
 $(function () {
 
-    var $container =$('<div class="container"></div>');
-    $('body').append($container);
+	var $container = $('<div class="container"></div>');
+	$('body').append($container);
 
-    $container.text('Loading');
+	$container.text('Loading');
 
-    var i = 1;
-    var id = setInterval(function () {
-        i++;
-        $container.text('Loading' + new Array(i).join('.'))
-    }, 500);
+	var i = 1;
+	var id = setInterval(function () {
+		i++;
+		$container.text('Loading' + new Array(i).join('.'))
+	}, 500);
 
-    $.get('http://localhost:9009', function (response) {
+	$.get('http://localhost:9009', function (response) {
 
-        clearInterval(id);
+		clearInterval(id);
 
-        $container.text('Choose:');
-        $container.append('<pre>' + response + '</pre>');
-    });
+		$container.text('Choose:');
+		$container.append('<pre>' + response + '</pre>');
+	});
 
 });

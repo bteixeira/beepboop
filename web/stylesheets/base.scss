@@ -1,14 +1,14 @@
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html, body {
-  background: $bg-main;
-  color: $color-main;
-  height: 100%;
+	background: $bg-main;
+	color: $color-main;
+	height: 100%;
 }
 
 body {
-  box-sizing: border-box;
-  padding: $space;
+	box-sizing: border-box;
+	padding: $space;
 }

@@ -1,104 +1,114 @@
 #image {
-    cursor: crosshair;
+	cursor: crosshair;
 }
 
 #image:active, #image:focus {
-    cursor: crosshair;
+	cursor: crosshair;
 }
 
 .image-blur-overlay {
-    background: black;
-    cursor: crosshair;
-    opacity: 0.95;
-    position: absolute;
+	background: black;
+	cursor: crosshair;
+	opacity: 0.95;
+	position: absolute;
 }
 
 .image-selection-overlay {
-    border: dashed 1px white;
-    cursor: grab;
-    cursor: -webkit-grab;
-    cursor: -moz-grab;
-    padding: 1px;
-    position: absolute;
-    z-index: 9;
+	border: dashed 1px white;
+	cursor: grab;
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+	padding: 1px;
+	position: absolute;
+	z-index: 9;
 }
 
 .image-selection-overlay.hidden {
-    display: none;
+	display: none;
 }
 
 #image {
-    display: block;
-    max-width: 100%;
+	display: block;
+	max-width: 100%;
 }
 
 #image-area {
-    display: inline-block;
-    position: relative;
+	display: inline-block;
+	position: relative;
 }
+
 #image-area.dragging, #image-area.dragging .image-blur-overlay, #image-area.dragging #image {
-    cursor: grabbing;
-    cursor: -webkit-grabbing;
-    cursor: -moz-grabbing;
+	cursor: grabbing;
+	cursor: -webkit-grabbing;
+	cursor: -moz-grabbing;
 }
 
 #image-container {
 }
 
 #image-area-container {
-    background: magenta;
-    position: relative;
-    border: solid 15px magenta;
-    border-radius: 4px;
-    text-align: center;
-    height: 100%;
-    box-sizing: border-box;
+	background: magenta;
+	position: relative;
+	border: solid 15px magenta;
+	border-radius: 4px;
+	text-align: center;
+	height: 100%;
+	box-sizing: border-box;
 }
+
 .resize-handle {
-    width: 5px;
-    height: 5px;
-    background: black;
-    border: solid 1px white;
-    position: absolute;
-    transform: translate(-50%, -50%);
+	width: 5px;
+	height: 5px;
+	background: black;
+	border: solid 1px white;
+	position: absolute;
+	transform: translate(-50%, -50%);
 }
+
 .resize-handle.top-left {
-    cursor: nwse-resize;
-    top: 0;
-    left: 0;
+	cursor: nwse-resize;
+	top: 0;
+	left: 0;
 }
+
 .resize-handle.top {
-    cursor: ns-resize;
-    top: 0;
-    left: 50%;
+	cursor: ns-resize;
+	top: 0;
+	left: 50%;
 }
+
 .resize-handle.top-right {
-    cursor: nesw-resize;
-    top: 0;
-    left: 100%;
+	cursor: nesw-resize;
+	top: 0;
+	left: 100%;
 }
+
 .resize-handle.left {
-    cursor: ew-resize;
-    top: 50%;
-    left: 0;
+	cursor: ew-resize;
+	top: 50%;
+	left: 0;
 }
+
 .resize-handle.right {
-    cursor: ew-resize;
-    top: 50%;
-    left: 100%;
+	cursor: ew-resize;
+	top: 50%;
+	left: 100%;
 }
+
 .resize-handle.bottom-left {
-    cursor: nesw-resize;
-    top: 100%;
-    left: 0;
+	cursor: nesw-resize;
+	top: 100%;
+	left: 0;
 }
+
 .resize-handle.bottom {
-    cursor: ns-resize;
-    top: 100%;
-    left: 50%;
+	cursor: ns-resize;
+	top: 100%;
+	left: 50%;
 }
+
 .resize-handle.bottom-right {
-    cursor: nwse-resize;
-    top: 100%;
-    left: 100%;
+	cursor: nwse-resize;
+	top: 100%;
+	left: 100%;
 }

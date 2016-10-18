@@ -1,53 +1,54 @@
 .mega-container button, .mega-container .button {
-    background: $bg-button;
-    border: 0;
-    border-radius: 4px;
-    box-sizing: border-box;
-    color: $color-button;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 18px;
-    font-weight: bold;
-    height: $button-size;
-    line-height: 1;
-    outline: 0;
-    padding: 11px;
-    text-decoration: none;
+	background: $bg-button;
+	border: 0;
+	border-radius: 4px;
+	box-sizing: border-box;
+	color: $color-button;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 18px;
+	font-weight: bold;
+	height: $button-size;
+	line-height: 1;
+	outline: 0;
+	padding: 11px;
+	text-decoration: none;
 
-    &:disabled {
-        background: $bg-button-disabled;
-    }
+	&:disabled {
+		background: $bg-button-disabled;
+	}
 }
 
 body.show-dashboard #game {
-  display: none;
+	display: none;
 }
 
 body.show-game #dashboard {
-  display: none;
+	display: none;
 }
 
 h1, h3 {
-  margin: 0;
-  font-weight: bold;
+	margin: 0;
+	font-weight: bold;
 }
+
 h1 {
-  margin-bottom: 30px;
-  font-size: 32px;
+	margin-bottom: 30px;
+	font-size: 32px;
 }
 
 h3 {
-  font-size: 18px;
+	font-size: 18px;
 }
 
 .control-group:not(:first-of-type) {
-  margin-top: 15px;
+	margin-top: 15px;
 }
 
 #btn-fake {
-  float: left;
+	float: left;
 }
 
 #btn-real {
-  float: right;
+	float: right;
 }

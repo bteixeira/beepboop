@@ -7,15 +7,15 @@ var Boxed = require('./' + process.argv[2]);
 var boxed = new Boxed();
 
 if (boxed.write) { // Should be writable
-    process.stdin
-        .pipe(split())
-        .pipe(boxed)
-    ;
+	process.stdin
+		.pipe(split())
+		.pipe(boxed)
+	;
 }
 
 if (boxed.pipe) {
-    boxed
-        .pipe(lineOutputter)
-        .pipe(process.stdout)
-    ;
+	boxed
+		.pipe(lineOutputter)
+		.pipe(process.stdout)
+	;
 }
