@@ -13,7 +13,7 @@
 }
 
 .control-group label {
-	font-size: 18px;
+	font: 19px 'bariol_regularregular';
 	font-weight: bold;
 }
 
@@ -27,7 +27,7 @@
 	border-radius: 2px;
 	color: #666;
 	height: $button-size;
-	font-size: 18px;
+	font: bold 19px 'bariol_regularregular';
 	padding: 10px;
 	background: $bg-input;
 	box-sizing: border-box;
@@ -57,8 +57,7 @@ button, .button {
 	color: $color-button;
 	cursor: pointer;
 	display: inline-block;
-	font-size: 18px;
-	font-weight: bold;
+	font: bold 19px 'bariol_regularregular';
 	height: $button-size;
 	line-height: 1;
 	outline: 0;

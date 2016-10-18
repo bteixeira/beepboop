@@ -1,28 +1,28 @@
-doctype html
-html(lang="en")
-	head
-		title Papaya &#x2022; Dashboard
-		meta(name="viewport" content="width=device-width, initial-scale=1.0")
-		link(rel="stylesheet" href="css/bundle.css")
+extends layout.pug
+
+block title
+	= ' Dashboard'
+
+block content
 	body.show-dashboard
 		#dashboard.mega-container
 			.control-group
 				h1.name= user.name
 			.control-group
 				h3.line.credits
-					include credits
+					include credits.pug
 			.control-group
 				button#btn-start(type="button") Start Game
 			.control-group
 				a.button#btn-logout(href="/logout") Log Out
 		#game.mega-container
 			.credits
-				include credits
+				include credits.pug
 			#guess-items
 			.control-group
 				button#btn-fake(type="button") Enhanced
 				button#btn-real(type="button") Natural
-		include game-summary
+		include game-summary.pug
 		#overlay.hidden
 			.inner
 				#bowlG

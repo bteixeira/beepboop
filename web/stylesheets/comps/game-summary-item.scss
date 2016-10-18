@@ -2,19 +2,36 @@
 	margin: $space 0;
 }
 
+#game-summary {
+	margin-bottom: $space;
+}
+#game-summary.hidden {
+	display: none;
+}
+
 .game-summary-item {
 
 	$item-height: 80px;
 	$item-height-expanded: $item-height * 2;
+	$thumb-width: 120px;
 
-	margin-bottom: $space-half;
+	margin-bottom: $space;
 	text-align: center;
 
+	.left-col {
+		float: left;
+		width: $thumb-width;
+	}
+
+	.right-col {
+		margin-left: $thumb-width + $space-half;
+	}
+
 	.thumbnail-container {
-		width: $item-height-expanded;
+		width: $item-height;
 		height: $item-height;
 		display: inline-block;
-		float: left;
+		//float: left;
 
 		img {
 			max-width: 100%;
@@ -24,25 +41,28 @@
 
 	&.expanded .thumbnail-container {
 		height: $item-height-expanded;
-
+		width: $thumb-width;
 		img {
 			cursor: pointer;
 		}
 	}
 
 	.control-group {
-		margin: 0;
-		line-height: $item-height;
+		margin-top: 0;
+		padding-top: ($item-height - $button-size) / 2;
 
-		button {
+		button, label {
 			vertical-align: middle;
+		}
+
+		label {
+			display: inline-block;
+			font-size: $font-size-small;
 		}
 	}
 
 	.truth-box {
-		float: left;
 		font-weight: bold;
-		line-height: $item-height;
 		padding: 0 $space;
 
 		&:after {
@@ -62,7 +82,7 @@
 	}
 
 	.data-item {
-		line-height: 1.8;
+		margin-bottom: $space-half;
 		text-align: right;
 		&.hint {
 			font-style: italic;

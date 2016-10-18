@@ -13,13 +13,14 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	border-radius: 30px;
+	border-radius: 15px;
 	background: $bg-box;
 	color: #333;
 	text-align: center;
 	padding: 30px;
-	font-size: 18px;
+	font-size: $font-size;
 	font-weight: bold;
+	line-height: 1.8;
 }
 
 #overlay-msg .msg-box .correct {

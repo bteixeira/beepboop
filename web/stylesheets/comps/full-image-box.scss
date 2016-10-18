@@ -1,6 +1,6 @@
 .full-image-box {
 	position: fixed;
-	padding: $space;
+	padding: $space-half;
 	background: $bg-overlay;
 	top: 0;
 	bottom: 0;
@@ -9,7 +9,7 @@
 	text-align: center;
 
 	.full-image-wrapper {
-		height: calc(100% - #{$space + $button-size});
+		height: calc(100% - #{$space-half + $button-size});
 		img {
 			max-height: 100%;
 			max-width: 100%;

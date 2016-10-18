@@ -49,6 +49,9 @@ P.comps = {
 
 		$el.on('mousedown touchstart', function (ev) {
 			ev.preventDefault();
+			if (ev.type === 'mousedown' && ev.which !== 1) {
+				return;
+			}
 			var x = ev.pageX;
 			var y = ev.pageY;
 			var lastX;
@@ -57,10 +60,17 @@ P.comps = {
 				x = ev.originalEvent.touches.item(0).pageX;
 				y = ev.originalEvent.touches.item(0).pageY;
 			}
-			var top = $('#guess-items').outerHeight() / 2;
-			var left = $('#guess-items').outerWidth() / 2;
-			$el.css('top', top);
-			$el.css('left', left);
+			var top = $('#guess-items').outerHeight() / 2 + $('#guess-items').offset().top;
+			var left = $('#guess-items').outerWidth() / 2 + $('#guess-items').offset().left;
+			var height = $el.outerHeight();
+			var width = $el.outerWidth();
+			$el.css({
+				top: top,
+				left: left,
+				height: height,
+				width: width,
+				position: 'fixed'
+			});
 			$el.toggleClass('dragging', true);
 			$('body').on('mouseup.drag touchend.drag', function (ev) {
 				$el.removeClass('dragging');
@@ -81,7 +91,7 @@ P.comps = {
 					comp.makeGuess('real');
 				} else {
 					// console.log('no swipe');
-					$el.css({top: '', left: ''});
+					$el.css({top: '', left: '', height: '', width: '', position: ''});
 				}
 			});
 			$('body').on('mousemove.drag', function (ev) {
@@ -127,9 +137,12 @@ P.comps = {
 		var $thumbnailContainer = $('<div class="thumbnail-container"></div>');
 		var $img = $('<img src="' + guessItem.getSrc() + '">');
 		$thumbnailContainer.append($img);
-		$el.append($thumbnailContainer);
-		$el.append('<div class="truth-box ' + (truth === guess ? 'correct' : 'wrong') + '">' + truth[0].toUpperCase() + truth.slice(1) + '</div>');
-		var $button = $('<button type="button">Full Image (10 Credits)</button>');
+		var $leftCol = $('<div class="left-col"></div>');
+		$leftCol.append($thumbnailContainer);
+		$leftCol.append('<div class="truth-box ' + (truth === guess ? 'correct' : 'wrong') + '">' + truth[0].toUpperCase() + truth.slice(1) + '</div>');
+		$el.append($leftCol);
+		var $rightCol = $('<div class="right-col"></div>');
+		var $button = $('<button type="button">Full Image</button> <label>(10 Credits)</label>');
 		if (P.user.get('credits') < 0) {
 			$button.attr('disabled', '');
 		}
@@ -156,7 +169,8 @@ P.comps = {
 		});
 		var $controlGroup = $('<div class="control-group"></div>');
 		$controlGroup.append($button);
-		$el.append($controlGroup);
+		$rightCol.append($controlGroup);
+		$el.append($rightCol);
 
 		return {
 			$el: $el
@@ -168,7 +182,7 @@ P.comps = {
 		var $imageWrapper = $('<div class="full-image-wrapper"></div>');
 		var $controlGroup = $('<div class="control-group"></div>');
 		var $img = $('<img src="' + src + '">');
-		var $btnSize = $('<button type="button">&#x2921;</button>');
+		var $btnSize = $('<button type="button">&#x21f1;</button>');
 		var $btnClose = $('<button type="button">&#x2716;</button>');
 
 		$controlGroup.append($btnSize, $btnClose);
@@ -181,6 +195,10 @@ P.comps = {
 
 		$btnSize.on('click', function () {
 			$el.toggleClass('expanded');
+		});
+
+		$img.on('click', function () {
+			$btnSize.click();
 		});
 
 		return {$el: $el};
