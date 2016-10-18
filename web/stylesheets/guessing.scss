@@ -1,5 +1,9 @@
+#game .credits {
+    height: 20px;
+}
+
 #guess-items {
-    height: calc(100% - 60px);
+    height: calc(100% - #{$space-half + $button-size + 20px}); // Allow space below for the guess buttons
     box-sizing: border-box;
     position: relative;
 }
@@ -33,4 +37,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#game .control-group:after {
+    content: "";
+    display: block;
+    clear: both;
 }

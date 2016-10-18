@@ -48,12 +48,12 @@
 
         &.correct:after {
             content: "\2714";
-            color: green;
+            color: $color-correct;
         }
 
         &.wrong:after {
             content: "\2718";
-            color: red;
+            color: $color-wrong;
         }
     }
 

@@ -11,6 +11,7 @@ P.API = {
     },
     makeGuess: function (id, guess, callback) {
         $.post('/api/makeGuess', {user: 'Kintaro', id: id, guess: guess}, function (data) {
+            $('.credits-data').text(data.credits);
             callback(data.correct);
         });
     },

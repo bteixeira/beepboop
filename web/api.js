@@ -201,7 +201,10 @@ router.post('/makeGuess', function (req, res) {
             if (result) {
                 req.session.user.credits += 1;
             }
-            res.send({correct: result});
+            res.send({
+                correct: result,
+                credits: req.session.user.credits
+            });
         });
     });
 });
