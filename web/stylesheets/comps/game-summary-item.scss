@@ -1,0 +1,70 @@
+#game-summary-items {
+    margin-bottom: $space;
+}
+
+.game-summary-item {
+
+    $item-height: 80px;
+    $item-height-expanded: $item-height * 2;
+
+    margin-bottom: $space-half;
+    text-align: center;
+
+    .thumbnail-container {
+        width: $item-height-expanded;
+        height: $item-height;
+        display: inline-block;
+        float: left;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+
+    &.expanded .thumbnail-container {
+        height: $item-height-expanded;
+    }
+
+    .control-group {
+        margin: 0;
+        line-height: $item-height;
+
+        button {
+            vertical-align: middle;
+        }
+    }
+
+    .truth-box {
+        float: left;
+        font-weight: bold;
+        line-height: $item-height;
+        padding: 0 $space;
+
+        &:after {
+            font-size: 24px;
+            margin-left: $space-quarter;
+        }
+
+        &.correct:after {
+            content: "\2714";
+            color: green;
+        }
+
+        &.wrong:after {
+            content: "\2718";
+            color: red;
+        }
+    }
+
+    .data-item {
+        line-height: 1.5;
+    }
+
+    &:after {
+        clear: both;
+        content: "";
+        display: block;
+    }
+
+}

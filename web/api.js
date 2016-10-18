@@ -35,6 +35,9 @@ router.get('/', function (req, res) {
     res.send('api okay');
 });
 
+/**
+ * Returns the JSON of an uncurated image
+ */
 router.get('/getImage', function (req, res) {
     console.log('ping');
     var skip = parseInt(req.query.skip, 10) || 0;
@@ -83,8 +86,6 @@ router.post('/saveImage', function (req, res) {
 });
 
 router.get('/getCroppedImage', function (req, res) {
-    console.log('pang');
-
     var query = {};
 
     for (var p in req.query) {
@@ -205,31 +206,55 @@ router.post('/makeGuess', function (req, res) {
     });
 });
 
-router.get('/getImageById', function (req, res) {
-    connection.findImageById(req.query.id, (err, image) => {
+/**
+ * Deducts the price from the user's account.
+ * Returns the JSON for the image and model.
+ */
+const IMAGE_PRICE = 10;
+router.post('/buyImage', function (req, res) {
+    console.log('session:', req.session);
+    if (req.session.user.credits < IMAGE_PRICE) {
+        res.send({error: true, message: 'Not enough credits'});
+    } else {
+        getImage(req.body.id, (err, image) => {
+            if (err) {
+                res.send(err);
+            } else {
+                connection.findModelByImage(image, (err, model) => {
+                    if (err) {
+                        res.send(err);
+                    } else {
+                        req.session.user.credits -= IMAGE_PRICE;
+                        res.send({
+                            image: image,
+                            model: model
+                        });
+                    }
+                });
+            }
+        });
+    }
+});
+
+function getImage(id, callback) {
+    connection.findImageById(id, (err, image) => {
         if (err) {
-            console.error(err);
-            res.status(500).send(err);
-            return;
+            callback(err);
         }
         utils.getFullContent(image, (err, contents) => {
             if (err) {
-                console.error(err);
-                res.status(500).send(err);
-                return;
+                callback(err);
             }
             magic.detect(contents, (err, mimeType) => {
                 if (err) {
-                    console.error(err);
-                    res.status(500).send(err);
-                    return;
+                    callback(err);
                 }
                 image.contents = contents.toString('base64');
                 image.mimeType = mimeType;
-                res.send(image);
+                callback(null, image);
             });
         });
     });
-});
+}
 
 module.exports = router;

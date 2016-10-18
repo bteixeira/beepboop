@@ -3,4 +3,8 @@
   border: solid 3px $color-border;
   border-radius: $space;
   height: 100%;
+
+  &.hidden {
+    display: none;
+  }
 }

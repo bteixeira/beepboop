@@ -27,6 +27,7 @@ P.comps = {
                     } else {
                         verdict = '<span class="wrong">Wrong!</span>';
                     }
+                    $('#game-summary-items').append(P.comps.gameSummaryItem(item, truth.toLowerCase(), guess).$el);
                     P.overlay.showAlert(verdict + '<br>They\'re ' + truth + '!', function () {
                         $el.remove();
                         comp.trigger('remove');
@@ -41,8 +42,8 @@ P.comps = {
 
         function checkRemaining () {
             if (!$('.guess-item').length) {
-                P.overlay.show();
-                window.location = '/dashboard';
+                $('#game').toggleClass('hidden', true);
+                $('#game-summary').removeClass('hidden');
             }
         }
 
@@ -119,5 +120,38 @@ P.comps = {
             }
         }
 
+    },
+
+    gameSummaryItem: function (guessItem /*model*/, truth, guess) {
+        var $el = $('<div class="game-summary-item"></div>');
+        var $thumbnailContainer = $('<div class="thumbnail-container"></div>');
+        var $img = $('<img src="' + guessItem.getSrc() + '">');
+        $thumbnailContainer.append($img);
+        $el.append($thumbnailContainer);
+        $el.append('<div class="truth-box ' + (truth === guess ? 'correct' : 'wrong') + '">' + truth[0].toUpperCase() + truth.slice(1) + '</div>');
+        var $button = $('<button type="button">Full Image (10 Credits)</button>');
+        $button.on('click', function () {
+            P.overlay.show();
+            P.API.buyImage(guessItem.id, function (data) {
+                console.log(data);
+                $img.attr('src', 'data:' + data.image.mimeType + ';base64,' + data.image.contents);
+                $el.toggleClass('expanded', true);
+                $button.remove();
+                $el.append('<div class="guess-item-data"><ul>' +
+                        '<li class="data-item">' + data.model.name + '</li>' +
+                        '<li class="data-item">' + data.model.attributes.Age + '</li>' +
+                        '<li class="data-item">' + data.model.attributes['Bra/cup size'] + '</li>' +
+                        '<li class="data-item">' + data.model.attributes['Profession'] + '</li>' +
+                    '</ul></div>');
+                P.overlay.hide();
+            });
+        });
+        var $controlGroup = $('<div class="control-group"></div>');
+        $controlGroup.append($button);
+        $el.append($controlGroup);
+
+        return {
+            $el: $el
+        };
     }
 };

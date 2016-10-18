@@ -13,5 +13,10 @@ P.API = {
         $.post('/api/makeGuess', {user: 'Kintaro', id: id, guess: guess}, function (data) {
             callback(data.correct);
         });
+    },
+    buyImage: function (id, callback) {
+        $.post('/api/buyImage', {id: id}, function (data) {
+            callback(data);
+        });
     }
 };
