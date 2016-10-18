@@ -130,22 +130,27 @@ P.comps = {
 		$el.append($thumbnailContainer);
 		$el.append('<div class="truth-box ' + (truth === guess ? 'correct' : 'wrong') + '">' + truth[0].toUpperCase() + truth.slice(1) + '</div>');
 		var $button = $('<button type="button">Full Image (10 Credits)</button>');
-		if (P.user.get('credits') < 10) {
+		if (P.user.get('credits') < 0) {
 			$button.attr('disabled', '');
 		}
 		$button.on('click', function () {
 			P.overlay.show();
 			P.API.buyImage(guessItem.id, function (data) {
-				console.log(data);
-				$img.attr('src', 'data:' + data.image.mimeType + ';base64,' + data.image.contents);
+				var src = 'data:' + data.image.mimeType + ';base64,' + data.image.contents;
+				$img.attr('src', src);
+				$img.on('click', function () {
+					$('body').append(new P.comps.fullImageBox(src).$el);
+				});
 				$el.toggleClass('expanded', true);
-				$button.remove();
+				$button.parent().remove();
 				$el.append('<div class="guess-item-data"><ul>' +
 					'<li class="data-item">' + data.model.name + '</li>' +
 					'<li class="data-item">' + data.model.attributes.Age + '</li>' +
-					'<li class="data-item">' + data.model.attributes['Bra/cup size'] + '</li>' +
+					'<li class="data-item">Cup ' + data.model.attributes['Bra/cup size'] + '</li>' +
 					'<li class="data-item">' + data.model.attributes['Profession'] + '</li>' +
+					'<li class="data-item hint">(Tap image to expand)</li>' +
 					'</ul></div>');
+				$img.click();
 				P.overlay.hide();
 			});
 		});
@@ -156,5 +161,28 @@ P.comps = {
 		return {
 			$el: $el
 		};
+	},
+
+	fullImageBox: function (src /* model */) {
+		var $el = $('<div class="full-image-box"></div>');
+		var $imageWrapper = $('<div class="full-image-wrapper"></div>');
+		var $controlGroup = $('<div class="control-group"></div>');
+		var $img = $('<img src="' + src + '">');
+		var $btnSize = $('<button type="button">&#x2921;</button>');
+		var $btnClose = $('<button type="button">&#x2716;</button>');
+
+		$controlGroup.append($btnSize, $btnClose);
+		$imageWrapper.append($img);
+		$el.append($imageWrapper, $controlGroup);
+
+		$btnClose.on('click', function () {
+			$el.remove();
+		});
+
+		$btnSize.on('click', function () {
+			$el.toggleClass('expanded');
+		});
+
+		return {$el: $el};
 	}
 };

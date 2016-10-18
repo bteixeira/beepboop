@@ -1,0 +1,29 @@
+.full-image-box {
+	position: fixed;
+	padding: $space;
+	background: $bg-overlay;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+
+	.full-image-wrapper {
+		height: calc(100% - #{$space + $button-size});
+		img {
+			max-height: 100%;
+			max-width: 100%;
+		}
+	}
+
+	&.expanded {
+		.full-image-wrapper {
+			overflow: auto;
+
+			img {
+				max-height: none;
+				max-width: none;
+			}
+		}
+	}
+}

@@ -1,7 +1,7 @@
 //$bg-main: #48AD00;
 $bg-main: white;
 $bg-button: #ff6717;
-$bg-button-disabled: #666;
+$bg-button-disabled: #ddd;
 //$bg-input: white;
 $bg-input: #ddd;
 $bg-box: white;
@@ -17,3 +17,5 @@ $button-size: 40px;
 $space: 30px;
 $space-half: $space / 2;
 $space-quarter: $space / 4;
+
+$bg-overlay: rgba(0, 0, 0, 0.75);

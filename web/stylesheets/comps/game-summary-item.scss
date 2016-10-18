@@ -24,6 +24,10 @@
 
 	&.expanded .thumbnail-container {
 		height: $item-height-expanded;
+
+		img {
+			cursor: pointer;
+		}
 	}
 
 	.control-group {
@@ -58,7 +62,12 @@
 	}
 
 	.data-item {
-		line-height: 1.5;
+		line-height: 1.8;
+		text-align: right;
+		&.hint {
+			font-style: italic;
+			font-size: 12px;
+		}
 	}
 
 	&:after {
