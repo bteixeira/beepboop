@@ -175,6 +175,7 @@ router.get('/getNextSet', function (req, res) {
 });
 
 router.post('/makeGuess', function (req, res) {
+	var now = new Date().getTime();
 	// required: user handle, image id, guess
 	console.log(`User Guessing ${util.inspect(req.body)}`);
 	console.log(`User Session ${util.inspect(req.session)}`);
@@ -197,7 +198,9 @@ router.post('/makeGuess', function (req, res) {
 				res.status(500).send(err);
 				return;
 			}
+
 			var result = (guess === model.attributes.Boobs);
+
 			connection.incrementUserCredits({name: req.session.name}, result ? 1 : 0, (err, user) => {
 				if (err) {
 					console.error(err);
@@ -208,6 +211,13 @@ router.post('/makeGuess', function (req, res) {
 					correct: result,
 					credits: user.credits
 				});
+				connection.insertGuess({
+					timestamp: now,
+					imageId: req.body.id,
+					type: 'Boobs',
+					guess: req.body.guess,
+					correct: result
+				}, console.error);
 			});
 		});
 	});
@@ -256,9 +266,6 @@ router.post('/buyImage', function (req, res) {
 			});
 		}
 	});
-
-
-
 
 });
 

@@ -8,12 +8,12 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
 var URL = 'mongodb://localhost:27017/beepboop';
 
-
 function MongoDBConnection(db) {
 	this._connection = db;
 	this._models = db.collection('models');
 	this._images = db.collection('images');
 	this._users = db.collection('users');
+	this._guesses = db.collection('guesses');
 }
 
 MongoDBConnection.prototype.addOrUpdateModel = function (model, callback) {
@@ -250,6 +250,10 @@ MongoDBConnection.prototype.incrementUserCredits = function (user, increment, ca
 			callback(err, result.value)
 		}
 	);
+};
+
+MongoDBConnection.prototype.insertGuess = function (guess, callback) {
+	this._guesses.insertOne(guess, callback);
 };
 
 module.exports = {
