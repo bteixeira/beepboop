@@ -48,7 +48,13 @@ app.post('/login', function (req, res) {
 		}
 		if (!user) {
 			console.log('creating new user', name);
-			connection.insertUser({name: name, credits: 1}, (err) => {
+			connection.insertUser({
+				name: name,
+				credits: 100,
+				score: 0,
+				hits: 0,
+				guesses: 0
+			}, (err) => {
 				if (err) {
 					console.error(err);
 					res.status(500).send(err);

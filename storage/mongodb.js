@@ -240,13 +240,11 @@ MongoDBConnection.prototype.insertUser = function (user, callback) {
 	this._users.insertOne(user, callback);
 };
 
-MongoDBConnection.prototype.incrementUserCredits = function (user, increment, callback) {
+MongoDBConnection.prototype.updateUser = function (user, callback) {
 	this._users.findOneAndUpdate(
 		{name: user.name},
-		{$inc: {credits: increment}},
-		{returnOriginal: false},
+		user,
 		(err, result) => {
-			console.log('incremented', result);
 			callback(err, result.value)
 		}
 	);

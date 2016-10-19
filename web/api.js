@@ -200,24 +200,50 @@ router.post('/makeGuess', function (req, res) {
 			}
 
 			var result = (guess === model.attributes.Boobs);
+			var incr = result ? 1 : 0;
 
-			connection.incrementUserCredits({name: req.session.name}, result ? 1 : 0, (err, user) => {
+			connection.findUserByName(req.session.name, (err, user) => {
 				if (err) {
 					console.error(err);
 					res.status(500).send(err);
 					return;
 				}
-				res.send({
-					correct: result,
-					credits: user.credits
+
+				if (!user.stats) {
+					user.stats = {
+						credits: user.credits,
+						score: user.credits,
+						guesses: 0,
+						hits: 0
+					};
+				}
+				user.stats.credits += incr;
+				user.stats.score += incr;
+				user.stats.guesses += 1;
+				user.stats.hits += incr;
+				delete user.credits;
+				delete user.score;
+				delete user.guesses;
+				delete user.hits;
+
+				connection.updateUser(user, (err, old) => {
+					if (err) {
+						console.error(err);
+						res.status(500).send(err);
+						return;
+					}
+					res.send({
+						correct: result,
+						stats: user.stats
+					});
+					connection.insertGuess({
+						timestamp: now,
+						imageId: req.body.id,
+						type: 'Boobs',
+						guess: req.body.guess,
+						correct: result
+					}, console.error);
 				});
-				connection.insertGuess({
-					timestamp: now,
-					imageId: req.body.id,
-					type: 'Boobs',
-					guess: req.body.guess,
-					correct: result
-				}, console.error);
 			});
 		});
 	});
@@ -242,27 +268,30 @@ router.post('/buyImage', function (req, res) {
 		} else {
 			getImage(req.body.id, (err, image) => {
 				if (err) {
-					res.send(err);
-				} else {
-					connection.findModelByImage(image, (err, model) => {
-						if (err) {
-							res.send(err);
-						} else {
-							connection.incrementUserCredits(user, -IMAGE_PRICE, (err, user) => {
-								if (err) {
-									console.error(err);
-									res.status(500).send(err);
-									return;
-								}
-								res.send({
-									image: image,
-									model: model,
-									credits: user.credits
-								});
-							});
-						}
-					});
+					console.error(err);
+					res.status(500).send(err);
+					return;
 				}
+				connection.findModelByImage(image, (err, model) => {
+					if (err) {
+						console.error(err);
+						res.status(500).send(err);
+						return;
+					}
+					user.stats.credits -= IMAGE_PRICE;
+					connection.updateUser(user, (err, old) => {
+						if (err) {
+							console.error(err);
+							res.status(500).send(err);
+							return;
+						}
+						res.send({
+							image: image,
+							model: model,
+							stats: user.stats
+						});
+					});
+				});
 			});
 		}
 	});
