@@ -9,8 +9,15 @@ block content
 			.control-group
 				h1.name= user.name
 			.control-group
-				h3.line.credits
-					include credits.pug
+				.stats-list
+					span.dt All-time score
+					span.dd.score-data= user.stats.score
+					br
+					span.dt Hit rate
+					span.dd.percent-data= (user.stats.hits / user.stats.guesses * 100).toFixed(1) + '%'
+					br
+					span.dt Credits
+					span.dd.credits-data= user.stats.credits
 			.control-group
 				button#btn-start(type="button") Start Game
 			.control-group

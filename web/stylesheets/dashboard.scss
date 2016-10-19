@@ -31,3 +31,17 @@ h3 {
 #btn-real {
 	float: right;
 }
+
+.stats-list {
+
+	display: inline-block;
+
+	.dt {
+		font-weight: bold;
+
+		&:after {
+			content: ": ";
+		}
+	}
+
+}

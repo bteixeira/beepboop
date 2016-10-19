@@ -10,14 +10,14 @@ P.API = {
 		});
 	},
 	makeGuess: function (id, guess, callback) {
-		$.post('/api/makeGuess', {user: 'Kintaro', id: id, guess: guess}, function (data) {
-			P.user.set('credits', data.stats.credits);
+		$.post('/api/makeGuess', {id: id, guess: guess}, function (data) {
+			P.user.updateStats(data.stats);
 			callback(data.correct);
 		});
 	},
 	buyImage: function (id, callback) {
 		$.post('/api/buyImage', {id: id}, function (data) {
-			P.user.set('credits', data.stats.credits);
+			P.user.updateStats(data.stats);
 			callback(data);
 		});
 	}
