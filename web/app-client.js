@@ -50,10 +50,12 @@ app.post('/login', function (req, res) {
 			console.log('creating new user', name);
 			connection.insertUser({
 				name: name,
-				credits: 100,
-				score: 0,
-				hits: 0,
-				guesses: 0
+				stats: {
+					credits: 100,
+					score: 0,
+					hits: 0,
+					guesses: 0
+				}
 			}, (err) => {
 				if (err) {
 					console.error(err);

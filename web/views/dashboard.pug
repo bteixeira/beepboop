@@ -10,12 +10,13 @@ block content
 				h1.name= user.name
 			.control-group
 				.stats-list
-					span.dt All-time score
-					span.dd.score-data= user.stats.score
-					br
-					span.dt Hit rate
-					span.dd.percent-data= (user.stats.hits / user.stats.guesses * 100).toFixed(1) + '%'
-					br
+					if user.stats.score
+						span.dt All-time score
+						span.dd.score-data= user.stats.score
+						br
+						span.dt Hit rate
+						span.dd.percent-data= (user.stats.hits / user.stats.guesses * 100).toFixed(1) + '%'
+						br
 					span.dt Credits
 					span.dd.credits-data= user.stats.credits
 			.control-group
