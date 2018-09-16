@@ -19,7 +19,7 @@
   "dependencies": {
     "body-parser": "^1.15.1",
     "bunyan": "^1.8.1",
-    "cheerio": "^0.19.0",
+    "cheerio": "^0.22.0",
     "diskdb": "^0.1.14",
     "express": "^4.13.4",
     "express-session": "^1.14.0",
@@ -27,7 +27,6 @@
     "lodash": "^4.13.1",
     "lowdb": "^0.13.0",
     "mkpath": "^1.0.0",
-    "mmmagic": "^0.4.4",
     "mongodb": "^2.2.1",
     "node-sass-middleware": "^0.9.8",
     "pg": "^4.4.3",
@@ -35,5 +34,9 @@
     "request": "^2.67.0",
     "semaphore": "^1.0.5",
     "split2": "^2.1.0"
+  },
+  "devDependencies": {
+    "mmmagic": "^0.5.1",
+    "sass": "^1.13.4"
   }
 }

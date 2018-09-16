@@ -23,7 +23,7 @@ $(function () {
 	$('#button-submit').on('click', function () {
 		var metadata = getMetadata();
 		metadata.crop = getCrop();
-		$.post('/api/saveImage', {
+		$.post('http://papaya-app.com/api/saveImage', {
 			hash: getHash(),
 			metadata: metadata
 		}, function (data) {

@@ -14,6 +14,9 @@ const META = require('./public/meta.config.json');
 
 var storage = require('../storage/default');
 var connection;
+
+var request = require('request');
+
 storage.getConnection(null, (err, db) => {
 	if (err) {
 		throw err;
@@ -39,6 +42,12 @@ router.get('/', function (req, res) {
  * Returns the JSON of an uncurated image
  */
 router.get('/getImage', function (req, res) {
+
+	var _req = request('http://papaya-app.com/api/getImage')
+
+	_req.pipe(res)
+	return
+
 	console.log('ping');
 	var skip = parseInt(req.query.skip, 10) || 0;
 	console.log('skipping?', skip);
