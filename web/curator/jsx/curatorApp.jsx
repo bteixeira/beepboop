@@ -29,21 +29,18 @@ class CuratorApp extends React.Component {
 					<div id="image-area-container">
 						<ImageCropWidget
 							image={this.state.image}
-							onChangeCrop={(crop) => this.setState({crop})}
+							onChangeCrop={(crop) => this.setState({crop} || {})}
 						/>
 					</div>
 				</div>
 				<CuratorControls
 					metaInfoControls={this.state.metaInfoControls}
-					x={ this.refs_.image.current ?
-							Math.round(this.state.crop.x * this.refs_.image.current.naturalWidth)
-							: ''
-					}
 					handlers={{
 						submit: this.handleSubmit.bind(this),
 						skip: this.handleSkip.bind(this),
 						resetSkip: this.handleResetSkip.bind(this),
 					}}
+					{...this.state.crop}
 				/>
 			</div>
 		)
