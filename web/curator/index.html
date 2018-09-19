@@ -8,59 +8,6 @@
 </head>
 <body>
 
-<!--<div id="container">-->
-    <!--<div id="info-container">-->
-        <!--<h3 class="model-name"></h3>-->
-        <!--<a href="" class="model-link" target="_blank"></a>-->
-        <!--<h4>Attributes</h4>-->
-        <!--<dl class="model-attrs"></dl>-->
-        <!--<h4>Image</h4>-->
-        <!--<a href="" class="image-link" target="_blank"></a>-->
-        <!--<dl>-->
-            <!--<dt>Hash</dt>-->
-            <!--<dd class="image-hash"></dd>-->
-            <!--<dt>MIME Type</dt>-->
-            <!--<dd class="image-mime"></dd>-->
-            <!--<dt>Size</dt>-->
-            <!--<dd class="image-size"></dd>-->
-            <!--<dt>Resolution</dt>-->
-            <!--<dd class="image-res"></dd>-->
-        <!--</dl>-->
-    <!--</div>-->
-    <!--<div id="image-container">-->
-        <!--<div id="image-area-container">-->
-            <!--<div id="image-area">-->
-                <!--<img id="image">-->
-                <!--<div class="image-selection-overlay hidden">-->
-                    <!--<div class="resize-handle top-left"></div>-->
-                    <!--<div class="resize-handle top"></div>-->
-                    <!--<div class="resize-handle top-right"></div>-->
-                    <!--<div class="resize-handle left"></div>-->
-                    <!--<div class="resize-handle right"></div>-->
-                    <!--<div class="resize-handle bottom-left"></div>-->
-                    <!--<div class="resize-handle bottom"></div>-->
-                    <!--<div class="resize-handle bottom-right"></div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div id="controls-container">-->
-        <!--Controls-->
-        <!--<form id="form-crop">-->
-            <!--<input id="input-crop-x" name="x" type="number">-->
-            <!--<input id="input-crop-y" name="y" type="number">-->
-            <!--<input id="input-crop-w" name="w" type="number">-->
-            <!--<input id="input-crop-h" name="h" type="number">-->
-        <!--</form>-->
-        <!--<form id="form-meta">-->
-            <!--<ul id="controls"></ul>-->
-            <!--<button type="button" id="button-skip">Skip</button>-->
-            <!--<button type="button" id="button-reset-skip">Reset</button>-->
-            <!--<button type="button" id="button-submit">Submit</button>-->
-        <!--</form>-->
-    <!--</div>-->
-<!--</div>-->
-
 <div id="container"></div>
 
 
@@ -70,11 +17,12 @@
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
-<script src="js/curator-app.jsx" type="text/babel"></script>
+<script src="js/curatorApp.jsx" type="text/babel"></script>
+<script src="js/curatorAttributePanel.jsx" type="text/babel"></script>
+<script src="js/curatorControls.jsx" type="text/babel"></script>
 <script type="text/babel">
 	ReactDOM.render(<CuratorApp/>, document.getElementById('container'));
 </script>
-<!--<script src="js/index.js"></script>-->
 <script src="js/form.js"></script>
 
 </body>

@@ -50,45 +50,12 @@ class CuratorApp extends React.Component {
 	render () {
 		return (
 			<div id="container">
-				<div id="info-container">
-					<h3 className="model-name">{this.state.model.name}</h3>
-					<a href={`http://www.${this.state.model.source}.com/babe/${this.state.model.slug}`} className="model-link" target="_blank">
-						{this.state.model.source} / {this.state.model.slug}
-					</a>
-					<h4>Attributes</h4>
-					<dl className="model-attrs"> {
-						Object.entries(this.state.model.attributes).map(([attr, value]) =>
-							<React.Fragment key={attr}>
-								<dt>{attr}</dt>
-								<dd>{value}</dd>
-							</React.Fragment>
-						)
-					} </dl>
-					<h4>Image</h4>
-					<a className="image-link" target="_blank" href={this.state.image.url}>
-						{this.state.image.filename}
-					</a>
-					<dl>
-						<dt>Hash</dt>
-						<dd className="image-hash">
-							{this.state.image.hash}
-						</dd>
-						<dt>MIME Type</dt>
-						<dd className="image-mime">
-							{this.state.image.mimeType}
-						</dd>
-						<dt>Size</dt>
-						<dd className="image-size">
-							{atob(this.state.image.contents || '').length} bytes
-						</dd>
-						<dt>Resolution</dt>
-						<dd className="image-res">
-							{this.refs_.image.current && this.refs_.image.current.naturalWidth}
-							{'\u00d7'}
-							{this.refs_.image.current && this.refs_.image.current.naturalHeight};
-						</dd>
-					</dl>
-				</div>
+				<CuratorAttributePanel
+					model={this.state.model}
+					image={this.state.image}
+					imageWidth={this.refs_.image.current && this.refs_.image.current.naturalWidth}
+					imageHeight={this.refs_.image.current && this.refs_.image.current.naturalHeight}
+				/>
 				<div id="image-container">
 					<div id="image-area-container">
 						<div id="image-area" onMouseDown={this.startSelecting.bind(this)}>
@@ -145,48 +112,13 @@ class CuratorApp extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="controls-container">
-					Controls
-					<form id="form-crop">
-						<input id="input-crop-x" name="x" type="number" readOnly value={
-							this.refs_.image.current ?
+				<CuratorControls
+					metaInfoControls={this.state.metaInfoControls}
+					x={ this.refs_.image.current ?
 							Math.round(this.state.crop.x * this.refs_.image.current.naturalWidth)
-								: ''
-						}/>
-						<input id="input-crop-y" name="y" type="number"/>
-						<input id="input-crop-w" name="w" type="number"/>
-						<input id="input-crop-h" name="h" type="number"/>
-					</form>
-					<form id="form-meta">
-						<ul id="controls"> {
-							Object.entries(this.state.metaInfoControls).map(([name, control]) =>
-								<div key={name}>
-									<label htmlFor={`control-${name}`} title={control.description}>{control.name}</label>
-									<select name={name} defaultValue={control.default}>
-										<option value=""/>
-										{
-											control.values.map(value => {
-												var val, desc;
-												if (typeof value === 'object') {
-													val = desc = value.value;
-													if ('description' in value) {
-														desc = value.description;
-													}
-												} else {
-													val = desc = String(value);
-												}
-												return <option key={val} value={val}>{desc}</option>
-											})
-										}
-									</select>
-								</div>,
-							)
-						} </ul>
-						<button type="button" id="button-skip">Skip</button>
-						<button type="button" id="button-reset-skip">Reset</button>
-						<button type="button" id="button-submit">Submit</button>
-					</form>
-				</div>
+							: ''
+					}
+				/>
 			</div>
 		)
 	}

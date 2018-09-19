@@ -1,9 +1,5 @@
 $(function () {
 
-	function getHash() {
-		return $('.image-hash').text();
-	}
-
 	function getCrop() {
 		var metadata = {};
 		$('#form-crop').serializeArray().forEach(function (el) {
@@ -24,7 +20,7 @@ $(function () {
 		var metadata = getMetadata();
 		metadata.crop = getCrop();
 		$.post('http://papaya-app.com/api/saveImage', {
-			hash: getHash(),
+			hash: $('.image-hash').text(),
 			metadata: metadata
 		}, function (data) {
 			$('#controls select').each(function (i, el) {
