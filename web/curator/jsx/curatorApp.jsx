@@ -25,10 +25,14 @@ class CuratorApp extends React.Component {
 					imageWidth={this.refs_.image.current && this.refs_.image.current.naturalWidth}
 					imageHeight={this.refs_.image.current && this.refs_.image.current.naturalHeight}
 				/>
-				<ImageCropWidget
-					image={this.state.image}
-					onChangeCrop={(crop) => this.setState({crop})}
-				/>
+				<div id="image-container">
+					<div id="image-area-container">
+						<ImageCropWidget
+							image={this.state.image}
+							onChangeCrop={(crop) => this.setState({crop})}
+						/>
+					</div>
+				</div>
 				<CuratorControls
 					metaInfoControls={this.state.metaInfoControls}
 					x={ this.refs_.image.current ?

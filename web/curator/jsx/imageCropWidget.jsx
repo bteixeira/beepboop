@@ -8,7 +8,7 @@ class ImageCropWidget extends React.Component {
 				y: null,
 				w: null,
 				h: null,
-			}
+			},
 		}
 		this.refs_ = {
 			image: React.createRef(),
@@ -18,61 +18,63 @@ class ImageCropWidget extends React.Component {
 	render () {
 		const {cls} = Util;
 		return (
-			<div id="image-container">
-				<div id="image-area-container">
-					<div id="image-area" onMouseDown={this.startSelecting.bind(this)}>
-						{ this.props.image && (
-							<img id="image"
-								 src="http://www.placecage.com/300/200"
-								// src={`data:${this.state.image.mimeType};base64,${this.state.image.contents}`}
-								 ref={this.refs_.image}
-							/>
-						) }
-						<div
-							className={cls('image-selection-overlay', {
-								'hidden': !this.state.showImageOverlay,
-							})}
-							onMouseDown={this.startDragging.bind(this)}
-						>
-							<div className="resize-handle top-left"/>
-							<div className="resize-handle top"/>
-							<div className="resize-handle top-right"/>
-							<div className="resize-handle left"/>
-							<div className="resize-handle right"/>
-							<div className="resize-handle bottom-left"/>
-							<div className="resize-handle bottom"/>
-							<div className="resize-handle bottom-right"/>
-						</div>
-						{ (this.state.crop.w || this.state.crop.h) && (
-							<React.Fragment>
-								<div className="image-blur-overlay top" style={{
-									top: 0,
-									left: 0,
-									width: '100%',
-									height: (this.state.crop.y * 100) + '%',
-								}}/>
-								<div className="image-blur-overlay bottom" style={{
-									top: (this.state.crop.y + this.state.crop.h) * 100 + '%',
-									left: 0,
-									width: '100%',
-									bottom: 0,
-								}}/>
-								<div className="image-blur-overlay left" style={{
-									top: (this.state.crop.y * 100) + '%',
-									left: 0,
-									width: (this.state.crop.x * 100) + '%',
-									height: (this.state.crop.h * 100) + '%',
-								}}/>
-								<div className="image-blur-overlay right" style={{
-									top: (this.state.crop.y * 100) + '%',
-									right: 0,
-									left: (this.state.crop.x + this.state.crop.w) * 100 + '%',
-									height: (this.state.crop.h * 100) + '%',
-								}}/>
-							</React.Fragment>
-						) }
-					</div>
+			<div id="image-area" onMouseDown={this.startSelecting.bind(this)}>
+				{this.props.image && (
+					<img id="image"
+						 src="http://www.placecage.com/300/200"
+						// src={`data:${this.state.image.mimeType};base64,${this.state.image.contents}`}
+						 ref={this.refs_.image}
+					/>
+				)}
+				<div
+					className={cls('image-selection-overlay', {
+						'hidden': !this.state.showImageOverlay,
+					})}
+					onMouseDown={this.startDragging.bind(this)}
+					style={{
+						top: `calc(${this.state.crop.y * 100}% - 2px)`,
+						left: `calc(${this.state.crop.x * 100}% - 2px)`,
+						width: (this.state.crop.w * 100) + '%',
+						height: (this.state.crop.h * 100) + '%',
+					}}
+				>
+					<div className="resize-handle top-left"/>
+					<div className="resize-handle top"/>
+					<div className="resize-handle top-right"/>
+					<div className="resize-handle left"/>
+					<div className="resize-handle right"/>
+					<div className="resize-handle bottom-left"/>
+					<div className="resize-handle bottom"/>
+					<div className="resize-handle bottom-right"/>
 				</div>
+				{(this.state.crop.w || this.state.crop.h) && (
+					<React.Fragment>
+						<div className="image-blur-overlay top" style={{
+							top: 0,
+							left: 0,
+							width: '100%',
+							height: (this.state.crop.y * 100) + '%',
+						}}/>
+						<div className="image-blur-overlay bottom" style={{
+							top: (this.state.crop.y + this.state.crop.h) * 100 + '%',
+							left: 0,
+							width: '100%',
+							bottom: 0,
+						}}/>
+						<div className="image-blur-overlay left" style={{
+							top: (this.state.crop.y * 100) + '%',
+							left: 0,
+							width: (this.state.crop.x * 100) + '%',
+							height: (this.state.crop.h * 100) + '%',
+						}}/>
+						<div className="image-blur-overlay right" style={{
+							top: (this.state.crop.y * 100) + '%',
+							right: 0,
+							left: (this.state.crop.x + this.state.crop.w) * 100 + '%',
+							height: (this.state.crop.h * 100) + '%',
+						}}/>
+					</React.Fragment>
+				)}
 			</div>
 		)
 	}
@@ -81,20 +83,22 @@ class ImageCropWidget extends React.Component {
 		if (ev.buttons !== 1) {
 			return;
 		}
+		ev.preventDefault(); // Don't let the browser drag the image around
 
 		this.setState({showImageOverlay: false})
 
-		var clickStart = this.getImageCoords(ev);
+		const clickStart = this.getImageCoords(ev);
 		this.setState({clickStart});
-		this.setState({crop: {
-			x: clickStart.x,
-			y: clickStart.y,
-			w: 0,
-			h: 0,
-		}});
-		ev.preventDefault(); // Don't let the browser drag the image around
+		this.setState({
+			crop: {
+				x: clickStart.x,
+				y: clickStart.y,
+				w: 0,
+				h: 0,
+			},
+		});
 
-		$('body').on('mousemove.resize', ev => {
+		$(document).on('mousemove.resize', ev => {
 			var c = this.getImageCoords(ev);
 			var crop = {};
 
@@ -117,8 +121,8 @@ class ImageCropWidget extends React.Component {
 			this.setState({crop})
 		});
 
-		$('body').one('mouseup', () => {
-			$('body').off('mousemove.resize');
+		$(document).one('mouseup', () => {
+			$(document).off('mousemove.resize');
 			console.log('done selecting!');
 
 			if (this.state.crop.h === 0 || this.state.crop.w === 0) {
@@ -126,9 +130,8 @@ class ImageCropWidget extends React.Component {
 					showImageOverlay: false,
 					crop: {},
 				})
-				$('#form-crop input').val('');
 			} else {
-				this.remakeSelectionOverlay();
+				this.setState({showImageOverlay: true})
 			}
 		});
 	}
@@ -156,7 +159,7 @@ class ImageCropWidget extends React.Component {
 		var c = this.getImageCoords(ev);
 		this.setState({clickStart: {x: c.x, y: c.y}});
 
-		$('body').on('mousemove.drag', ev => {
+		$imageArea.on('mousemove.drag', ev => {
 			var c = this.getImageCoords(ev);
 			var crop = {...this.state.crop};
 
@@ -222,20 +225,12 @@ class ImageCropWidget extends React.Component {
 		});
 
 		$(this).toggleClass('dragging', true);
-		$('body').one('mouseup', () => {
+		$(document).one('mouseup', () => {
 			console.log('end');
-			$('body').off('mousemove.drag');
+			$imageArea.off('mousemove.drag');
 			$imageArea.removeClass('dragging');
-			this.remakeSelectionOverlay();
+			this.setState({showImageOverlay: true})
 		});
-	}
-
-	remakeSelectionOverlay () {
-		this.setState({showImageOverlay: true})
-		$('.image-selection-overlay').css('top', 'calc(' + (this.state.crop.y * 100) + '% - 2px)');
-		$('.image-selection-overlay').css('left', 'calc(' + (this.state.crop.x * 100) + '% - 2px)');
-		$('.image-selection-overlay').css('width', (this.state.crop.w * 100) + '%');
-		$('.image-selection-overlay').css('height', (this.state.crop.h * 100) + '%');
 	}
 
 	/**
