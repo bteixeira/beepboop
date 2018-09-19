@@ -145,59 +145,56 @@ class ImageCropWidget extends React.Component {
 
 		var $handle = $(ev.target);
 		var mode;
-		console.log(ev.target);
 		if ($handle.is('.resize-handle')) {
 			mode = 'resize';
 		} else {
 			mode = 'drag';
 		}
-		console.log('mode', mode);
 
 		this.setState({showImageOverlay: false})
 		$imageArea.toggleClass('dragging', true);
 
-		var c = this.getImageCoords(ev);
-		this.setState({clickStart: {x: c.x, y: c.y}});
+		var clickStart = this.getImageCoords(ev);
 
-		$imageArea.on('mousemove.drag', ev => {
-			var c = this.getImageCoords(ev);
+		$(document).on('mousemove.drag', ev => {
+			var coords = this.getImageCoords(ev);
 			var crop = {...this.state.crop};
 
 			if (mode === 'resize') {
 				if ($handle.is('.top-left')) {
-					crop.w += crop.x - c.x;
-					crop.x = c.x;
-					crop.h += crop.y - c.y;
-					crop.y = c.y;
+					crop.w += crop.x - coords.x;
+					crop.x = coords.x;
+					crop.h += crop.y - coords.y;
+					crop.y = coords.y;
 				} else if ($handle.is('.top')) {
-					crop.h += crop.y - c.y;
-					crop.y = c.y;
+					crop.h += crop.y - coords.y;
+					crop.y = coords.y;
 				} else if ($handle.is('.top-right')) {
-					crop.w = c.x - crop.x;
-					crop.h += crop.y - c.y;
-					crop.y = c.y;
+					crop.w = coords.x - crop.x;
+					crop.h += crop.y - coords.y;
+					crop.y = coords.y;
 				} else if ($handle.is('.left')) {
-					crop.w += crop.x - c.x;
-					crop.x = c.x;
+					crop.w += crop.x - coords.x;
+					crop.x = coords.x;
 				} else if ($handle.is('.right')) {
-					crop.w = c.x - crop.x;
+					crop.w = coords.x - crop.x;
 				} else if ($handle.is('.bottom-left')) {
-					crop.w += crop.x - c.x;
-					crop.x = c.x;
-					crop.h = c.y - crop.y;
+					crop.w += crop.x - coords.x;
+					crop.x = coords.x;
+					crop.h = coords.y - crop.y;
 				} else if ($handle.is('.bottom')) {
-					crop.h = c.y - crop.y;
+					crop.h = coords.y - crop.y;
 				} else if ($handle.is('.bottom-right')) {
-					crop.w = c.x - crop.x;
-					crop.h = c.y - crop.y;
+					crop.w = coords.x - crop.x;
+					crop.h = coords.y - crop.y;
 				}
 
 			} else {// dragging
 
 				// 1 check diff from clickStart
 				var diff = {
-					x: c.x - this.state.clickStart.x,
-					y: c.y - this.state.clickStart.y,
+					x: coords.x - clickStart.x,
+					y: coords.y - clickStart.y,
 				};
 
 				// 2 add that vector to crop.xy
@@ -205,7 +202,7 @@ class ImageCropWidget extends React.Component {
 				crop.y += diff.y;
 
 				// 3 assign c to clickStart
-				this.setState({clickStart: c})
+				clickStart = coords
 
 				if (crop.y + crop.h > 1) {
 					crop.y = 1 - crop.h;
@@ -227,7 +224,7 @@ class ImageCropWidget extends React.Component {
 		$(this).toggleClass('dragging', true);
 		$(document).one('mouseup', () => {
 			console.log('end');
-			$imageArea.off('mousemove.drag');
+			$(document).off('mousemove.drag');
 			$imageArea.removeClass('dragging');
 			this.setState({showImageOverlay: true})
 		});
