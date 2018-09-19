@@ -9,7 +9,7 @@ class CuratorControls extends React.Component {
 					<input id="input-crop-w" name="w" type="number" readOnly value={this.props.w}/>
 					<input id="input-crop-h" name="h" type="number" readOnly value={this.props.h}/>
 				</form>
-				<form id="form-meta">
+				<form id="form-meta" onSubmit={this.props.handlers.submit}>
 					<ul id="controls"> {
 						Object.entries(this.props.metaInfoControls).map(([name, control]) =>
 							<div key={name}>
@@ -34,9 +34,9 @@ class CuratorControls extends React.Component {
 							</div>,
 						)
 					} </ul>
-					<button type="button" id="button-skip">Skip</button>
-					<button type="button" id="button-reset-skip">Reset</button>
-					<button type="button" id="button-submit">Submit</button>
+					<button type="button" onClick={this.props.handlers.skip}>Skip</button>
+					<button type="button" onClick={this.props.handlers.resetSkip}>Reset Skip</button>
+					<button type="submit">Submit</button>
 				</form>
 			</div>
 		)

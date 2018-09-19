@@ -16,6 +16,7 @@ class ImageCropWidget extends React.Component {
 	}
 
 	render () {
+		const {cls} = Util;
 		return (
 			<div id="image-container">
 				<div id="image-area-container">
