@@ -1,0 +1,107 @@
+.image-area-container {
+	/*margin: 15px 0; !* TODO USE BOOTSTRAP'S GUTTER VAR *!*/
+	background: $pink;
+	position: relative;
+	border: solid 15px $pink;
+	border-radius: 4px;
+	text-align: center;
+	/*height: 100%;*/
+	box-sizing: border-box;
+}
+
+.image-area > img {
+	cursor: crosshair;
+	display: block;
+	max-width: 100%;
+}
+
+.image-blur-overlay {
+	background: black;
+	cursor: crosshair;
+	opacity: 0.95;
+	position: absolute;
+}
+
+.image-selection-overlay {
+	border: dashed 1px white;
+	cursor: grab;
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+	padding: 1px;
+	position: absolute;
+	z-index: 9;
+}
+
+.image-selection-overlay.hidden {
+	display: none;
+}
+
+.image-area {
+	display: inline-block;
+	position: relative;
+}
+
+.image-area.dragging,
+.image-area.dragging .image-blur-overlay,
+.image-area.dragging > img {
+	cursor: grabbing;
+	cursor: -webkit-grabbing;
+	cursor: -moz-grabbing;
+}
+
+.resize-handle {
+	width: 5px;
+	height: 5px;
+	background: black;
+	border: solid 1px white;
+	position: absolute;
+	transform: translate(-50%, -50%);
+}
+
+.resize-handle.top-left {
+	cursor: nwse-resize;
+	top: 0;
+	left: 0;
+}
+
+.resize-handle.top {
+	cursor: ns-resize;
+	top: 0;
+	left: 50%;
+}
+
+.resize-handle.top-right {
+	cursor: nesw-resize;
+	top: 0;
+	left: 100%;
+}
+
+.resize-handle.left {
+	cursor: ew-resize;
+	top: 50%;
+	left: 0;
+}
+
+.resize-handle.right {
+	cursor: ew-resize;
+	top: 50%;
+	left: 100%;
+}
+
+.resize-handle.bottom-left {
+	cursor: nesw-resize;
+	top: 100%;
+	left: 0;
+}
+
+.resize-handle.bottom {
+	cursor: ns-resize;
+	top: 100%;
+	left: 50%;
+}
+
+.resize-handle.bottom-right {
+	cursor: nwse-resize;
+	top: 100%;
+	left: 100%;
+}

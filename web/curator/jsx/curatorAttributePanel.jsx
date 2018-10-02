@@ -8,7 +8,7 @@ class CuratorAttributePanel extends React.Component {
 				   className="model-link" target="_blank">
 					{model.source} / {model.slug}
 				</a>
-				<h4>Attributes</h4>
+				<h4>Model attributes</h4>
 				<dl> {
 					Object.entries(model.attributes).map(([attr, value]) =>
 						<React.Fragment key={attr}>
@@ -17,7 +17,7 @@ class CuratorAttributePanel extends React.Component {
 						</React.Fragment>,
 					)
 				} </dl>
-				<h4>Image</h4>
+				<h4>Image attributes</h4>
 				<a className="image-link" target="_blank" href={image.url}>
 					{image.filename}
 				</a>

@@ -18,27 +18,15 @@ class CuratorApp extends React.Component {
 
 	render () {
 		return (
-			<div className="container-fluid">
+			<div className="container-fluid my-3">
 				<div className="row">
-					<div className="col-3">
-						<CuratorAttributePanel
-							model={this.state.model}
+					<div className="col-12 col-md-8 col-xl-6 order-md-2">
+						<ImageCropWidget
 							image={this.state.image}
-							imageWidth={this.refs_.image.current && this.refs_.image.current.naturalWidth}
-							imageHeight={this.refs_.image.current && this.refs_.image.current.naturalHeight}
+							onChangeCrop={(crop) => this.setState({crop} || {})}
 						/>
 					</div>
-					<div className="col-6">
-						<div id="image-container">
-							<div id="image-area-container">
-								<ImageCropWidget
-									image={this.state.image}
-									onChangeCrop={(crop) => this.setState({crop} || {})}
-								/>
-							</div>
-						</div>
-					</div>
-					<div className="col-3">
+					<div className="col-12 col-md-4 col-xl-3 order-md-1">
 						<CuratorControls
 							metaInfoControls={this.state.metaInfoControls}
 							handlers={{
@@ -47,6 +35,14 @@ class CuratorApp extends React.Component {
 								resetSkip: this.handleResetSkip.bind(this),
 							}}
 							{...this.state.crop}
+						/>
+					</div>
+					<div className="col-12 col-xl-3 order-3">
+						<CuratorAttributePanel
+							model={this.state.model}
+							image={this.state.image}
+							imageWidth={this.refs_.image.current && this.refs_.image.current.naturalWidth}
+							imageHeight={this.refs_.image.current && this.refs_.image.current.naturalHeight}
 						/>
 					</div>
 				</div>

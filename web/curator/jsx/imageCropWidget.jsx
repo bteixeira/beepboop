@@ -46,86 +46,91 @@ class ImageCropWidget extends React.Component {
 				} else {
 					this.setState({selectionDone: true});
 				}
+				const $imageArea = $(this._refs.imageArea.current);
+				$imageArea.removeClass('dragging');
 			}
 			// SELECTED is impossible, CLEAR is impossible
 		});
 	}
 
 	setCrop(crop) {
-		crop = crop || {}
-		crop = Object.assign({}, this.state.crop, crop);
+		if (crop) {
+			crop = Object.assign({}, this.state.crop, crop);
+			this.props.onChangeCrop({
+				x: Math.round(crop.x * this._refs.image.current.naturalWidth),
+				y: Math.round(crop.y * this._refs.image.current.naturalHeight),
+				w: Math.round(crop.w * this._refs.image.current.naturalWidth),
+				h: Math.round(crop.h * this._refs.image.current.naturalHeight),
+			});
+		}
 		this.setState({crop})
-		this.props.onChangeCrop({
-			x: Math.round(crop.x * this._refs.image.current.naturalWidth),
-			y: Math.round(crop.y * this._refs.image.current.naturalHeight),
-			w: Math.round(crop.w * this._refs.image.current.naturalWidth),
-			h: Math.round(crop.h * this._refs.image.current.naturalHeight),
-		});
 	}
 
 	render () {
 		return (
-			<div
-				id="image-area"
-				onMouseDown={this.onMouseDownImageArea.bind(this)}
-				ref={this._refs.imageArea}
-			>
-				{this.props.image && (
-					<img id="image"
-						 src="http://www.placecage.com/300/200"
-						// src={`data:${this.state.image.mimeType};base64,${this.state.image.contents}`}
-						 ref={this._refs.image}
-					/>
-				)}
-				{this.state.selectionDone && (
-					<div
-						className="image-selection-overlay"
-						onMouseDown={this.onMouseDownImageSelectionOverlay.bind(this)}
-						style={{
-							top: `calc(${this.state.crop.y * 100}% - 2px)`,
-							left: `calc(${this.state.crop.x * 100}% - 2px)`,
-							width: (this.state.crop.w * 100) + '%',
-							height: (this.state.crop.h * 100) + '%',
-						}}
-					>
-						<div className="resize-handle top-left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top-left')}/>
-						<div className="resize-handle top" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top')}/>
-						<div className="resize-handle top-right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top-right')}/>
-						<div className="resize-handle left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'left')}/>
-						<div className="resize-handle right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'right')}/>
-						<div className="resize-handle bottom-left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom-left')}/>
-						<div className="resize-handle bottom" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom')}/>
-						<div className="resize-handle bottom-right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom-right')}/>
-					</div>
-				)}
-				{this.state.crop && (
-					<React.Fragment>
-						<div className="image-blur-overlay top" style={{
-							top: 0,
-							left: 0,
-							width: '100%',
-							height: (this.state.crop.y * 100) + '%',
-						}}/>
-						<div className="image-blur-overlay bottom" style={{
-							top: (this.state.crop.y + this.state.crop.h) * 100 + '%',
-							left: 0,
-							width: '100%',
-							bottom: 0,
-						}}/>
-						<div className="image-blur-overlay left" style={{
-							top: (this.state.crop.y * 100) + '%',
-							left: 0,
-							width: (this.state.crop.x * 100) + '%',
-							height: (this.state.crop.h * 100) + '%',
-						}}/>
-						<div className="image-blur-overlay right" style={{
-							top: (this.state.crop.y * 100) + '%',
-							right: 0,
-							left: (this.state.crop.x + this.state.crop.w) * 100 + '%',
-							height: (this.state.crop.h * 100) + '%',
-						}}/>
-					</React.Fragment>
-				)}
+			<div className="image-area-container">
+				<div
+					className="image-area"
+					onMouseDown={this.onMouseDownImageArea.bind(this)}
+					ref={this._refs.imageArea}
+				>
+					{this.props.image && (
+						<img
+							 src="http://www.placecage.com/600/400"
+							// src={`data:${this.state.image.mimeType};base64,${this.state.image.contents}`}
+							 ref={this._refs.image}
+						/>
+					)}
+					{this.state.selectionDone && (
+						<div
+							className="image-selection-overlay"
+							onMouseDown={this.onMouseDownImageSelectionOverlay.bind(this)}
+							style={{
+								top: `calc(${this.state.crop.y * 100}%)`,
+								left: `calc(${this.state.crop.x * 100}%)`,
+								width: (this.state.crop.w * 100) + '%',
+								height: (this.state.crop.h * 100) + '%',
+							}}
+						>
+							<div className="resize-handle top-left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top-left')}/>
+							<div className="resize-handle top" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top')}/>
+							<div className="resize-handle top-right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top-right')}/>
+							<div className="resize-handle left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'left')}/>
+							<div className="resize-handle right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'right')}/>
+							<div className="resize-handle bottom-left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom-left')}/>
+							<div className="resize-handle bottom" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom')}/>
+							<div className="resize-handle bottom-right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom-right')}/>
+						</div>
+					)}
+					{this.state.crop && (
+						<React.Fragment>
+							<div className="image-blur-overlay top" style={{
+								top: 0,
+								left: 0,
+								width: '100%',
+								height: (this.state.crop.y * 100) + '%',
+							}}/>
+							<div className="image-blur-overlay bottom" style={{
+								top: (this.state.crop.y + this.state.crop.h) * 100 + '%',
+								left: 0,
+								width: '100%',
+								bottom: 0,
+							}}/>
+							<div className="image-blur-overlay left" style={{
+								top: (this.state.crop.y * 100) + '%',
+								left: 0,
+								width: (this.state.crop.x * 100) + '%',
+								height: (this.state.crop.h * 100) + '%',
+							}}/>
+							<div className="image-blur-overlay right" style={{
+								top: (this.state.crop.y * 100) + '%',
+								right: 0,
+								left: (this.state.crop.x + this.state.crop.w) * 100 + '%',
+								height: (this.state.crop.h * 100) + '%',
+							}}/>
+						</React.Fragment>
+					)}
+				</div>
 			</div>
 		)
 	}
@@ -192,17 +197,17 @@ class ImageCropWidget extends React.Component {
 		this.setState({selectionDone: false});
 		this._hiddenState.currentAction = ACTIONS.DRAGGING;
 		this._hiddenState.prevCoords = this.getImageCoords(ev);
+
+		const $imageArea = $(this._refs.imageArea.current);
+		$imageArea.toggleClass('dragging', true);
 	}
 
 	continueDragging (ev) {
 		const coords = this.getImageCoords(ev);
-		const $imageArea = $(this._refs.imageArea.current);
 		const diff = {
 			x: coords.x - this._hiddenState.prevCoords.x,
 			y: coords.y - this._hiddenState.prevCoords.y,
 		};
-
-		$imageArea.toggleClass('dragging', true);
 
 		this._hiddenState.prevCoords = coords;
 
