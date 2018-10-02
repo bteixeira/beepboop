@@ -1,44 +1,45 @@
-body, html {
-	height: 100%;
-}
+/*body, html {*/
+	/*height: 100%;*/
+/*}*/
 
-#container, #image-container
+/*#container*/
+/*, #image-container*/
 	/*, #image-area-container */
-{
-	box-sizing: border-box;
-	height: 100%;
-}
+/*{*/
+	/*box-sizing: border-box;*/
+	/*height: 100%;*/
+/*}*/
 
 #image {
 	max-height: 100%;
 }
 
-#info-container {
-	box-sizing: border-box;
-	float: left;
-	padding-right: 15px;
-	width: 20%;
-}
+/*#info-container {*/
+	/*box-sizing: border-box;*/
+	/*float: left;*/
+	/*padding-right: 15px;*/
+	/*width: 20%;*/
+/*}*/
 
-#image-container {
-	box-sizing: border-box;
-	float: left;
-	width: 60%;
-}
+/*#image-container {*/
+	/*box-sizing: border-box;*/
+	/*float: left;*/
+	/*width: 60%;*/
+/*}*/
 
-#controls-container {
-	box-sizing: border-box;
-	float: left;
-	padding-left: 15px;
-	width: 20%;
-}
+/*#controls-container {*/
+	/*box-sizing: border-box;*/
+	/*float: left;*/
+	/*padding-left: 15px;*/
+	/*width: 20%;*/
+/*}*/
 
-#controls {
-	padding: 0;
-}
+/*#controls {*/
+	/*padding: 0;*/
+/*}*/
 
-#controls-container select, #controls-container input {
-	display: block;
-	margin-bottom: 5px;
-	width: 100%;
-}
+/*#controls-container select, #controls-container input {*/
+	/*display: block;*/
+	/*margin-bottom: 5px;*/
+	/*width: 100%;*/
+/*}*/

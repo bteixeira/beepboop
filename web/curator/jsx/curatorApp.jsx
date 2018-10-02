@@ -18,30 +18,38 @@ class CuratorApp extends React.Component {
 
 	render () {
 		return (
-			<div id="container">
-				<CuratorAttributePanel
-					model={this.state.model}
-					image={this.state.image}
-					imageWidth={this.refs_.image.current && this.refs_.image.current.naturalWidth}
-					imageHeight={this.refs_.image.current && this.refs_.image.current.naturalHeight}
-				/>
-				<div id="image-container">
-					<div id="image-area-container">
-						<ImageCropWidget
+			<div className="container-fluid">
+				<div className="row">
+					<div className="col-3">
+						<CuratorAttributePanel
+							model={this.state.model}
 							image={this.state.image}
-							onChangeCrop={(crop) => this.setState({crop} || {})}
+							imageWidth={this.refs_.image.current && this.refs_.image.current.naturalWidth}
+							imageHeight={this.refs_.image.current && this.refs_.image.current.naturalHeight}
+						/>
+					</div>
+					<div className="col-6">
+						<div id="image-container">
+							<div id="image-area-container">
+								<ImageCropWidget
+									image={this.state.image}
+									onChangeCrop={(crop) => this.setState({crop} || {})}
+								/>
+							</div>
+						</div>
+					</div>
+					<div className="col-3">
+						<CuratorControls
+							metaInfoControls={this.state.metaInfoControls}
+							handlers={{
+								submit: this.handleSubmit.bind(this),
+								skip: this.handleSkip.bind(this),
+								resetSkip: this.handleResetSkip.bind(this),
+							}}
+							{...this.state.crop}
 						/>
 					</div>
 				</div>
-				<CuratorControls
-					metaInfoControls={this.state.metaInfoControls}
-					handlers={{
-						submit: this.handleSubmit.bind(this),
-						skip: this.handleSkip.bind(this),
-						resetSkip: this.handleResetSkip.bind(this),
-					}}
-					{...this.state.crop}
-				/>
 			</div>
 		)
 	}

@@ -6,7 +6,7 @@ class CuratorControls extends React.Component {
 		const w = (typeof props.w === 'number' ? props.w : '');
 		const h = (typeof props.h === 'number' ? props.h : '');
 		return (
-			<div id="controls-container">
+			<div>
 				Controls
 				<form id="form-crop">
 					<input id="input-crop-x" name="x" type="number" readOnly value={x}/>

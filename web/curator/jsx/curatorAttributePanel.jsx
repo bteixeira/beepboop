@@ -2,7 +2,7 @@ class CuratorAttributePanel extends React.Component {
 	render () {
 		const {model, image} = this.props
 		return (
-			<div id="info-container">
+			<div>
 				<h3 className="model-name">{model.name}</h3>
 				<a href={`http://www.${model.source}.com/babe/${model.slug}`}
 				   className="model-link" target="_blank">
