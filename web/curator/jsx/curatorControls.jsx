@@ -7,19 +7,35 @@ class CuratorControls extends React.Component {
 		const h = (typeof props.h === 'number' ? props.h : '');
 		return (
 			<div>
-				Controls
 				<form id="form-crop">
-					<input id="input-crop-x" name="x" type="number" readOnly value={x}/>
-					<input id="input-crop-y" name="y" type="number" readOnly value={y}/>
-					<input id="input-crop-w" name="w" type="number" readOnly value={w}/>
-					<input id="input-crop-h" name="h" type="number" readOnly value={h}/>
+					<h5>
+						<strong>Image Crop</strong>
+					</h5>
+					<div className="form-group form-row">
+						<label htmlFor="x" className="col-auto col-form-label">X</label>
+						<div className="col">
+							<input className="form-control" name="x" type="number" readOnly value={x}/>
+						</div>
+						<label htmlFor="y" className="col-auto col col-form-label">Y</label>
+						<div className="col">
+							<input className="form-control" name="y" type="number" readOnly value={y}/>
+						</div>
+						<label htmlFor="w" className="col-auto col col-form-label">W</label>
+						<div className="col">
+							<input className="form-control" name="w" type="number" readOnly value={w}/>
+						</div>
+						<label htmlFor="h" className="col-auto col col-form-label">H</label>
+						<div className="col">
+							<input className="form-control" name="h" type="number" readOnly value={h}/>
+						</div>
+					</div>
 				</form>
 				<form id="form-meta" onSubmit={this.props.handlers.submit}>
-					<ul id="controls"> {
+					{
 						Object.entries(this.props.metaInfoControls).map(([name, control]) =>
-							<div key={name}>
+							<div className="form-group" key={name}>
 								<label htmlFor={`control-${name}`} title={control.description}>{control.name}</label>
-								<select name={name} defaultValue={control.default}>
+								<select className="form-control" name={name} defaultValue={control.default}>
 									<option value=""/>
 									{
 										control.values.map(value => {
@@ -38,10 +54,19 @@ class CuratorControls extends React.Component {
 								</select>
 							</div>,
 						)
-					} </ul>
-					<button type="button" onClick={this.props.handlers.skip}>Skip</button>
-					<button type="button" onClick={this.props.handlers.resetSkip}>Reset Skip</button>
-					<button type="submit">Submit</button>
+					}
+					<div className="form-row">
+						<div className="col"/>
+						<div className="col-auto">
+							<button type="button" className="btn btn-secondary" onClick={this.props.handlers.skip}>Skip</button>
+						</div>
+						<div className="col-auto">
+							<button type="button" className="btn btn-secondary" onClick={this.props.handlers.resetSkip}>Reset Skip</button>
+						</div>
+						<div className="col-auto">
+							<button type="submit" className="btn btn-primary">Submit</button>
+						</div>
+					</div>
 				</form>
 			</div>
 		)
