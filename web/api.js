@@ -85,7 +85,12 @@ router.get('/getImage', function (req, res) {
 	});
 });
 
-router.post('/saveImage', function (req, res) {
+router.put('/saveImage', function (req, res) {
+
+	/***************************/
+	return request.post('http://papaya-app.com/api/saveImage', {form: req.body}).pipe(res);
+	/***************************/
+
 	connection.addImageMetadata(req.body.hash, req.body.metadata, (err) => {
 		if (err) {
 			throw err;

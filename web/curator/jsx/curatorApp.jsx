@@ -1,6 +1,6 @@
 class CuratorApp extends React.Component {
 	constructor (props) {
-		super(props)
+		super(props);
 		this.state = {
 			metaInfoControls: {},
 			model: {
@@ -8,11 +8,11 @@ class CuratorApp extends React.Component {
 			},
 			image: {},
 			crop: {},
-		}
+		};
 		this.refs_ = {
 			image: React.createRef(),
-		}
-		this.requestImage()
+		};
+		this.requestImage();
 		this._skip = 0;
 	}
 
@@ -51,35 +51,18 @@ class CuratorApp extends React.Component {
 	}
 
 	handleSubmit (values) {
-		function getCrop() {
-			var metadata = {};
-			$('#form-crop').serializeArray().forEach(function (el) {
-				metadata[el.name] = el.value;
-			});
-			return metadata;
-		}
-
-		function getMetadata() {
-			var metadata = {};
-			$('#form-meta').serializeArray().forEach(function (el) {
-				metadata[el.name] = el.value;
-			});
-			return metadata;
-		}
-
-		var metadata = getMetadata();
-		metadata.crop = getCrop();
-		$.post('http://papaya-app.com/api/saveImage', {
-			hash: $('.image-hash').text(),
-			metadata: metadata
-		}, function (data) {
-			$('#controls select').each(function (i, el) {
-				$(this).val('default' in META[this.name] ? String(META[this.name].default) : '');
-			});
-			requestImage();
-			$('#form-crop input').val('');
-			$('.image-blur-overlay').remove();
-			$('.image-selection-overlay').toggleClass('hidden', true);
+		$.ajax('/api/saveImage', {
+			type: 'PUT',
+			data: {
+				hash: this.state.image.hash,
+				metadata: {
+					...values,
+					crop: {...this.state.crop},
+				},
+			},
+			success: () => {
+				this.requestImage();
+			},
 		});
 	}
 

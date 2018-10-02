@@ -53,7 +53,7 @@ class ImageCropWidget extends React.Component {
 		});
 	}
 
-	setCrop(crop) {
+	setCrop (crop) {
 		if (crop) {
 			crop = Object.assign({}, this.state.crop, crop);
 			this.props.onChangeCrop({
@@ -76,9 +76,9 @@ class ImageCropWidget extends React.Component {
 				>
 					{this.props.image && (
 						<img
-							 src="http://www.placecage.com/600/400"
-							// src={`data:${this.state.image.mimeType};base64,${this.state.image.contents}`}
-							 ref={this._refs.image}
+							src="http://www.placecage.com/600/400"
+							// src={`data:${this.props.image.mimeType};base64,${this.props.image.contents}`}
+							ref={this._refs.image}
 						/>
 					)}
 					{this.state.selectionDone && (
@@ -92,14 +92,22 @@ class ImageCropWidget extends React.Component {
 								height: (this.state.crop.h * 100) + '%',
 							}}
 						>
-							<div className="resize-handle top-left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top-left')}/>
-							<div className="resize-handle top" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top')}/>
-							<div className="resize-handle top-right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top-right')}/>
-							<div className="resize-handle left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'left')}/>
-							<div className="resize-handle right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'right')}/>
-							<div className="resize-handle bottom-left" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom-left')}/>
-							<div className="resize-handle bottom" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom')}/>
-							<div className="resize-handle bottom-right" onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom-right')}/>
+							<div className="resize-handle top-left"
+								 onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top-left')}/>
+							<div className="resize-handle top"
+								 onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top')}/>
+							<div className="resize-handle top-right"
+								 onMouseDown={this.onMouseDownResizeHandle.bind(this, 'top-right')}/>
+							<div className="resize-handle left"
+								 onMouseDown={this.onMouseDownResizeHandle.bind(this, 'left')}/>
+							<div className="resize-handle right"
+								 onMouseDown={this.onMouseDownResizeHandle.bind(this, 'right')}/>
+							<div className="resize-handle bottom-left"
+								 onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom-left')}/>
+							<div className="resize-handle bottom"
+								 onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom')}/>
+							<div className="resize-handle bottom-right"
+								 onMouseDown={this.onMouseDownResizeHandle.bind(this, 'bottom-right')}/>
 						</div>
 					)}
 					{this.state.crop && (
