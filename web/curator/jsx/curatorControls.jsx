@@ -1,13 +1,18 @@
 class CuratorControls extends React.Component {
 	render () {
+		const props = this.props;
+		const x = (typeof props.x === 'number' ? props.x : '');
+		const y = (typeof props.y === 'number' ? props.y : '');
+		const w = (typeof props.w === 'number' ? props.w : '');
+		const h = (typeof props.h === 'number' ? props.h : '');
 		return (
 			<div id="controls-container">
 				Controls
 				<form id="form-crop">
-					<input id="input-crop-x" name="x" type="number" readOnly value={this.props.x || ''}/>
-					<input id="input-crop-y" name="y" type="number" readOnly value={this.props.y || ''}/>
-					<input id="input-crop-w" name="w" type="number" readOnly value={this.props.w || ''}/>
-					<input id="input-crop-h" name="h" type="number" readOnly value={this.props.h || ''}/>
+					<input id="input-crop-x" name="x" type="number" readOnly value={x}/>
+					<input id="input-crop-y" name="y" type="number" readOnly value={y}/>
+					<input id="input-crop-w" name="w" type="number" readOnly value={w}/>
+					<input id="input-crop-h" name="h" type="number" readOnly value={h}/>
 				</form>
 				<form id="form-meta" onSubmit={this.props.handlers.submit}>
 					<ul id="controls"> {

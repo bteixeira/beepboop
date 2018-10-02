@@ -55,7 +55,12 @@ class ImageCropWidget extends React.Component {
 		crop = crop || {}
 		crop = Object.assign({}, this.state.crop, crop);
 		this.setState({crop})
-		this.props.onChangeCrop(crop);
+		this.props.onChangeCrop({
+			x: Math.round(crop.x * this._refs.image.current.naturalWidth),
+			y: Math.round(crop.y * this._refs.image.current.naturalHeight),
+			w: Math.round(crop.w * this._refs.image.current.naturalWidth),
+			h: Math.round(crop.h * this._refs.image.current.naturalHeight),
+		});
 	}
 
 	render () {
